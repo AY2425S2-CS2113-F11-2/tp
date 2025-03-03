@@ -1,5 +1,7 @@
 package seedu.duke.messages;
 
+
+
 public class Messages {
 
     public void displayWelcomeMessage() {
@@ -12,10 +14,26 @@ public class Messages {
     }
 
     public void invalidCommandMessage() {
-        System.out.println("ERROR: Invalid command");
+        System.out.println(errorMessageTag() + "Invalid command");
     }
 
     public void exitAppMessage() {
         System.out.println("Have a nice day!");
+    }
+
+    public static void createNewFileMessage(String filePath) {
+        System.out.println("Storage file created: " + filePath);
+    }
+
+    public static String errorMessageTag() {
+        return "ERROR: ";
+    }
+
+    public static void loadDataMessage(String filePath) {
+        System.out.println("Loading data from: " + filePath  + ": \n");
+    }
+
+    public static void emptyDataFileMessage() {
+        System.out.println("No previous data found.");
     }
 }

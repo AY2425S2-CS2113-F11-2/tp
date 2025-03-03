@@ -15,25 +15,19 @@ public class Duke {
     }
 
     public static void main(String[] args) {
-        new Duke(DataStorage.DATA_FILE).run(); 
+        new Duke(DataStorage.DATA_FILE).run();
     }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
         Messages messages = new Messages();
         HelpPage helpPage = new HelpPage();
-        UI ui = new UI(scanner, messages, helpPage);
+        UI ui = new UI(scanner, messages, helpPage, storageFilePath);
 
         messages.displayWelcomeMessage();
         helpPage.displayCommandList();
         messages.setDivider();
-
-        DataStorage.displayStoredData(storageFilePath); 
         ui.handleUserInput();
-    }
-
-    public void saveUserInput(String input) {
-        DataStorage.saveData(input); 
     }
 }
 
