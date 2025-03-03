@@ -1,21 +1,33 @@
 package seedu.duke;
 
 import java.util.Scanner;
+import seedu.duke.ui.UI;
+import seedu.duke.messages.Messages;
+import seedu.duke.menu.HelpPage;
+import seedu.duke.storage.DataStorage;
 
 public class Duke {
-    /**
-     * Main entry-point for the java.duke.Duke application.
-     */
-    public static void main(String[] args) {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
-        System.out.println("What is your name?");
+    private final String storageFilePath;
 
-        Scanner in = new Scanner(System.in);
-        System.out.println("Hello " + in.nextLine());
+    public Duke(String fileName) {
+        this.storageFilePath = fileName;  
+        DataStorage.ensureFileExists();  
+    }
+
+    public static void main(String[] args) {
+        new Duke(DataStorage.DATA_FILE).run();
+    }
+
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        Messages messages = new Messages();
+        HelpPage helpPage = new HelpPage();
+        UI ui = new UI(scanner, messages, helpPage, storageFilePath);
+
+        messages.displayWelcomeMessage();
+        helpPage.displayCommandList();
+        messages.setDivider();
+        ui.handleUserInput();
     }
 }
+
