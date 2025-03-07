@@ -5,7 +5,7 @@ Welcome to O$P$ expense-tracker! How can I help you?
 
 ________________________________________________________________________________
 
-COMMANDS: 
+COMMANDS:
 
 /help: Open a menu of commands
 /cats: Shows all the previously created categories
@@ -14,19 +14,7 @@ COMMANDS:
 
 ________________________________________________________________________________
 
-
-________________________________________________________________________________
-
-COMMANDS: 
-
-/help: Open a menu of commands
-/cats: Shows all the previously created categories
-/bye: Save all data and exit the program
-
-
-________________________________________________________________________________
-
-
+>
 ________________________________________________________________________________
 
 Have a nice day!
