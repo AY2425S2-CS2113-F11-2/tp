@@ -1,4 +1,3 @@
-Storage file created: expenses.txt
 
 ________________________________________________________________________________
 
@@ -46,10 +45,4 @@ exit
 
 ________________________________________________________________________________
 
-Enter command: list
-No expenses found.
-
-________________________________________________________________________________
-
-Enter command: exit
-Thank you for using the Expense Manager. Goodbye!
+Enter command: Thank you for using the Expense Manager. Goodbye!

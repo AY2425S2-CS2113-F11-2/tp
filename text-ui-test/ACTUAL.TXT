@@ -2,22 +2,47 @@
 ________________________________________________________________________________
 
 Welcome to O$P$ expense-tracker! How can I help you?
+AVAILABLE COMMANDS:
+------------------
+help
+  Description: Displays this help message
+  Usage: help
+
+add
+  Description: Add a new expense
+  Usage: add
+  You will be prompted to enter:
+    - Title: Short name for the expense
+    - Description: Detailed information about the expense
+    - Amount: The monetary value (must be a positive number)
+
+list
+  Description: List all expenses
+  Usage: list
+
+delete
+  Description: Delete an existing expense
+  Usage: delete
+  You will be shown the list of expenses and prompted to enter
+  the index of the expense to delete
+
+edit
+  Description: Edit an existing expense
+  Usage: edit
+  You will be shown the list of expenses and prompted to enter:
+    - Index of the expense to edit
+    - New title (press Enter to keep current)
+    - New description (press Enter to keep current)
+    - New amount (press Enter to keep current)
+
+balance
+  Description: Show the balance overview (total expenses and amount owed)
+  Usage: balance
+
+exit
+  Description: Exit the program
+  Usage: exit
 
 ________________________________________________________________________________
 
-COMMANDS:
-
-/help: Open a menu of commands
-/cats: Shows all the previously created categories
-/bye: Save all data and exit the program
-
-
-________________________________________________________________________________
-
->
-________________________________________________________________________________
-
-Have a nice day!
-
-________________________________________________________________________________
-
+Enter command: Thank you for using the Expense Manager. Goodbye!
