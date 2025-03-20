@@ -8,14 +8,19 @@ import seedu.duke.expense.Expense;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
 
+import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import seedu.duke.expense.BudgetManager;
+import seedu.duke.expense.Expense;
 
 //@@author matthewyeo1
 class ExpenseCommandTest {
@@ -206,6 +211,89 @@ class ExpenseCommandTest {
         String actualOutput = outContent.toString().trim();
         actualOutput = actualOutput.replaceAll("\r\n", "\n");
         assertEquals(expectedMessage, actualOutput);
+    }
+    //@@author
+
+    //@@author mohammedhamdhan
+    @Test
+    void testExecuteEditExpenseInvalidAmount() {
+        // Prepare test data - add an expense first
+        Expense expense = new Expense("Original", "Original Description", 50.0);
+        budgetManager.addExpense(expense);
+        
+        // Provide invalid amount input
+        provideInput("1\nUpdated Title\nUpdated Description\ninvalid\n");
+        expenseCommand.executeEditExpense();
+        
+        // Check that original amount is kept
+        Expense editedExpense = budgetManager.getExpense(0);
+        assertEquals("Updated Title", editedExpense.getTitle());
+        assertEquals("Updated Description", editedExpense.getDescription());
+        assertEquals(50.0, editedExpense.getAmount());
+        
+        // Check output message
+        String actualOutput = outContent.toString().trim();
+        assertTrue(actualOutput.contains("Invalid amount format. Keeping original amount."));
+    }
+    
+    @Test
+    void testShowBalanceOverview() {
+        // Prepare test data with unsettled expenses
+        budgetManager.addExpense(new Expense("Expense 1", "Description 1", 25.0));
+        budgetManager.addExpense(new Expense("Expense 2", "Description 2", 35.0));
+        
+        // Call the method
+        provideInput("");
+        expenseCommand.showBalanceOverview();
+        
+        // Check output
+        String actualOutput = outContent.toString().trim();
+        assertTrue(actualOutput.contains("Balance Overview"));
+        assertTrue(actualOutput.contains("Total number of unsettled expenses: 2"));
+        assertTrue(actualOutput.contains("Total amount owed: $60.00"));
+    }
+    
+    @Test
+    void testDisplayAllExpensesEmpty() {
+        // Clear any existing expenses
+        while (budgetManager.getExpenseCount() > 0) {
+            budgetManager.deleteExpense(0);
+        }
+        
+        // Test display with empty list
+        provideInput("");
+        expenseCommand.displayAllExpenses();
+        
+        // Check output
+        String actualOutput = outContent.toString().trim();
+        assertEquals("No expenses found.", actualOutput);
+    }
+    
+    @Test
+    void testDisplayAllExpenses() {
+        // Add test expenses
+        Expense expense1 = new Expense("Coffee", "Morning coffee", 5.0);
+        Expense expense2 = new Expense("Lunch", "Business lunch", 15.0);
+        budgetManager.addExpense(expense1);
+        budgetManager.addExpense(expense2);
+        
+        // Display all expenses
+        provideInput("");
+        expenseCommand.displayAllExpenses();
+        
+        // Check output contains both expenses
+        String actualOutput = outContent.toString().trim();
+        actualOutput = actualOutput.replaceAll("\r\n", "\n");
+        
+        assertTrue(actualOutput.contains("List of Expenses:"));
+        assertTrue(actualOutput.contains("Expense #1"));
+        assertTrue(actualOutput.contains("Coffee"));
+        assertTrue(actualOutput.contains("Morning coffee"));
+        assertTrue(actualOutput.contains("$5.0"));
+        assertTrue(actualOutput.contains("Expense #2"));
+        assertTrue(actualOutput.contains("Lunch"));
+        assertTrue(actualOutput.contains("Business lunch"));
+        assertTrue(actualOutput.contains("$15.0"));
     }
     //@@author
 }
