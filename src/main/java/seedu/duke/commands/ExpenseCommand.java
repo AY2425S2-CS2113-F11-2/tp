@@ -51,7 +51,7 @@ public class ExpenseCommand {
             assert budgetManager.getAllExpenses().size() == sizeBefore + 1 : "Failed to add expense";
             
             System.out.println("Expense added successfully:");
-            System.out.println(newExpense.toFormattedString());
+            System.out.println(newExpense.toString());
         } catch (NumberFormatException e) {
             System.out.println("Invalid amount format. Please enter a valid number.");
         }
@@ -82,7 +82,7 @@ public class ExpenseCommand {
                 assert budgetManager.getAllExpenses().size() == sizeBefore - 1 : "Failed to delete expense";
                 
                 System.out.println("Expense deleted successfully:");
-                System.out.println(expenseToDelete.toFormattedString());
+                System.out.println(expenseToDelete.toString());
             } else {
                 System.out.println("Invalid expense index.");
             }
@@ -110,7 +110,7 @@ public class ExpenseCommand {
                 assert expenseToEdit != null : "Expense at index " + index + " should not be null";
                 
                 System.out.println("Current expense details:");
-                System.out.println(expenseToEdit.toFormattedString());
+                System.out.println(expenseToEdit.toString());
                 
                 String originalTitle = expenseToEdit.getTitle();
                 String originalDescription = expenseToEdit.getDescription();
@@ -156,7 +156,7 @@ public class ExpenseCommand {
                 assert Math.abs(updatedExpense.getAmount() - newAmount) < 0.001 : "Amount was not updated correctly";
                 
                 System.out.println("Expense edited successfully:");
-                System.out.println(updatedExpense.toFormattedString());
+                System.out.println(updatedExpense.toString());
             } else {
                 System.out.println("Invalid expense index.");
             }

@@ -2,6 +2,7 @@ package seedu.duke.expense;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import seedu.duke.messages.Messages;
 import seedu.duke.storage.DataStorage;
 
@@ -174,5 +175,55 @@ public class BudgetManager {
      */
     public void saveAllExpenses() {
         DataStorage.saveExpenses(expenses);
+    }
+
+    /**
+     * Checks if the given index is valid.
+     *
+     * @param index the index to check
+     * @return true if the index is valid, false otherwise
+     */
+    public boolean isValidIndex(int index) {
+        return index > 0 && index <= expenses.size();
+    }
+
+    /**
+     * Gets an expense by index (1-based).
+     *
+     * @param index the 1-based index of the expense to get
+     * @return the expense at the specified index
+     */
+    public Expense getExpenseByIndex(int index) {
+        return expenses.get(index - 1);
+    }
+
+    /**
+     * Removes an expense at the specified index (1-based).
+     *
+     * @param index the 1-based index of the expense to remove
+     * @return the removed expense
+     */
+    public Expense removeExpense(int index) {
+        Expense removedExpense = expenses.remove(index - 1);
+        saveAllExpenses();
+        return removedExpense;
+    }
+
+    /**
+     * Updates an expense at the specified index (1-based).
+     *
+     * @param index       the 1-based index of the expense to update
+     * @param title       the new title
+     * @param description the new description
+     * @param amount      the new amount
+     * @return the updated expense
+     */
+    public Expense updateExpense(int index, String title, String description, double amount) {
+        Expense expense = getExpenseByIndex(index);
+        expense.setTitle(title);
+        expense.setDescription(description);
+        expense.setAmount(amount);
+        saveAllExpenses();
+        return expense;
     }
 } 
