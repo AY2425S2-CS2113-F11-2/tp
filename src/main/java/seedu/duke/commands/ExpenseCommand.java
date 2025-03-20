@@ -257,67 +257,6 @@ public class ExpenseCommand {
     }
 
     /**
-     * Displays all settled expenses.
-     */
-    public void displaySettledExpenses(){
-        List<Expense> expenses = budgetManager.getAllExpenses();
-        int numberOfExpensesPrinted = 0;
-        if (expenses.isEmpty()) {
-            System.out.println("No expenses found.");
-            return;
-        }
-
-        for (int i = 0; i < expenses.size(); i++) {
-            while(i < expenses.size() && !expenses.get(i).getDone()) {
-                i++;
-            }
-            if(i >= expenses.size()) {
-                break;
-            }
-            numberOfExpensesPrinted++;
-            System.out.println("Expense #" + (i + 1));
-            System.out.println(expenses.get(i));
-            System.out.println();
-        }
-        if(numberOfExpensesPrinted != 0){
-            System.out.println("List of Settled Expenses:");
-        }
-        String pluralOrSingular = (numberOfExpensesPrinted != 1 ? "expenses" : "expense");
-        System.out.println("You have " + numberOfExpensesPrinted + " settled " + pluralOrSingular);
-    }
-
-    /**
-     * Displays all unsettled expenses.
-     */
-    public void displayUnsettledExpenses() {
-        List<Expense> expenses = budgetManager.getAllExpenses();
-        int numberOfExpensesPrinted = 0;
-
-        if (expenses.isEmpty()) {
-            System.out.println("No expenses found.");
-            return;
-        }
-
-        for (int i = 0; i < expenses.size(); i++) {
-            while (i < expenses.size() && expenses.get(i).getDone()) {
-                i++;
-            }
-            if (i >= expenses.size()) {
-                break;
-            }
-            numberOfExpensesPrinted++;
-            System.out.println("Expense #" + (i + 1));
-            System.out.println(expenses.get(i));
-            System.out.println();
-        }
-        if(numberOfExpensesPrinted != 0){
-            System.out.println("List of Settled Expenses:");
-        }
-        String pluralOrSingular = (numberOfExpensesPrinted != 1 ? "expenses" : "expense");
-        System.out.println("You have " + numberOfExpensesPrinted + " unsettled " + pluralOrSingular);
-    }
-
-    /**
      * Shows the balance overview.
      */
     public void showBalanceOverview() {
