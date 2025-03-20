@@ -3,6 +3,7 @@ package seedu;
 import java.util.Scanner;
 import seedu.duke.commands.ExpenseCommand;
 import seedu.duke.commands.FriendsCommands;
+import seedu.duke.commands.SplitCommand;
 import seedu.duke.expense.BudgetManager;
 import seedu.duke.friends.GroupManager;
 import seedu.duke.menu.HelpPage;
@@ -33,8 +34,16 @@ public class OMPM {
         GroupManager groupManager = new GroupManager();  // Create an instance of GroupManager
         FriendsCommands friendsCommand = new FriendsCommands(groupManager);
         ExpenseCommand expenseCommand = new ExpenseCommand(new BudgetManager(), scanner);
+        SplitCommand splitCommand = new SplitCommand(scanner, groupManager);
 
-        ui = new UI(scanner, messages, helpPage, "data/expenses.txt", expenseCommand, commands, friendsCommand);
+        ui = new UI(scanner, 
+        messages, 
+        helpPage, 
+        "data/expenses.txt", 
+        expenseCommand, 
+        commands, 
+        friendsCommand, 
+        splitCommand);
 
         // Display welcome message and command list
         messages.displayWelcomeMessage();

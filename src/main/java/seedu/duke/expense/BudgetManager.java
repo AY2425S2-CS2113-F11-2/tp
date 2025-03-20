@@ -98,7 +98,9 @@ public class BudgetManager {
         return expenses.size();
     }
 
+
     /**
+     * Calculates the total balance (sum of all unsettled expense amounts).
      * Gets the number of unsettled expenses.
      *
      * @return the number of unsettled expenses
@@ -124,6 +126,9 @@ public class BudgetManager {
             if(!expense.getDone()) {
                 total += expense.getAmount();
             }
+            if(!expense.getDone()) {
+                total += expense.getAmount();
+            }
         }
         return total;
     }
@@ -141,6 +146,8 @@ public class BudgetManager {
         }
         return expenses.get(index);
     }
+
+
 
     /**
      * Marks an expense at the specified index.

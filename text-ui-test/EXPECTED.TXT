@@ -190,6 +190,7 @@ Description: 10x Egg Prata from SpringLeaf
 Amount: $25.00
 
 Enter the index of the expense to delete:
+Owed amounts file not found. No amounts to update.
 Expense deleted successfully:
 Title: Supper
 Description: 10x Egg Prata from SpringLeaf

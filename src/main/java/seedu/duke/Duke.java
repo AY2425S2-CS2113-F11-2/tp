@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import seedu.duke.commands.ExpenseCommand;
 import seedu.duke.commands.FriendsCommands;
+import seedu.duke.commands.SplitCommand;
 import seedu.duke.commands.Commands;
 import seedu.duke.expense.BudgetManager;
 import seedu.duke.friends.GroupManager;
@@ -39,7 +40,15 @@ public class Duke {
 
         GroupManager groupManager = new GroupManager();
         FriendsCommands friendsCommand = new FriendsCommands(groupManager);
-        UI ui = new UI(scanner, messages, helpPage, storageFilePath, expenseCommand, commands, friendsCommand);
+        SplitCommand splitCommand = new SplitCommand(scanner, groupManager);
+        UI ui = new UI(scanner,
+            messages,
+            helpPage,
+            storageFilePath,
+            expenseCommand,
+            commands,
+            friendsCommand,
+            splitCommand);
 
         messages.displayWelcomeMessage();
         helpPage.displayCommandList();

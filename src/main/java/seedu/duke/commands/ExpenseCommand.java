@@ -1,10 +1,18 @@
 package seedu.duke.commands;
 
-import java.util.List;
-import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import seedu.duke.expense.BudgetManager;
 import seedu.duke.expense.Expense;
+import seedu.duke.friends.Friend;
+import seedu.duke.friends.GroupManager;
+import java.util.Scanner;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Handles expense-related commands entered by the user.
@@ -12,6 +20,7 @@ import seedu.duke.expense.Expense;
 public class ExpenseCommand {
     private BudgetManager budgetManager;
     private Scanner scanner;
+    private GroupManager groupManager;
 
     /**
      * Constructs an ExpenseCommand with the given BudgetManager and Scanner.
@@ -90,6 +99,8 @@ public class ExpenseCommand {
             System.out.println("Invalid index format. Please enter a valid number.");
         }
     }
+
+    //@@author
 
     /**
      * Executes the edit expense command.
@@ -246,12 +257,74 @@ public class ExpenseCommand {
     }
 
     /**
+     * Displays all settled expenses.
+     */
+    public void displaySettledExpenses(){
+        List<Expense> expenses = budgetManager.getAllExpenses();
+        int numberOfExpensesPrinted = 0;
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found.");
+            return;
+        }
+
+        for (int i = 0; i < expenses.size(); i++) {
+            while(i < expenses.size() && !expenses.get(i).getDone()) {
+                i++;
+            }
+            if(i >= expenses.size()) {
+                break;
+            }
+            numberOfExpensesPrinted++;
+            System.out.println("Expense #" + (i + 1));
+            System.out.println(expenses.get(i));
+            System.out.println();
+        }
+        if(numberOfExpensesPrinted != 0){
+            System.out.println("List of Settled Expenses:");
+        }
+        String pluralOrSingular = (numberOfExpensesPrinted != 1 ? "expenses" : "expense");
+        System.out.println("You have " + numberOfExpensesPrinted + " settled " + pluralOrSingular);
+    }
+
+    /**
+     * Displays all unsettled expenses.
+     */
+    public void displayUnsettledExpenses() {
+        List<Expense> expenses = budgetManager.getAllExpenses();
+        int numberOfExpensesPrinted = 0;
+
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found.");
+            return;
+        }
+
+        for (int i = 0; i < expenses.size(); i++) {
+            while (i < expenses.size() && expenses.get(i).getDone()) {
+                i++;
+            }
+            if (i >= expenses.size()) {
+                break;
+            }
+            numberOfExpensesPrinted++;
+            System.out.println("Expense #" + (i + 1));
+            System.out.println(expenses.get(i));
+            System.out.println();
+        }
+        if(numberOfExpensesPrinted != 0){
+            System.out.println("List of Settled Expenses:");
+        }
+        String pluralOrSingular = (numberOfExpensesPrinted != 1 ? "expenses" : "expense");
+        System.out.println("You have " + numberOfExpensesPrinted + " unsettled " + pluralOrSingular);
+    }
+
+    /**
      * Shows the balance overview.
      */
     public void showBalanceOverview() {
         double totalBalance = budgetManager.getTotalBalance();
         System.out.println("Balance Overview");
         System.out.println("----------------");
+        System.out.println("Total number of unsettled expenses: " + budgetManager.getUnsettledExpenseCount());
         System.out.println("Total number of unsettled expenses: " + budgetManager.getUnsettledExpenseCount());
         System.out.println("Total amount owed: $" + String.format("%.2f", totalBalance));
     }
@@ -292,4 +365,79 @@ public class ExpenseCommand {
     public BudgetManager getBudgetManager() {
         return budgetManager;
     }
+
+    //@@author matthewyeo1
+    /**
+     * Updates the owesData.txt file for the deleted expense.
+     *
+     * @param deletedExpense the expense being deleted
+     */
+    private void updateOwesDataFile(Expense deletedExpense) {
+        String owesFile = "owedAmounts.txt";
+        File file = new File(owesFile);
+
+        // Temporary map to store updated owed amounts
+        Map<String, Double> updatedOwes = new HashMap<>();
+
+        try (Scanner fileScanner = new Scanner(file)) {
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine().trim();
+                if (line.startsWith("- ")) { // Lines with owed amounts start with "- "
+                    String[] parts = line.split(" owes: ");
+                    if (parts.length == 2) {
+                        String name = parts[0].substring(2).trim(); // Extract the member's name
+                        double amount = Double.parseDouble(parts[1].trim()); // Extract the owed amount
+                        updatedOwes.put(name, amount); // Store in the map
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Owed amounts file not found. No amounts to update.");
+            return;
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing owed amounts. Some amounts may not be updated.");
+            return;
+        }
+
+        // Adjust owed amounts for the deleted expense
+        List<Friend> groupMembers = getGroupMembersForExpense(deletedExpense);
+        if (groupMembers != null && !groupMembers.isEmpty()) {
+            double totalAmount = deletedExpense.getAmount();
+            int numMembers = groupMembers.size();
+            double sharePerMember = totalAmount / numMembers;
+
+            for (Friend member : groupMembers) {
+                String name = member.getName();
+                double currentOwed = updatedOwes.getOrDefault(name, 0.0);
+                double newOwed = Math.max(currentOwed - sharePerMember, 0.0); // Reduce owed amount
+                updatedOwes.put(name, newOwed);
+            }
+        }
+
+        // Clear the existing file content before appending updated data
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(""); // Clear the file
+        } catch (IOException e) {
+            System.out.println("Error clearing owed amounts file: " + e.getMessage());
+            return;
+        }
+
+        System.out.println("Updated owed amounts written to file successfully.");
+    }
+
+    /**
+     * Retrieves the group members associated with the given expense.
+     *
+     * @param expense the expense to find group members for
+     * @return the list of group members, or null if none are found
+     */
+    private List<Friend> getGroupMembersForExpense(Expense expense) {
+        // Assuming the expense has a reference to its associated group
+        String groupName = expense.getGroupName(); // Add this method to your Expense class
+        if (groupName == null || groupName.isEmpty()) {
+            return null;
+        }
+        return groupManager.getGroupMembers(groupName);
+    }
+    //@@author
 } 

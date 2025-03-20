@@ -8,6 +8,7 @@ public class Expense {
     private String description;
     private double amount;
     private Boolean isDone;
+    private String groupName;
 
     /**
      * Constructs an Expense object with the given title, description, and amount.
@@ -121,4 +122,24 @@ public class Expense {
     public void setDone(Boolean isDone) {
         this.isDone = isDone;
     }
+
+    //@@author matthewyeo1
+    /**
+     * Gets the group name associated with the expense.
+     *
+     * @return the group name
+     */
+    public String getGroupName() {
+        return groupName;
+    }
+
+    /**
+     * Sets the group name associated with the expense.
+     *
+     * @param groupName the group name
+     */
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+    //@@author
 }

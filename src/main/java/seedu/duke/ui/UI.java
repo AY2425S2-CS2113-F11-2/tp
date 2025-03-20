@@ -1,12 +1,13 @@
 package seedu.duke.ui;
 
 import java.util.Scanner;
-import seedu.duke.messages.Messages;
-import seedu.duke.menu.HelpPage;
+
+import seedu.duke.commands.Commands;
 import seedu.duke.commands.ExpenseCommand;
 import seedu.duke.commands.FriendsCommands;
-import seedu.duke.commands.Commands;
 import seedu.duke.expense.BudgetManager;
+import seedu.duke.menu.HelpPage;
+import seedu.duke.messages.Messages;
 
 public class UI {
     private final Scanner scanner;
