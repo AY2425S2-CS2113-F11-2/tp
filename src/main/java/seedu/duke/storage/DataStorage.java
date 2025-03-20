@@ -12,21 +12,24 @@ import seedu.duke.expense.Expense;
 import seedu.duke.messages.Messages;
 
 public class DataStorage {
-    public static final String DATA_FILE = "expenses.txt";
+    public static String dataFile = "expenses.txt";
     private static final String SEPARATOR = "|";
 
     /**
      * Ensures that the data file exists.
      */
     public static void ensureFileExists() {
-        File file = new File(DATA_FILE);
+        File file = new File(dataFile);
         try {
             if (file.createNewFile()) {
-                // Removed: Messages.createNewFileMessage(DATA_FILE);
+                Messages.createNewFileMessage();
             }
         } catch (IOException e) {
             System.out.println(Messages.errorMessageTag() + " Error creating data file: " + e.getMessage());
         }
+        //@@author matthewyeo1
+        assert file.exists() : "Data file should exist after ensuring";
+        //@@author
     }
 
     /**
@@ -36,11 +39,15 @@ public class DataStorage {
      * @return true if saving was successful, false otherwise
      */
     public static boolean saveExpenses(List<Expense> expenses) {
-        try (FileWriter writer = new FileWriter(DATA_FILE)) {
+        //@@author matthewyeo1
+        assert expenses != null : "Expenses list should not be null";
+        //@@author
+        try (FileWriter writer = new FileWriter(dataFile)) {
             for (Expense expense : expenses) {
                 writer.write(expense.getTitle() + SEPARATOR
                         + expense.getDescription() + SEPARATOR
-                        + expense.getAmount() + System.lineSeparator());
+                        + expense.getAmount() + SEPARATOR
+                        + expense.getDone() + System.lineSeparator());
             }
             // Removed: System.out.println("Expenses saved successfully.");
             return true;
@@ -57,10 +64,10 @@ public class DataStorage {
      */
     public static List<Expense> loadExpenses() {
         List<Expense> expenses = new ArrayList<>();
-        File file = new File(DATA_FILE);
+        File file = new File(dataFile);
         
         if (!file.exists()) {
-            // Removed: Messages.createNewFileMessage(DATA_FILE);
+            // Removed: Messages.createNewFileMessage(dataFile);
             return expenses;
         }
         
@@ -70,18 +77,21 @@ public class DataStorage {
                 return expenses;
             }
             
-            // Removed: Messages.loadDataMessage(DATA_FILE);
+            // Removed: Messages.loadDataMessage(dataFile);
             
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split("\\" + SEPARATOR);
-                
-                if (parts.length == 3) {
+
+                if (parts.length == 4) {
                     String title = parts[0];
                     String description = parts[1];
                     double amount = Double.parseDouble(parts[2]);
-                    
-                    expenses.add(new Expense(title, description, amount));
+                    boolean isDone = true;
+                    if (parts[3].equals("false")) {
+                        isDone = false;
+                    }
+                    expenses.add(new Expense(title, description, amount,isDone));
                 }
             }
             
@@ -91,6 +101,20 @@ public class DataStorage {
         }
         
         return expenses;
+    }
+
+    /**
+     * Clears the contents of the data file (for testing purposes).
+     */
+    public static void resetExpenses() {
+        try (FileWriter writer = new FileWriter(dataFile)) {
+            writer.write("");
+        } catch (IOException e) {
+            System.out.println(Messages.errorMessageTag() + " Error resetting expenses: " + e.getMessage());
+        }
+        //@@author matthewyeo1
+        assert new File(dataFile).length() == 0 : "Data file should be empty after reset";
+        //@@author
     }
 }
 

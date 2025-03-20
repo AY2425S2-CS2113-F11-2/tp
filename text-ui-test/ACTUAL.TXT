@@ -1,2 +1,303 @@
 
+________________________________________________________________________________
+
+Welcome to O$P$ expense-tracker! How can I help you?
+AVAILABLE COMMANDS:
+------------------
+help
+  Description: Displays this help message
+  Usage: help
+
+add
+  Description: Add a new expense
+  Usage: add
+  You will be prompted to enter:
+    - Title: Short name for the expense
+    - Description: Detailed information about the expense
+    - Amount: The monetary value (must be a positive number)
+
+mark
+  Description: mark an expense as settled
+  Usage: mark
+  You will be prompted to enter: expense number
+
+unmark
+  Description: unmark an expense to become an unsettled expense
+  Usage: unmark
+  You will be prompted to enter: expense number
+
+list
+  Description: List all expenses
+  Usage: list
+
+list-settled
+  Description: List all settled expenses
+  Usage: list-settled
+
+list-unsettled
+  Description: List all unsettled expenses
+  Usage: list-unsettled
+
+delete
+  Description: Delete an existing expense
+  Usage: delete
+  You will be shown the list of expenses and prompted to enter
+  the index of the expense to delete
+
+edit
+  Description: Edit an existing expense
+  Usage: edit
+  You will be shown the list of expenses and prompted to enter:
+    - Index of the expense to edit
+    - New title (press Enter to keep current)
+    - New description (press Enter to keep current)
+    - New amount (press Enter to keep current)
+
+balance
+  Description: Show the balance overview (total expenses and amount owed)
+  Usage: balance
+
+create-group
+  Description: Create a new group and add members to it
+  Usage: create-group
+  You will be prompted to:
+    - Enter group name
+    - Enter members to add one by one
+    - Enter done to create and save the group
+
+view-group
+  Description: view the members of a specific group
+  Usage: view-group
+  You will be prompted to enter:
+    - Enter group name
+
+add-member
+  Description: add a member to an existing group/ create a new group and add
+  Usage: add-member
+  You will be prompted to enter:
+    - Enter name of new member
+    - Enter name group to add to
+        If the group exists, adds to group. Else prompts the user to create a new group first
+
+remove-group
+  Description: remove a member from a group
+  Usage: remove-group
+  You will be prompted to enter:
+    - Enter name of member to remove
+    - Enter group to remove member from
+
+my-groups
+  Description: view the members of a specific group
+  Usage: view-group
+  Shows all the members and groups
+
+exit
+  Description: Exit the program
+  Usage: exit
+
+________________________________________________________________________________
+
+Enter command: No expenses found.
+
+________________________________________________________________________________
+
+Enter command: Enter expense title:
+Enter expense description:
+Enter expense amount:
+Enter :
+Expense added successfully:
+Title: Breakfast
+Description: 1x Big Breakfast from McDonald's
+Amount: $10.00
+
+________________________________________________________________________________
+
+Enter command: List of Expenses:
+Expense #1
+Title: Breakfast
+Description: 1x Big Breakfast from McDonald's
+Amount: $10.00
+
+Enter the index of the expense to edit:
+Current expense details:
+Title: Breakfast
+Description: 1x Big Breakfast from McDonald's
+Amount: $10.00
+Enter new title (press Enter to keep current):
+Enter new description (press Enter to keep current):
+Enter new amount (press Enter to keep current):
+Expense edited successfully:
+Title: Breakfast
+Description: 1x Big Breakfast from McDonald's
+Amount: $9.00
+
+________________________________________________________________________________
+
+Enter command: List of Expenses:
+Expense #1
+Title: Breakfast
+Description: 1x Big Breakfast from McDonald's
+Amount: $9.00
+
+Enter the index of the expense to edit:
+Invalid expense index.
+
+________________________________________________________________________________
+
+Enter command: List of Expenses:
+Expense #1
+Title: Breakfast
+Description: 1x Big Breakfast from McDonald's
+Amount: $9.00
+
+Enter the index of the expense to edit:
+Current expense details:
+Title: Breakfast
+Description: 1x Big Breakfast from McDonald's
+Amount: $9.00
+Enter new title (press Enter to keep current):
+Enter new description (press Enter to keep current):
+Enter new amount (press Enter to keep current):
+Expense edited successfully:
+Title: Supper
+Description: 10x Egg Prata from SpringLeaf
+Amount: $25.00
+
+________________________________________________________________________________
+
+Enter command: Balance Overview
+----------------
+Total number of unsettled expenses: 1
+Total amount owed: $25.00
+
+________________________________________________________________________________
+
+Enter command: List of Expenses:
+Expense #1
+Title: Supper
+Description: 10x Egg Prata from SpringLeaf
+Amount: $25.00
+
+Enter the index of the expense to delete:
+Invalid expense index.
+
+________________________________________________________________________________
+
+Enter command: List of Expenses:
+Expense #1
+Title: Supper
+Description: 10x Egg Prata from SpringLeaf
+Amount: $25.00
+
+Enter the index of the expense to delete:
+Expense deleted successfully:
+Title: Supper
+Description: 10x Egg Prata from SpringLeaf
+Amount: $25.00
+
+________________________________________________________________________________
+
+Enter command: No expenses found.
+
+________________________________________________________________________________
+
+Enter command: AVAILABLE COMMANDS:
+------------------
+help
+  Description: Displays this help message
+  Usage: help
+
+add
+  Description: Add a new expense
+  Usage: add
+  You will be prompted to enter:
+    - Title: Short name for the expense
+    - Description: Detailed information about the expense
+    - Amount: The monetary value (must be a positive number)
+
+mark
+  Description: mark an expense as settled
+  Usage: mark
+  You will be prompted to enter: expense number
+
+unmark
+  Description: unmark an expense to become an unsettled expense
+  Usage: unmark
+  You will be prompted to enter: expense number
+
+list
+  Description: List all expenses
+  Usage: list
+
+list-settled
+  Description: List all settled expenses
+  Usage: list-settled
+
+list-unsettled
+  Description: List all unsettled expenses
+  Usage: list-unsettled
+
+delete
+  Description: Delete an existing expense
+  Usage: delete
+  You will be shown the list of expenses and prompted to enter
+  the index of the expense to delete
+
+edit
+  Description: Edit an existing expense
+  Usage: edit
+  You will be shown the list of expenses and prompted to enter:
+    - Index of the expense to edit
+    - New title (press Enter to keep current)
+    - New description (press Enter to keep current)
+    - New amount (press Enter to keep current)
+
+balance
+  Description: Show the balance overview (total expenses and amount owed)
+  Usage: balance
+
+create-group
+  Description: Create a new group and add members to it
+  Usage: create-group
+  You will be prompted to:
+    - Enter group name
+    - Enter members to add one by one
+    - Enter done to create and save the group
+
+view-group
+  Description: view the members of a specific group
+  Usage: view-group
+  You will be prompted to enter:
+    - Enter group name
+
+add-member
+  Description: add a member to an existing group/ create a new group and add
+  Usage: add-member
+  You will be prompted to enter:
+    - Enter name of new member
+    - Enter name group to add to
+        If the group exists, adds to group. Else prompts the user to create a new group first
+
+remove-group
+  Description: remove a member from a group
+  Usage: remove-group
+  You will be prompted to enter:
+    - Enter name of member to remove
+    - Enter group to remove member from
+
+my-groups
+  Description: view the members of a specific group
+  Usage: view-group
+  Shows all the members and groups
+
+exit
+  Description: Exit the program
+  Usage: exit
+
+________________________________________________________________________________
+
+Enter command: Invalid command.
+
+________________________________________________________________________________
+
 Enter command: Thank you for using the Expense Manager. Goodbye!

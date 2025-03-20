@@ -7,6 +7,7 @@ public class Expense {
     private String title;
     private String description;
     private double amount;
+    private Boolean isDone;
 
     /**
      * Constructs an Expense object with the given title, description, and amount.
@@ -19,6 +20,22 @@ public class Expense {
         this.title = title;
         this.description = description;
         this.amount = amount;
+        this.isDone = false;
+    }
+
+    /**
+     * Creates a new Expense with the specified title, description, amount, and completion status.
+     *
+     * @param title       A short name or summary of the expense
+     * @param description Detailed information about the expense
+     * @param amount      The monetary value of the expense.
+     * @param isDone      Indicates whether the expense is settled
+     */
+    public Expense(String title, String description, double amount, boolean isDone) {
+        this.title = title;
+        this.description = description;
+        this.amount = amount;
+        this.isDone = isDone;
     }
 
     /**
@@ -86,4 +103,22 @@ public class Expense {
                 + "Description: " + description + "\n"
                 + "Amount: $" + String.format("%.2f", amount);
     }
-} 
+
+    /**
+     * Returns whether the expense is marked as completed.
+     *
+     * @return {@code true} if the expense is completed, {@code false} otherwise.
+     */
+    public Boolean getDone() {
+        return isDone;
+    }
+
+    /**
+     * Sets the completion status of the expense.
+     *
+     * @param isDone {@code true} to mark the expense as completed, {@code false} otherwise.
+     */
+    public void setDone(Boolean isDone) {
+        this.isDone = isDone;
+    }
+}

@@ -1,1 +1,26 @@
+list
+add
+Breakfast
+1x Big Breakfast from McDonald's
+10.00
+edit
+1
+
+
+9.00
+edit
+0
+edit
+1
+Supper
+10x Egg Prata from SpringLeaf
+25.00
+balance
+delete
+0
+delete
+1
+list
+help
+invalidcommand
 exit

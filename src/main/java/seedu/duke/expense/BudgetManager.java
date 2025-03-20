@@ -2,13 +2,14 @@ package seedu.duke.expense;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import seedu.duke.messages.Messages;
 import seedu.duke.storage.DataStorage;
 
 /**
  * Manages a collection of expenses and provides operations on them.
  */
 public class BudgetManager {
+    Messages messages = new Messages();
     private List<Expense> expenses;
 
     /**
@@ -37,7 +38,7 @@ public class BudgetManager {
      */
     public Expense deleteExpense(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= expenses.size()) {
-            throw new IndexOutOfBoundsException("Invalid expense index: " + index);
+            throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
         }
         Expense deletedExpense = expenses.remove(index);
         DataStorage.saveExpenses(expenses);
@@ -57,7 +58,7 @@ public class BudgetManager {
     public Expense editExpense(int index, String title, String description, double amount) 
             throws IndexOutOfBoundsException {
         if (index < 0 || index >= expenses.size()) {
-            throw new IndexOutOfBoundsException("Invalid expense index: " + index);
+            throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
         }
         
         Expense expense = expenses.get(index);
@@ -97,14 +98,31 @@ public class BudgetManager {
     }
 
     /**
-     * Calculates the total balance (sum of all expense amounts).
+     * Gets the number of unsettled expenses.
+     *
+     * @return the number of unsettled expenses
+     */
+    public int getUnsettledExpenseCount() {
+        int numberOfUnsettledExpenses = 0;
+        for (Expense expense : expenses) {
+            if (!expense.getDone()) {
+                numberOfUnsettledExpenses++;
+            }
+        }
+        return numberOfUnsettledExpenses;
+    }
+
+    /**
+     * Calculates the total balance (sum of all unsettled expense amounts).
      *
      * @return the total balance
      */
     public double getTotalBalance() {
         double total = 0;
         for (Expense expense : expenses) {
-            total += expense.getAmount();
+            if(!expense.getDone()) {
+                total += expense.getAmount();
+            }
         }
         return total;
     }
@@ -118,11 +136,39 @@ public class BudgetManager {
      */
     public Expense getExpense(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= expenses.size()) {
-            throw new IndexOutOfBoundsException("Invalid expense index: " + index);
+            throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
         }
         return expenses.get(index);
     }
-    
+
+    /**
+     * Marks an expense at the specified index.
+     *
+     * @param index the index of the expense to mark
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public void markExpense(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= expenses.size()) {
+            throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
+        }
+        expenses.get(index).setDone(true);
+        saveAllExpenses();
+    }
+
+    /**
+     * Unmarks an expense at the specified index.
+     *
+     * @param index the index of the expense to unmark
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public void unmarkExpense(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= expenses.size()) {
+            throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
+        }
+        expenses.get(index).setDone(false);
+        saveAllExpenses();
+    }
+
     /**
      * Saves all expenses to storage.
      */
