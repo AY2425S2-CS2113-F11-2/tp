@@ -1,5 +1,7 @@
 package seedu.duke.friends;
 
+import seedu.duke.messages.Messages;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import java.util.List;
 public class Group {
     private String name;
     private List<Friend> friends;
+    private Messages messages;
 
     public Group(String name) {
         this.name = name;
@@ -40,7 +43,7 @@ public class Group {
         String result = "Group Name: " + name + "\nMembers:\n";
 
         if (friends.isEmpty()) {
-            result += "No members in this group.";
+            result += messages.displayEmptyGroupMessage();
         } else {
             for (Friend friend : friends) {
                 result += "- " + friend.getName() + "\n";

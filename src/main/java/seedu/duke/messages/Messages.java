@@ -66,5 +66,33 @@ public class Messages {
     public static void createNewFileMessage() {
         System.out.println("Created a new file!");
     }
+
+    /**
+     * Displays message for a group with no members.
+     */
+    public String displayEmptyGroupMessage() {
+        return "No members in this group.";
+    }
+
+    /**
+     * Displays message for missing groups.txt file.
+     */
+    public void displayMissingFileExceptionMessage() {
+        System.out.println("Owed amounts file not found. No amounts to display.");
+    }
+
+    /**
+     * Displays message for invalid amounts.
+     */
+    public void displayInvalidAmountExceptionMessage() {
+        System.out.println("Error parsing owed amounts. Some amounts may not be displayed.");
+    }
+
+    /**
+     * Displays message for missing group.
+     */
+    public void displayMissingGroupMessage() {
+        System.out.println("Group not found.");
+    }
 }
 //@@author

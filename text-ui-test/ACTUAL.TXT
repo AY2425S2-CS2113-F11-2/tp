@@ -91,6 +91,13 @@ my-groups
   Usage: view-group
   Shows all the members and groups
 
+split
+  Description: Split an expense between the members of an existing group
+  Usage: split
+  You will be prompted to enter:
+    - Expense
+    - Group to split it among
+
 exit
   Description: Exit the program
   Usage: exit
@@ -140,7 +147,7 @@ Description: 1x Big Breakfast from McDonald's
 Amount: $9.00
 
 Enter the index of the expense to edit:
-Invalid expense index.
+Please enter a valid expense number.
 
 ________________________________________________________________________________
 
@@ -179,7 +186,7 @@ Description: 10x Egg Prata from SpringLeaf
 Amount: $25.00
 
 Enter the index of the expense to delete:
-Invalid expense index.
+Please enter a valid expense number.
 
 ________________________________________________________________________________
 
@@ -290,6 +297,13 @@ my-groups
   Description: view the members of a specific group
   Usage: view-group
   Shows all the members and groups
+
+split
+  Description: Split an expense between the members of an existing group
+  Usage: split
+  You will be prompted to enter:
+    - Expense
+    - Group to split it among
 
 exit
   Description: Exit the program

@@ -1,5 +1,6 @@
 package seedu.duke.friends;
 
+import seedu.duke.messages.Messages;
 import seedu.duke.storage.GroupStorage;
 import java.util.List;
 import java.util.ArrayList;
@@ -8,8 +9,10 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 //@@author nandhananm7
+
 public class GroupManager {
     private List<Group> groups;
+    private Messages messages;
 
     public GroupManager() {
         this.groups = GroupStorage.loadGroups();  // Load the existing groups from storage
@@ -61,9 +64,9 @@ public class GroupManager {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Owed amounts file not found. No amounts to display.");
+            messages.displayMissingFileExceptionMessage();
         } catch (NumberFormatException e) {
-            System.out.println("Error parsing owed amounts. Some amounts may not be displayed.");
+            messages.displayInvalidAmountExceptionMessage();
         }
 
         // Display group members and their owed amounts
@@ -82,7 +85,7 @@ public class GroupManager {
         }
 
         if (!groupFound) {
-            System.out.println("Group not found.");
+            messages.displayMissingGroupMessage();
         }
     }
     //@@author
@@ -104,21 +107,19 @@ public class GroupManager {
             saveGroups(); // Save changes after removal
             System.out.println("Group '" + groupName + "' has been removed.");
         } else {
-            System.out.println("Group not found.");
+            messages.displayMissingGroupMessage();
         }
     }
 
-
     // Save the updated list of groups
     public void saveGroups() {
-
         GroupStorage.saveGroups(groups);
     }
 
     // Get all groups
     public List<Group> getGroups() {
-
         return groups;
     }
 }
 //@@author
+
