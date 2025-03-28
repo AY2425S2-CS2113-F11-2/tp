@@ -100,6 +100,20 @@ split
     - Expense
     - Group to split it among
 
+summary
+  Description: View expense summaries in different formats
+  Usage: summary
+  You will be prompted to choose:
+    - Monthly Summary: Shows total expenses and count per month
+    - Category-wise Summary: Shows total expenses and count per category
+
+export
+  Description: Export expense summaries to text files
+  Usage: export
+  You will be prompted to choose:
+    - Monthly Summary: Exports to monthly_summary.txt
+    - Category-wise Summary: Exports to category_summary.txt
+
 change-currency
   Description: Change all you expenses to a different currency
   Usage: change currency
@@ -337,6 +351,20 @@ split
   You will be prompted to enter:
     - Expense
     - Group to split it among
+
+summary
+  Description: View expense summaries in different formats
+  Usage: summary
+  You will be prompted to choose:
+    - Monthly Summary: Shows total expenses and count per month
+    - Category-wise Summary: Shows total expenses and count per category
+
+export
+  Description: Export expense summaries to text files
+  Usage: export
+  You will be prompted to choose:
+    - Monthly Summary: Exports to monthly_summary.txt
+    - Category-wise Summary: Exports to category_summary.txt
 
 change-currency
   Description: Change all you expenses to a different currency
