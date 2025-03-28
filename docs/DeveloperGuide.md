@@ -27,6 +27,7 @@
 &nbsp;&nbsp;[4.5 ExpenseClassifier Class](#44-expenseclassifier-class) <br>
 &nbsp;&nbsp;[4.6 Currency Class](#45-currency-class) <br>
 
+
 ## Acknowledgements
 
 ---
@@ -91,6 +92,7 @@ The `executeDeleteExpense()` method manages expense deletion with these features
 - Updates owed amounts in the owesData.txt file
 - Handles invalid indices gracefully
 - Uses assertions to ensure valid state
+
 
 #### Displaying Settled Expenses
 
@@ -189,6 +191,8 @@ The class uses assertions to validate:
 ### 4.0 Friend Class
 
 ### 4.1 Group Class
+
+
 ### Group Class
 
 The `Group` class in the `seedu.duke.friends` package manages a collection of `Friend` objects under a specified group name.
@@ -227,7 +231,6 @@ The `Group` class in the `seedu.duke.friends` package manages a collection of `F
    - Constructs a formatted string showing the group name and member names.
    - If the group is empty, calls `messages.displayEmptyGroupMessage()` to display an appropriate message.
    - **Important:** Ensure that the `messages` field is initialized externally to prevent a `NullPointerException`.
-
 
 ### 4.2 GroupManager Class
 
@@ -289,5 +292,4 @@ The `writeToFile()` method handles writing the new currency to a file with these
 - Writes the newCurrency string to the file.
 - Closes the FileWriter after writing the data to ensure resources are properly released.
 - Declares the IOException to be thrown, which is handled by the calling method.
-
 

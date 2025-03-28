@@ -122,6 +122,21 @@ public class HelpPage {
         System.out.println("    - Group to split it among");
         System.out.println();
 
+        System.out.println("summary");
+        System.out.println("  Description: View expense summaries in different formats");
+        System.out.println("  Usage: summary");
+        System.out.println("  You will be prompted to choose:");
+        System.out.println("    - Monthly Summary: Shows total expenses and count per month");
+        System.out.println("    - Category-wise Summary: Shows total expenses and count per category");
+        System.out.println();
+
+        System.out.println("export");
+        System.out.println("  Description: Export expense summaries to text files");
+        System.out.println("  Usage: export");
+        System.out.println("  You will be prompted to choose:");
+        System.out.println("    - Monthly Summary: Exports to monthly_summary.txt");
+        System.out.println("    - Category-wise Summary: Exports to category_summary.txt");
+
         System.out.println("change-currency");
         System.out.println("  Description: Change all you expenses to a different currency");
         System.out.println("  Usage: change currency");
@@ -133,6 +148,7 @@ public class HelpPage {
         System.out.println("  Enter currency based on ISO 4217 standard (eg: SGD, USD, JPY)");
         System.out.println("    -Please input your exchange rate from USD to a new currency (if you picked 1)");
         System.out.println("  Enter the exchange rate you'd like to use");
+
         System.out.println();
 
         System.out.println("exit");

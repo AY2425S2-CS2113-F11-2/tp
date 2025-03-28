@@ -1,6 +1,0 @@
-[GROUP]|team
-team|matt
-team|you
-[GROUP]|hello
-hello|matt
-hello|mott

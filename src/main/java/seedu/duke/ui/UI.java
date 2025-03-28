@@ -2,12 +2,14 @@ package seedu.duke.ui;
 
 import java.util.Scanner;
 
+import seedu.duke.commands.Commands;
+
 import seedu.duke.currency.Currency;
 import seedu.duke.messages.Messages;
 import seedu.duke.menu.HelpPage;
+
 import seedu.duke.commands.ExpenseCommand;
 import seedu.duke.commands.FriendsCommands;
-import seedu.duke.commands.Commands;
 import seedu.duke.commands.SplitCommand;
 import seedu.duke.expense.BudgetManager;
 import seedu.duke.summary.ExpenseClassifier;
@@ -137,7 +139,10 @@ public class UI {
             currency.changeCurrency();
             break;
         case Commands.SUMMARY:
-            expenseClassifier.calculateCategoryProportions();
+            expenseCommand.showExpenseSummary();
+            break;
+        case Commands.EXPORT:
+            expenseCommand.exportExpenseSummary();
             break;
         default:
             messages.displayInvalidCommandMessage();

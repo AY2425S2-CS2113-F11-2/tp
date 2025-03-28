@@ -5,20 +5,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import seedu.duke.expense.BudgetManager;
 import seedu.duke.expense.Expense;
 import seedu.duke.friends.Friend;
 import seedu.duke.friends.GroupManager;
 import seedu.duke.currency.Currency;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 /**
  * Handles expense-related commands entered by the user.
@@ -379,6 +379,233 @@ public class ExpenseCommand {
             System.out.println("Please enter a valid expense number.");
         } catch(NumberFormatException e){
             System.out.println("Please enter a number.");
+        }
+    }
+
+    //@@author mohammedhamdhan
+    /**
+     * Shows the expense summary in different views.
+     */
+    public void showExpenseSummary() {
+        System.out.println("Choose summary view:");
+        System.out.println("1. Monthly Summary");
+        System.out.println("2. Category-wise Summary");
+        System.out.println("3. Back to main menu");
+        
+        String choice = scanner.nextLine().trim();
+        
+        switch (choice) {
+        case "1":
+            showMonthlySummary();
+            break;
+        case "2":
+            showCategorySummary();
+            break;
+        case "3":
+            return;
+        default:
+            System.out.println("Invalid choice. Please select 1, 2, or 3.");
+            break;
+        }
+    }
+
+    /**
+     * Shows a monthly summary of expenses.
+     */
+    private void showMonthlySummary() {
+        List<Expense> expenses = budgetManager.getAllExpenses();
+        assert expenses != null : "Expenses list should not be null";
+        
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found.");
+            return;
+        }
+
+        // Group expenses by month
+        Map<String, List<Expense>> monthlyExpenses = new HashMap<>();
+        Map<String, Double> monthlyTotals = new HashMap<>();
+        
+        for (Expense expense : expenses) {
+            String month = expense.getDate().substring(3, 10); // Get MM-YYYY
+            
+            // Add expense to the month's list
+            if (!monthlyExpenses.containsKey(month)) {
+                monthlyExpenses.put(month, new ArrayList<>());
+            }
+            monthlyExpenses.get(month).add(expense);
+            
+            // Update month's total amount
+            monthlyTotals.merge(month, expense.getAmount(), Double::sum);
+        }
+
+        System.out.println("\nMonthly Expense Summary:");
+        System.out.println("----------------------");
+        for (Map.Entry<String, List<Expense>> entry : monthlyExpenses.entrySet()) {
+            String month = entry.getKey();
+            List<Expense> monthExpenses = entry.getValue();
+            double total = monthlyTotals.get(month);
+            
+            System.out.printf("%s: $%.2f (%d expenses)%n", month, total, monthExpenses.size());
+            
+            // List all expense titles for this month
+            System.out.println("  Expenses:");
+            for (Expense expense : monthExpenses) {
+                System.out.printf("  - %s (%s): $%.2f%n", 
+                        expense.getTitle(), 
+                        expense.getDate(), 
+                        expense.getAmount());
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Shows a category-wise summary of expenses.
+     */
+    private void showCategorySummary() {
+        List<Expense> expenses = budgetManager.getAllExpenses();
+        assert expenses != null : "Expenses list should not be null";
+        
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found.");
+            return;
+        }
+
+        // Group expenses by category (using description instead of title)
+        Map<String, Double> categoryTotals = new HashMap<>();
+        Map<String, Integer> categoryCounts = new HashMap<>();
+        
+        for (Expense expense : expenses) {
+            String category = expense.getDescription();
+            categoryTotals.merge(category, expense.getAmount(), Double::sum);
+            categoryCounts.merge(category, 1, Integer::sum);
+        }
+
+        System.out.println("\nCategory-wise Expense Summary:");
+        System.out.println("----------------------------");
+        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
+            String category = entry.getKey();
+            double total = entry.getValue();
+            int count = categoryCounts.get(category);
+            System.out.printf("%s: $%.2f (%d expenses)%n", category, total, count);
+        }
+    }
+
+    /**
+     * Exports the expense summary to a file.
+     */
+    public void exportExpenseSummary() {
+        System.out.println("Choose export format:");
+        System.out.println("1. Monthly Summary");
+        System.out.println("2. Category-wise Summary");
+        System.out.println("3. Back to main menu");
+        
+        String choice = scanner.nextLine().trim();
+        
+        switch (choice) {
+        case "1":
+            exportMonthlySummary();
+            break;
+        case "2":
+            exportCategorySummary();
+            break;
+        case "3":
+            return;
+        default:
+            System.out.println("Invalid choice. Please select 1, 2, or 3.");
+            break;
+        }
+    }
+
+    /**
+     * Exports monthly summary to a file.
+     */
+    private void exportMonthlySummary() {
+        try (FileWriter writer = new FileWriter("monthly_summary.txt")) {
+            List<Expense> expenses = budgetManager.getAllExpenses();
+            assert expenses != null : "Expenses list should not be null";
+            
+            if (expenses.isEmpty()) {
+                writer.write("No expenses found.");
+                return;
+            }
+
+            // Group expenses by month
+            Map<String, List<Expense>> monthlyExpenses = new HashMap<>();
+            Map<String, Double> monthlyTotals = new HashMap<>();
+            
+            for (Expense expense : expenses) {
+                String month = expense.getDate().substring(3, 10);
+                
+                // Add expense to the month's list
+                if (!monthlyExpenses.containsKey(month)) {
+                    monthlyExpenses.put(month, new ArrayList<>());
+                }
+                monthlyExpenses.get(month).add(expense);
+                
+                // Update month's total amount
+                monthlyTotals.merge(month, expense.getAmount(), Double::sum);
+            }
+
+            writer.write("Monthly Expense Summary\n");
+            writer.write("----------------------\n");
+            for (Map.Entry<String, List<Expense>> entry : monthlyExpenses.entrySet()) {
+                String month = entry.getKey();
+                List<Expense> monthExpenses = entry.getValue();
+                double total = monthlyTotals.get(month);
+                
+                writer.write(String.format("%s: $%.2f (%d expenses)%n", 
+                        month, total, monthExpenses.size()));
+                
+                // List all expense titles for this month
+                writer.write("  Expenses:\n");
+                for (Expense expense : monthExpenses) {
+                    writer.write(String.format("  - %s (%s): $%.2f%n", 
+                            expense.getTitle(), 
+                            expense.getDate(), 
+                            expense.getAmount()));
+                }
+                writer.write("\n");
+            }
+            System.out.println("Monthly summary exported to monthly_summary.txt");
+        } catch (IOException e) {
+            System.out.println("Error exporting monthly summary: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Exports category-wise summary to a file.
+     */
+    private void exportCategorySummary() {
+        try (FileWriter writer = new FileWriter("category_summary.txt")) {
+            List<Expense> expenses = budgetManager.getAllExpenses();
+            assert expenses != null : "Expenses list should not be null";
+            
+            if (expenses.isEmpty()) {
+                writer.write("No expenses found.");
+                return;
+            }
+
+            Map<String, Double> categoryTotals = new HashMap<>();
+            Map<String, Integer> categoryCounts = new HashMap<>();
+            
+            for (Expense expense : expenses) {
+                String category = expense.getDescription();
+                categoryTotals.merge(category, expense.getAmount(), Double::sum);
+                categoryCounts.merge(category, 1, Integer::sum);
+            }
+
+            writer.write("Category-wise Expense Summary\n");
+            writer.write("----------------------------\n");
+            for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
+                String category = entry.getKey();
+                double total = entry.getValue();
+                int count = categoryCounts.get(category);
+                writer.write(String.format("%s: $%.2f (%d expenses)%n", category, total, count));
+            }
+            System.out.println("Category summary exported to category_summary.txt");
+        } catch (IOException e) {
+            System.out.println("Error exporting category summary: " + e.getMessage());
         }
     }
 
