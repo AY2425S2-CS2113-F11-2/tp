@@ -16,24 +16,40 @@ public class ExpenseClassifier {
         initializeCategoryKeywords();
     }
 
+    //@@author mohammedhamdhan
     private void initializeCategoryKeywords() {
         categoryKeywords = new HashMap<>();
         categoryKeywords.put(Categories.Food, Arrays.asList(
                 "food", "restaurant", "groceries", "dining", "snack", "lunch", "dinner",
-                "breakfast", "brunch", "cafe", "bistro", "barbecue", "fast food", "dessert", "bakery"));
+                "breakfast", "brunch", "cafe", "bistro", "barbecue", "fast food", "dessert", "bakery",
+                "takeout", "delivery", "food court", "food truck", "buffet", "catering", "meal", "eating",
+                "coffee", "tea", "juice", "smoothie", "ice cream", "pizza", "burger", "sandwich", "sushi",
+                "noodles", "rice", "pasta", "salad", "soup", "steak", "seafood", "vegetarian", "vegan"));
+        
         categoryKeywords.put(Categories.Shopping, Arrays.asList(
-                "clothes", "electronics", "mall", "fashion", "accessory",
-                "shoes", "jewelry", "home decor", "furniture", "beauty", "cosmetics", "boutique", "outlet"));
+                "clothes", "electronics", "mall", "fashion", "accessory", "shoes", "jewelry", "home decor",
+                "furniture", "beauty", "cosmetics", "boutique", "outlet", "department store", "supermarket",
+                "grocery", "pharmacy", "bookstore", "stationery", "sports", "toys", "gadgets", "appliances",
+                "hardware", "tools", "garden", "pet supplies", "office supplies", "art supplies", "music store",
+                "video games", "computer", "phone", "camera", "watch", "bag", "wallet", "perfume", "makeup"));
+        
         categoryKeywords.put(Categories.Travel, Arrays.asList(
-                "flight", "hotel", "transport", "train", "taxi",
-                "bus", "cruise", "rental car", "itinerary", "tour", "excursion", "travel agent", "reservation",
-                "airport", "visa", "backpacker"));
+                "flight", "hotel", "transport", "train", "taxi", "bus", "cruise", "rental car", "itinerary",
+                "tour", "excursion", "travel agent", "reservation", "airport", "visa", "backpacker", "hostel",
+                "resort", "vacation", "trip", "journey", "commute", "subway", "metro", "ferry", "shuttle",
+                "airline", "luggage", "suitcase", "passport", "boarding pass", "check-in", "transit",
+                "destination", "sightseeing", "tourist", "guide", "map", "navigation", "gps", "travel insurance"));
+        
         categoryKeywords.put(Categories.Entertainment, Arrays.asList(
-                "movie", "concert", "game", "party", "music",
-                "theater", "comedy", "festival", "show", "art", "exhibition", "opera", "dance", "amusement",
-                 "performance", "arcade"));
+                "movie", "concert", "game", "party", "music", "theater", "comedy", "festival", "show",
+                "art", "exhibition", "opera", "dance", "amusement", "performance", "arcade", "cinema",
+                "theatre", "gallery", "museum", "zoo", "aquarium", "theme park", "fair", "carnival",
+                "karaoke", "bowling", "pool", "golf", "tennis", "sports event", "stadium", "arena",
+                "casino", "gambling", "betting", "lottery", "streaming", "subscription", "gaming",
+                "video games", "board games", "puzzle", "hobby", "craft", "photography", "dancing",
+                "singing", "karaoke", "club", "bar", "pub", "nightlife"));
     }
-
+    //@@author
     public Map<Categories, Double> calculateCategoryTotals(List<Expense> expenses) {
         Map<Categories, Double> categoryTotals = new HashMap<>();
         for (Categories category : Categories.values()) {

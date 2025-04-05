@@ -1,3 +1,4 @@
+//@@author mohammedhamdhan
 package seedu.duke.expense;
 
 /**
@@ -78,6 +79,7 @@ public class Expense {
     public void setDescription(String description) {
         this.description = description;
     }
+    //@@author
 
     //@@author matthewyeo1
     /**
@@ -99,6 +101,7 @@ public class Expense {
     }
     //@@author
 
+    //@@author mohammedhamdhan
     /**
      * Returns the amount of the expense.
      *
@@ -149,6 +152,7 @@ public class Expense {
     public void setDone(Boolean isDone) {
         this.isDone = isDone;
     }
+    //@@author
 
     //@@author matthewyeo1
     /**

@@ -322,59 +322,105 @@ class ExpenseCommandTest {
 
     @Test
     void testShowCategorySummary() {
+        provideInput("\n"); // Initialize expenseCommand
+        
         // Add expenses with more explicit category indicators
         budgetManager.addExpense(new Expense("Lunch", "restaurant food", "01-01-2025", 25.50));
         budgetManager.addExpense(new Expense("T-shirt", "clothes shopping", "02-01-2025", 35.00));
         budgetManager.addExpense(new Expense("Movie ticket", "entertainment movie cinema", "03-01-2025", 15.00));
 
-        // First provideInput with answer for visualization prompt ('n' for no)
-        provideInput("n\n");
+        // Run the category summary with visualization disabled
+        expenseCommand.showExpenseSummary("summary/BY-CATEGORY/N");
 
-        // Run the category summary
-        expenseCommand.showCategorySummary();
-
-        // Get the output and print it for debugging
+        // Get the output and verify
         String output = outContent.toString();
-        System.err.println("CATEGORY SUMMARY OUTPUT:\n" + output);
         
         // Verify the output contains the summary title
         assertTrue(output.contains("Category-wise Expense Summary"), 
                    "Output should contain the summary title");
         
-        // More comprehensive checks for food-related terms
+        // Check for food-related terms
         assertTrue(
             output.contains("Food") || 
-            output.contains("Dining") || 
-            output.contains("restaurant") || 
-            output.contains("Restaurant") || 
-            output.contains("Meal") ||
-            output.contains("Lunch"),
+            output.contains("restaurant"),
             "Output should contain food-related category"
         );
         
-        // More comprehensive checks for shopping-related terms
+        // Check for shopping-related terms
         assertTrue(
             output.contains("Shopping") || 
-            output.contains("Clothing") || 
-            output.contains("clothes") || 
-            output.contains("T-shirt") || 
-            output.contains("Apparel"),
+            output.contains("clothes"),
             "Output should contain shopping-related category"
         );
         
-        // More comprehensive checks for entertainment-related terms
+        // Check for entertainment-related terms
         assertTrue(
             output.contains("Entertainment") || 
-            output.contains("Leisure") || 
-            output.contains("Recreation") || 
-            output.contains("movie") || 
-            output.contains("Movie") ||
-            output.contains("cinema") ||
-            output.contains("Cinema") ||
-            output.contains("Misc") ||  // Sometimes entertainment falls under misc
-            output.contains("Other"),   // Or other categories
+            output.contains("movie"),
             "Output should contain entertainment-related category"
         );
+    }
+
+    @Test
+    void testShowExpenseSummaryInvalidFormat() {
+        provideInput("\n"); // Initialize expenseCommand
+        expenseCommand.showExpenseSummary("summary/invalid");
+        String output = outContent.toString();
+        assertTrue(output.contains("Invalid format. Usage: summary/BY-MONTH/N or BY-CATEGORY/Y or N"), 
+            "Should show correct invalid format message");
+    }
+
+    @Test
+    void testShowExpenseSummaryByMonthWithY() {
+        provideInput("\n"); // Initialize expenseCommand
+        expenseCommand.showExpenseSummary("summary/BY-MONTH/Y");
+        String output = outContent.toString();
+        assertTrue(output.contains("Invalid format. BY-MONTH view only supports N option (no visualization)"), 
+            "Should reject BY-MONTH with Y option");
+    }
+
+    @Test
+    void testShowExpenseSummaryInvalidViewType() {
+        provideInput("\n"); // Initialize expenseCommand
+        expenseCommand.showExpenseSummary("summary/INVALID/Y");
+        String output = outContent.toString();
+        assertTrue(output.contains("Invalid view type"), "Should show invalid view type message");
+    }
+
+    @Test
+    void testShowExpenseSummaryInvalidVisualization() {
+        provideInput("\n"); // Initialize expenseCommand
+        expenseCommand.showExpenseSummary("summary/BY-CATEGORY/X");
+        String output = outContent.toString();
+        assertTrue(output.contains("Invalid visualization choice"), "Should show invalid visualization choice message");
+    }
+
+    @Test
+    void testMonthlyExpenseSummary() {
+        provideInput("\n"); // Initialize expenseCommand
+        
+        // Add expenses from different months
+        budgetManager.addExpense(new Expense("January Expense", "first month", "15-01-2025", 100.00));
+        budgetManager.addExpense(new Expense("February Expense", "second month", "15-02-2025", 200.00));
+
+        // Run the monthly summary
+        expenseCommand.showExpenseSummary("summary/BY-MONTH/N");
+
+        // Verify output shows both months with correct totals
+        String output = outContent.toString();
+        assertTrue(output.contains("Monthly Expense Summary"));
+        assertTrue(output.contains("01-2025")); // January
+        assertTrue(output.contains("02-2025")); // February
+        assertTrue(output.contains("$100.00")); // January amount
+        assertTrue(output.contains("$200.00")); // February amount
+    }
+
+    @Test
+    void testShowExpenseSummaryEmptyExpenses() {
+        provideInput("\n"); // Initialize expenseCommand
+        expenseCommand.showExpenseSummary("summary/BY-MONTH/N");
+        String output = outContent.toString();
+        assertTrue(output.contains("No expenses found"), "Should show no expenses message");
     }
 
     @Test
@@ -408,35 +454,12 @@ class ExpenseCommandTest {
 
     @Test
     void testShowExpenseSummaryMenu() {
-        // Test the summary menu with option 3 (Cancel)
-        provideInput("3\n");
-        expenseCommand.showExpenseSummary();
-
+        provideInput("\n"); // Initialize expenseCommand
+        // Test the summary command with invalid format
+        expenseCommand.showExpenseSummary("summary");
         String output = outContent.toString();
-        assertTrue(output.contains("Choose summary view:"));
-        assertTrue(output.contains("1. Monthly Summary"));
-        assertTrue(output.contains("2. Category-wise Summary"));
-        assertTrue(output.contains("3. Cancel"));
-    }
-
-    @Test
-    void testMonthlyExpenseSummary() {
-        // Add expenses from different months
-        budgetManager.addExpense(new Expense("January Expense", "first month", "15-01-2025", 100.00));
-        budgetManager.addExpense(new Expense("February Expense", "second month", "15-02-2025", 200.00));
-
-        provideInput("");
-
-        // Run the monthly summary
-        expenseCommand.showMonthlySummary();
-
-        // Verify output shows both months with correct totals
-        String output = outContent.toString();
-        assertTrue(output.contains("Monthly Expense Summary"));
-        assertTrue(output.contains("01-2025")); // January
-        assertTrue(output.contains("02-2025")); // February
-        assertTrue(output.contains("$100.00")); // January amount
-        assertTrue(output.contains("$200.00")); // February amount
+        assertTrue(output.contains("Invalid format. Usage: summary/BY-MONTH/N or BY-CATEGORY/Y or N"), 
+            "Should show invalid format message");
     }
 
     @Test

@@ -2,19 +2,23 @@
 package seedu.duke.commands;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -22,10 +26,10 @@ import javax.swing.SwingConstants;
 import org.knowm.xchart.AnnotationTextPanel;
 import org.knowm.xchart.PieChart;
 import org.knowm.xchart.PieChartBuilder;
-import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.style.PieStyler.LabelType;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.Styler.ChartTheme;
+import org.knowm.xchart.XChartPanel;
 
 import seedu.duke.currency.Currency;
 import seedu.duke.expense.BudgetManager;
@@ -39,6 +43,8 @@ import seedu.duke.summary.ExpenseClassifier;
  * Handles expense-related commands entered by the user.
  */
 public class ExpenseCommand {
+    private static final List<JFrame> activeChartWindows = new ArrayList<>();
+
     private BudgetManager budgetManager;
     private Scanner scanner;
     private GroupManager groupManager;
@@ -56,7 +62,31 @@ public class ExpenseCommand {
         this.budgetManager = budgetManager;
         this.scanner = scanner;
         this.currency = currency;
+        initializeVisualizationCleanup();
     }
+
+    /**
+     * Closes all active chart windows.
+     */
+    private static void closeAllChartWindows() {
+        for (JFrame window : activeChartWindows) {
+            if (window != null && window.isDisplayable()) {
+                window.dispose();
+            }
+        }
+        activeChartWindows.clear();
+    }
+
+    /**
+     * Initializes the automatic cleanup of visualization windows.
+     * This should be called when the ExpenseCommand is constructed.
+     */
+    private void initializeVisualizationCleanup() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            closeAllChartWindows();
+        }));
+    }
+
     //@@author
 
     //@@author matthewyeo1
@@ -472,28 +502,47 @@ public class ExpenseCommand {
 
     //@@author mohammedhamdhan
     /**
-     * Shows the expense summary in different views.
+     * Shows the expense summary based on the provided input format.
+     * Format: summary/BY-MONTH/N or BY-CATEGORY/Y or N
+     *
+     * @param userInput The command input from the user
      */
-    public void showExpenseSummary() {
-        System.out.println("Choose summary view:");
-        System.out.println("1. Monthly Summary");
-        System.out.println("2. Category-wise Summary");
-        System.out.println("3. Cancel");
-        
-        String choice = scanner.nextLine().trim();
-        
-        switch (choice) {
-        case "1":
-            showMonthlySummary();
-            break;
-        case "2":
-            showCategorySummary();
-            break;
-        case "3":
-            return;
-        default:
-            System.out.println("Invalid choice. Please select 1, 2, or 3.");
-            break;
+    public void showExpenseSummary(String userInput) {
+        try {
+            String[] parts = userInput.split("/", 3);
+            
+            if (parts.length < 3 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
+                System.out.println("Invalid format. Usage: summary/BY-MONTH/N or BY-CATEGORY/Y or N");
+                return;
+            }
+
+            String viewType = parts[1].trim().toUpperCase();
+            String showChart = parts[2].trim().toUpperCase();
+
+            // Special handling for BY-MONTH - only allow N
+            if (viewType.equals("BY-MONTH") && !showChart.equals("N")) {
+                System.out.println("Invalid format. BY-MONTH view only supports N option (no visualization).");
+                return;
+            }
+
+            if (!showChart.equals("Y") && !showChart.equals("N")) {
+                System.out.println("Invalid visualization choice. Please enter Y or N.");
+                return;
+            }
+
+            switch (viewType) {
+            case "BY-MONTH":
+                showMonthlySummary();
+                break;
+            case "BY-CATEGORY":
+                showCategorySummary(showChart.equals("Y"));
+                break;
+            default:
+                System.out.println("Invalid view type. Please use BY-MONTH or BY-CATEGORY.");
+                break;
+            }
+        } catch (Exception e) {
+            System.out.println("Error processing summary command: " + e.getMessage());
         }
     }
 
@@ -548,9 +597,11 @@ public class ExpenseCommand {
     }
 
     /**
-     * Shows a category-wise summary of expenses with visualization.
+     * Shows a category-wise summary of expenses with optional visualization.
+     * 
+     * @param showVisualization Whether to show the pie chart visualization
      */
-    public void showCategorySummary() {
+    public void showCategorySummary(boolean showVisualization) {
         List<Expense> expenses = budgetManager.getAllExpenses();
         assert expenses != null : "Expenses list should not be null";
         
@@ -585,66 +636,126 @@ public class ExpenseCommand {
             }
         }
         
-        // Ask user if they want to see the chart visualization
-        System.out.println("\nDo you want to see a pie chart visualization? (y/n)");
-        String response = scanner.nextLine().trim().toLowerCase();
-        
-        if (response.equals("y")) {
+        if (showVisualization && !categoryNames.isEmpty()) {
             showPieChart(categoryNames, categoryValues);
         }
     }
 
     /**
      * Displays a pie chart of expenses by category using XChart.
-     * 
-     * @param categoryNames The list of category names
-     * @param categoryValues The list of category values (total expense amounts)
      */
     private void showPieChart(List<String> categoryNames, List<Number> categoryValues) {
-        // Create Chart
+        assert categoryNames != null && categoryValues != null : "Category data cannot be null";
+        assert categoryNames.size() == categoryValues.size() : "Category names and values must have same size";
+        assert !categoryNames.isEmpty() : "Cannot create pie chart with no data";
+
+        // Close any existing chart windows
+        closeAllChartWindows();
+
+        // Create Chart with specific dimensions
         PieChart chart = new PieChartBuilder()
-                .width(800)
-                .height(600)
+                .width(1024)
+                .height(768)
                 .title("Expenses by Category")
                 .theme(ChartTheme.GGPlot2)
                 .build();
-        
-        // Customize Chart
-        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideE);
-        chart.getStyler().setLegendVisible(true);
-        chart.getStyler().setAnnotationTextPanelPadding(1);
-        chart.getStyler().setPlotContentSize(0.7);
-        chart.getStyler().setDecimalPattern("#,###.##");
-        chart.getStyler().setLabelsVisible(true);
-        chart.getStyler().setLabelType(LabelType.Percentage); // Show percentages on pie slices
-        
+
+        // Calculate total for percentage calculations
+        double total = categoryValues.stream()
+                .mapToDouble(num -> num.doubleValue())
+                .sum();
+        assert total > 0 : "Total expenses must be greater than 0";
+
+        // Customize Chart styling
+        chart.getStyler()
+                .setLegendPosition(Styler.LegendPosition.OutsideE)
+                .setLegendVisible(true)
+                .setAnnotationTextPanelPadding(8)
+                .setPlotContentSize(0.7)  // Ensure pie chart is a complete circle
+                .setDecimalPattern("#,###.##")
+                .setPlotBackgroundColor(Color.WHITE)
+                .setChartBackgroundColor(Color.WHITE)
+                .setToolTipsEnabled(true)  // Enable tooltips on hover
+                .setToolTipsAlwaysVisible(false)
+                .setAntiAlias(true)
+                .setLegendBorderColor(Color.BLACK);
+
+        chart.getStyler().setLabelType(LabelType.Percentage);
+        chart.getStyler().setLabelsFontColor(Color.BLACK);
+        chart.getStyler().setLabelsDistance(1.15);
         // Add an annotation panel with summary info
-        chart.addAnnotation(
-            new AnnotationTextPanel("Expense Categories Summary", 40, 40, true));
-        
-        // Create custom series names with formatted amounts for legend
+        chart.addAnnotation(new AnnotationTextPanel(
+            String.format("Total Expenses: $%.2f", total), 40, 40, true));
+
+        // Create custom series names with formatted amounts and percentages
         for (int i = 0; i < categoryNames.size(); i++) {
             String name = categoryNames.get(i);
-            Number value = categoryValues.get(i);
-            // Format the series name to include the amount
-            String formattedName = String.format("%s: $%.2f", name, value.doubleValue());
-            chart.addSeries(formattedName, value);
+            double value = categoryValues.get(i).doubleValue();
+            double percentage = (value / total) * 100;
+
+            // Format with amount and percentage
+            String formattedName = String.format("%s: $%.2f (%.1f%%)", 
+                name, value, percentage);
+
+            // Add series with custom colors based on index
+            Color seriesColor = getColorForIndex(i);
+            chart.addSeries(formattedName, value)
+                .setFillColor(seriesColor);
         }
-        
-        // Display the chart in a Swing window using SwingWrapper
-        SwingWrapper<PieChart> wrapper = new SwingWrapper<>(chart);
-        JFrame frame = wrapper.displayChart();
+
+        // Display the chart in a custom frame
+        JFrame frame = new JFrame("Expense Summary");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+        frame.setLayout(new BorderLayout());
+
+        // Add the chart panel
+        XChartPanel<PieChart> chartPanel = new XChartPanel<>(chart);
+        frame.add(chartPanel, BorderLayout.CENTER);
+
         // Add instruction label
         JLabel label = new JLabel("Close this window to return to the application", SwingConstants.CENTER);
+        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(label, BorderLayout.SOUTH);
-        
-        // Resize and center
+
+        // Set frame properties
         frame.pack();
-        frame.setLocationRelativeTo(null);
-        
-        System.out.println("Displaying pie chart. Close the chart window to continue.");
+        frame.setLocationRelativeTo(null);  // Center on screen
+
+        // Add window listener to handle closing and cleanup
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                activeChartWindows.remove(frame);
+                frame.dispose();
+            }
+        });
+
+        // Track this window
+        activeChartWindows.add(frame);
+        frame.setVisible(true);
+
+        System.out.println("Displaying pie chart.");
+    }
+
+    /**
+     * Returns a color for the given index to ensure consistent coloring.
+     * @param index The index of the category
+     * @return A Color object for the pie chart segment
+     */
+    private Color getColorForIndex(int index) {
+        Color[] colors = {
+            new Color(70, 130, 180),   // Steel Blue
+            new Color(255, 99, 71),    // Tomato
+            new Color(50, 205, 50),    // Lime Green
+            new Color(255, 215, 0),    // Gold
+            new Color(147, 112, 219),  // Medium Purple
+            new Color(60, 179, 113),   // Medium Sea Green
+            new Color(238, 130, 238),  // Violet
+            new Color(30, 144, 255),   // Dodge Blue
+            new Color(255, 165, 0),    // Orange
+            new Color(106, 90, 205)    // Slate Blue
+        };
+        return colors[index % colors.length];
     }
 
     /**

@@ -3,7 +3,7 @@
 1.  Ensure you have Java 17 or above installed on your PC. **[Version 17 is preferred]**
 2.  You may download [here](https://se-education.org/guides/tutorials/javaInstallationMac.html) for Mac users and [here](https://www.oracle.com/sg/java/technologies/downloads/) for Windows users.
 3.  If you have it installed already, you may check it by running `java -version` in your terminal.
-4.  Download the latest `.jar` file from here. **[link will be updated once v1 is ready]**
+4.  Download the latest `.jar` file from here(https://github.com/AY2425S2-CS2113-F11-2/tp/releases/tag/v2.0).
 5.  Copy the file to the folder you want to use as the home folder for your **O\$P$ budget tracking app** 🙂.
 6.  Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar tp.jar` command to run the application.
 7.  Type the command in the command box and press **Enter** to execute it.
@@ -15,7 +15,6 @@
 ## Feature List
 
 These are all the available commands that the user can input while navigating through the O\$P\$ application.
-
 
 ### Admin:
 
@@ -57,15 +56,20 @@ places. The `amount` is capped at 50,000SGD or its equivalent if your expenses a
 
 - **Format:** `add/<title>/<date>/<amount>`
 
-- **Example Usage:** 
+- **Example Usage:**
+
 ```
 add/breakfast/23-08-2002/10.00
 ```
+
 - **Output:**
+
 ```
-Enter the description (press Enter to skip): 
+Enter the description (press Enter to skip):
 ```
+
 If you choose to add a description within 200 characters:
+
 ```
 Expense added successfully:
 Title: breakfast
@@ -73,7 +77,9 @@ Description: McDonald's
 Date: 23-08-2002
 Amount: 10.00
 ```
+
 If you skip the description part, the description field will be replaced with 'nil':
+
 ```
 Expense added successfully:
 Title: breakfast
@@ -81,6 +87,7 @@ Description: nil
 Date: 23-08-2002
 Amount: 10.00
 ```
+
 The entry will automatically be tagged with a unique expense ID.
 
 You are not allowed to add an expense containing a `title` of an
@@ -98,15 +105,19 @@ If you do not wish to change the `title`, `date` or/and `amount`, type `X` (both
 in the respective fields. Suppose you only want to change the `amount`:
 
 - **Example Usage:**
+
 ```
 edit/1/x/X/10
 ```
 
 - **Output:**
+
 ```
-Enter the description (press Enter to skip): 
+Enter the description (press Enter to skip):
 ```
+
 If you choose to change the description within 200 characters:
+
 ```
 Expense edited successfully:
 Title: breakfast
@@ -114,7 +125,9 @@ Description: Technoedge Canteen
 Date: 23-08-2002
 Amount: 10.00
 ```
+
 If you choose to keep the current description:
+
 ```
 Expense added successfully:
 Title: breakfast
@@ -122,6 +135,7 @@ Description: McDonald's
 Date: 23-08-2002
 Amount: 10.00
 ```
+
 ---
 
 #### Delete an expense: `delete`
@@ -135,11 +149,13 @@ Expense ID is 1-index, so to delete your second expense, type `delete/2`.
 - **Format:** `delete/<expense ID>`
 
 - **Example Usage:**
+
 ```
 delete/1
 ```
 
 - **Output:**
+
 ```
 Are you sure you want to delete this expense? (y/n)
 Title: breakfast
@@ -147,12 +163,16 @@ Description: Technoedge Canteen
 Date: 23-08-2002
 Amount: 10.00
 ```
+
 Typing 'n' (both lowercase and uppercase accepted) aborts the function.
+
 ```
 Deletion aborted.
 ```
+
 Typing 'y' (both lowercase and uppercase accepted) will display the title, description, date and amount of the to-be-deleted expense
 and execute the delete function.
+
 ```
 Updated owed amounts written to file successfully.
 Expense deleted successfully:
@@ -163,7 +183,6 @@ Amount: 10.00
 ```
 
 ---
-
 
 #### View all expenses: `list`
 
@@ -180,6 +199,7 @@ View all the expenses.
   Date: 01-01-2025
   Amount: $50.00
   ```
+
 ---
 
 #### View unsettled expenses: `list-unsettled`
@@ -245,7 +265,7 @@ User can unmark an expense that has been marked already.
   "Enter expense number to unmark"
   User input: 1
   ```
-  
+
 ---
 
 #### Find from previous expenses: `find`
@@ -258,6 +278,7 @@ User can find expenses that contain this keyword in the expense description
   "Enter keyword to search for expenses:"
   User input: taxi
   ```
+
 ---
 
 #### Change currency: `change-currency`
@@ -294,7 +315,9 @@ User can change the currency all expenses are in
 ---
 
 #### View balance in wallet: `balance`
+
 Shows total money to be paid and total money to pay.
+
 - **Format and Usage:** `balance`
 - **Output:**
   ```
@@ -303,6 +326,7 @@ Shows total money to be paid and total money to pay.
   Total number of unsettled expenses: <total number of unsettled expenses user has>
   Total amount owed: <total amount user owes>
   ```
+
 ---
 
 ## Manage Group Members:
@@ -499,6 +523,7 @@ Splits an expense among members of a group either equally or manually (via absol
   ```
 
 ---
+
 ### Select split method: `split`
 
 Allows an expense to be split among a certain group, either equally or via manually specified amounts/percentages.
@@ -521,47 +546,64 @@ Allows an expense to be split among a certain group, either equally or via manua
 
 ---
 
-
 ## Expense Analytics:
 
 #### View summary of expenses: `summary`
 
 Displays comprehensive analytics of your expenses through different visualization options. This command helps you track and analyze your spending patterns.
 
-- **Usage:** `summary`
+- **Format:** `summary/[BY-MONTH|BY-CATEGORY]/[Y|N]`
 
-- **Options:**
+  - First parameter must be either `BY-MONTH` or `BY-CATEGORY`
+  - Second parameter must be `Y` or `N` for visualization
+  - Note: `BY-MONTH` only supports `N` option (no visualization)
 
-  1. **Monthly Summary**
+- **Features:**
+
+  1. **Monthly Summary (`summary/BY-MONTH/N`)**
 
      - Shows total expenses for each month
-     - Displays a month-by-month comparison
-     - Includes percentage changes between months
+     - Lists all expenses within each month
+     - Displays expense count per month
+     - No visualization available for monthly view
 
-  2. **Category-wise Summary**
-
+  2. **Category-wise Summary (`summary/BY-CATEGORY/Y` or `summary/BY-CATEGORY/N`)**
      - Breaks down expenses into categories (Food, Travel, Entertainment, Shopping, Miscellaneous)
-     - Shows percentage distribution across categories
-     - Highlights your highest spending category
-     - Provides month-to-month category comparison
+     - Shows total amount and count for each category
+     - Optional pie chart visualization (Y/N)
+     - Displays percentage distribution across categories
 
-  3. **Back to main menu**
-     - Returns to the main interface
-
-- **Example output:**
+- **Example Usage:**
 
   ```
-  === Monthly Summary ===
-  January 2024: $1,200
-  - Food: 40%
-  - Travel: 25%
-  - Entertainment: 15%
-  - Shopping: 10%
-  - Miscellaneous: 10%
-
-  Total Expenses: $1,200
-  Highest Category: Food ($480)
+  summary/BY-CATEGORY/Y
   ```
+
+- **Example Output:**
+
+  ```
+  Category-wise Expense Summary:
+  ----------------------------
+  Food: $480.00 (4 expenses)
+  Travel: $300.00 (2 expenses)
+  Entertainment: $180.00 (3 expenses)
+  Shopping: $120.00 (1 expense)
+  Miscellaneous: $120.00 (2 expenses)
+
+  [Pie chart visualization will appear in a separate window]
+  ```
+  ![image](https://github.com/user-attachments/assets/5eb6f031-9924-43d2-ab6b-3540e15fcefb)
+
+
+- **Notes about Pie Chart Visualization:**
+  - Only available for category-wise summary
+  - Shows percentages to one decimal place
+  - For expenses with large value differences (e.g., $50,000 vs $10):
+    - Very small expenses may not be clearly visible on the chart
+    - Hover over segments to see exact values
+    - Legend shows both amount and percentage for each category
+  - Chart window will automatically close when program exits
+  - Close the chart window to return to the application
 
 ---
 
@@ -579,10 +621,12 @@ Allows the user to choose a method to view their expenses with the following opt
 - **Format:** `sort-list/N`, where N = 1,2,3 or 4
 
 - **Example Usage:**
+
 ```
 sort-list/1
 ```
-- **Output:** 
+
+- **Output:**
 
 ```
 Expenses sorted by title (ascending):
@@ -604,9 +648,11 @@ Amount: 10.00
 ```
 
 - **Example Usage:**
+
 ```
 sort-list/2
 ```
+
 - **Output:**
 
 ```
@@ -629,6 +675,7 @@ Amount: 10.00
 ```
 
 - **Example Usage:**
+
 ```
 sort-list/3
 ```
@@ -655,9 +702,11 @@ Amount: 90.00
 ```
 
 - **Example Usage:**
+
 ```
 sort-list/4
 ```
+
 - **Output:**
 
 ```
@@ -678,3 +727,32 @@ Description: yes
 Date: 01-01-2025
 Amount: 10.00
 ```
+
+## Command Summary
+
+Here's a quick reference for all available commands:
+
+| Command         | Format                                                  | Example Usage                          |
+| --------------- | ------------------------------------------------------- | -------------------------------------- |
+| Help            | `help`                                                  | `help`                                 |
+| Exit            | `exit`                                                  | `exit`                                 |
+| Add Expense     | `add/<title>/<date>/<amount>`                           | `add/lunch/01-01-2024/15.50`           |
+| Edit Expense    | `edit/<expense ID>/<new title>/<new date>/<new amount>` | `edit/1/dinner/x/20.00`                |
+| Delete Expense  | `delete/<expense ID>`                                   | `delete/1`                             |
+| List All        | `list`                                                  | `list`                                 |
+| List Unsettled  | `list-unsettled`                                        | `list-unsettled`                       |
+| List Settled    | `list-settled`                                          | `list-settled`                         |
+| Mark Settled    | `mark/<expense ID>`                                     | `mark/1`                               |
+| Unmark Settled  | `unmark/<expense ID>`                                   | `unmark/1`                             |
+| Find Expense    | `find`                                                  | `find` (then enter keyword)            |
+| Change Currency | `change-currency/<method>/<currency>[/<rate>]`          | `change-currency/1/USD/0.75`           |
+| View Balance    | `balance`                                               | `balance`                              |
+| Create Group    | `create-group`                                          | `create-group` (then follow prompts)   |
+| View Group      | `view-group`                                            | `view-group` (then enter group name)   |
+| Add Member      | `add-member/<member name>/<group-name>`                 | `add-member/John/Friends`              |
+| Remove Member   | `remove-member`                                         | `remove-member` (then follow prompts)  |
+| View All Groups | `my-groups`                                             | `my-groups`                            |
+| Remove Group    | `remove-group`                                          | `remove-group` (then enter group name) |
+| Split Expense   | `split`                                                 | `split` (then follow prompts)          |
+| View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`                |
+| Sort List       | `sort-list/<option>`                                    | `sort-list/1`                          |

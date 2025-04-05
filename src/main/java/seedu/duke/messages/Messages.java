@@ -1,7 +1,13 @@
 //@@author matthewyeo1
 package seedu.duke.messages;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JFrame;
+
 public class Messages {
+
+    private static final List<JFrame> activeChartWindows = new ArrayList<>();
 
     /**
      * System message upon program start-up.
@@ -108,21 +114,20 @@ public class Messages {
 
             add
               Description: Add a new expense
-              Usage: add
-              You will be prompted to enter:
+              Usage: add/<title>/<date>/<amount>
+              Format:
                 - Title: Short name for the expense
-                - Description: Detailed information about the expense
+                - Date: In DD-MM-YYYY format
                 - Amount: The monetary value (must be a positive number)
+              You will then be prompted to enter a description
 
             mark
               Description: Mark an expense as settled
-              Usage: mark
-              You will be prompted to enter: expense number
+              Usage: mark/<expense number>
 
             unmark
               Description: Unmark an expense to become an unsettled expense
-              Usage: unmark
-              You will be prompted to enter: expense number
+              Usage: unmark/<expense number>
 
             list
               Description: List all expenses
@@ -138,18 +143,13 @@ public class Messages {
 
             delete
               Description: Delete an existing expense
-              Usage: delete
-              You will be shown the list of expenses and prompted to enter
-              the index of the expense to delete
+              Usage: delete/<expense number>
 
             edit
               Description: Edit an existing expense
-              Usage: edit
-              You will be shown the list of expenses and prompted to enter:
-                - Index of the expense to edit
-                - New title (press Enter to keep current)
-                - New description (press Enter to keep current)
-                - New amount (press Enter to keep current)
+              Usage: edit/<expense number>/<new title>/<new date>/<new amount>
+              Note: Use 'x' to keep existing values for title, date, or amount
+              You will then be prompted to enter a new description
 
             balance
               Description: Show the balance overview (total expenses and amount owed)
@@ -171,11 +171,8 @@ public class Messages {
 
             add-member
               Description: Add a member to an existing group/ create a new group and add
-              Usage: add-member
-              You will be prompted to enter:
-                - Enter name of new member
-                - Enter name group to add to
-                    If the group exists, adds to group. Else prompts the user to create a new group first
+              Usage: add-member /<member name> /<group-name>
+                -If the group exists, adds to group. Else prompts the user to create a new group first
 
             remove-group
               Description: Remove a member from a group
@@ -185,9 +182,8 @@ public class Messages {
                 - Enter group to remove member from
 
             my-groups
-              Description: View the members of a specific group
-              Usage: view-group
-              Shows all the members and groups
+              Description: View all groups and their members
+              Usage: my-groups
 
             split
               Description: Split an expense between the members of an existing group
@@ -198,48 +194,61 @@ public class Messages {
 
             summary
               Description: View expense summaries in different formats
-              Usage: summary
-              You will be prompted to choose:
-                - Monthly Summary: Shows total expenses and count per month
-                - Category-wise Summary: Shows total expenses and count per category
+              Usage: summary/[BY-MONTH|BY-CATEGORY]/[Y|N]
+              Format:
+                - First parameter must be either BY-MONTH or BY-CATEGORY
+                - Second parameter must be Y or N for visualization
+                Note: BY-MONTH only supports N option (no visualization)
 
             export
               Description: Export expense summaries to text files
               Usage: export
               You will be prompted to choose:
-                - Monthly Summary: Exports to monthly_summary.txt
-                - Category-wise Summary: Exports to category_summary.txt
+                1. Monthly Summary: Exports to monthly_summary.txt
+                2. Category-wise Summary: Exports to category_summary.txt
+                3. Back to main menu
 
             change-currency
               Description: Change all your expenses to a different currency
-              Usage: change-currency
-              You will be prompted to enter:
-                - Please enter a number
-              Enter 1 to enter your own exchange rate
-              Enter 2 to use an estimated exchange rate
-                - Please enter a currency to change to
-              Enter currency based on ISO 4217 standard (e.g., SGD, USD, JPY)
-                - Please input your exchange rate from USD to a new currency (if you picked 1)
-              Enter the exchange rate you'd like to use
+              Usage: change-currency/<method>/<currency>[/<rate>]
+              Format:
+                Method 1: change-currency/1/<currency>/<exchange rate>
+                Method 2: change-currency/2/<currency>
+              Note: Currency must be in ISO 4217 format (e.g., SGD, USD, JPY)
 
             sort-list
-              Description: Choose how you would like to view your expenses
-              Usage: sort-list N, where N is 1,2,3 or 4
-                - Sort expenses for viewing by:
-                [1] Title (ascending alphabetically)
-                [2] Title (descending alphabetically)
-                [3] Amount (ascending)
-                [4] Amount (descending)
-    
-              Enter 1 to show the expense of which the first letter of the title comes last lexicographically on top
-              Enter 2 to show the expense of which the first letter of the title comes first lexicographically on top
-              Enter 3 to show the expense with the smallest amount on top
-              Enter 4 to show the expense with the largest amount on top
+              Description: Sort expenses for viewing
+              Usage: sort-list/<option>
+              Options:
+                1: Sort by title (ascending alphabetically)
+                2: Sort by title (descending alphabetically)
+                3: Sort by amount (ascending)
+                4: Sort by amount (descending)
+
+            find
+              Description: Search for expenses by keyword
+              Usage: find
+              You will be prompted to enter a search keyword
 
             exit
               Description: Exit the program
               Usage: exit
             """);
+    }
+
+    private static void closeAllChartWindows() {
+        for (JFrame window : activeChartWindows) {
+            if (window != null && window.isDisplayable()) {
+                window.dispose();
+            }
+        }
+        activeChartWindows.clear();
+    }
+
+    private void initializeVisualizationCleanup() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            closeAllChartWindows();
+        }));
     }
 }
 //@@author

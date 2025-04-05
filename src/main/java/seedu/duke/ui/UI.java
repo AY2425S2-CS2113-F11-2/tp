@@ -4,14 +4,12 @@ package seedu.duke.ui;
 import java.util.Scanner;
 
 import seedu.duke.commands.Commands;
-
-import seedu.duke.currency.Currency;
-import seedu.duke.messages.Messages;
-
 import seedu.duke.commands.ExpenseCommand;
 import seedu.duke.commands.FriendsCommands;
 import seedu.duke.commands.SplitCommand;
+import seedu.duke.currency.Currency;
 import seedu.duke.expense.BudgetManager;
+import seedu.duke.messages.Messages;
 import seedu.duke.summary.ExpenseClassifier;
 
 /**
@@ -150,7 +148,7 @@ public class UI {
         } else if(command.startsWith(Commands.CHANGE_CURRENCY)){
             currency.changeCurrency(command);
         } else if (command.startsWith(Commands.SUMMARY)){
-            expenseCommand.showExpenseSummary();
+            expenseCommand.showExpenseSummary(command);
         } else if (command.equals(Commands.EXPORT)){
             expenseCommand.exportExpenseSummary();
         } else if (command.equals(Commands.FIND)){
