@@ -36,7 +36,8 @@ class ExpenseCommandTest {
     void setUp() {
         budgetManager = new BudgetManager();
         outContent = new ByteArrayOutputStream();
-
+        currency = new Currency(new Scanner(System.in), budgetManager);
+        expenseCommand = new ExpenseCommand(budgetManager, new Scanner(System.in), currency); // Initialize here
         System.setOut(new PrintStream(outContent));
     }
 
@@ -487,22 +488,22 @@ class ExpenseCommandTest {
     //@@author nandhananm7
     @Test
     void testFindExpenseFound() {
-        // Add two expenses. Only the second expense ("Cab Ride") should match the keyword "cab".
-        Expense expense1 = new Expense("Taxi", "from jb to singapore", "12-12-1327", 12.00);
-        Expense expense2 = new Expense("Cab Ride", "to airport", "15-10-2025", 20.00);
+        // Add the expense to the budget manager
+        Expense expense1 = new Expense("new groceries", "Updated description", "01-01-2025", 150.00);
         budgetManager.addExpense(expense1);
-        budgetManager.addExpense(expense2);
 
-        // Simulate user input: "cab"
-        provideInput("cab\n");
-        expenseCommand.findExpense();
+        expenseCommand = new ExpenseCommand(budgetManager, new Scanner(System.in), currency);
+        expenseCommand.findExpense("find /new groceries");
 
         String output = outContent.toString();
-        // Verify that the output indicates one matching expense and shows the details of "Cab Ride"
-        assertTrue(output.contains("Found 1 matching expense(s):"),
-                "Expected output to indicate 1 matching expense found");
-        assertTrue(output.contains("Cab Ride"), "Expected output to contain 'Cab Ride'");
+
+        assertTrue(output.contains("Found 1 matching expense(s):"));
+        assertTrue(output.contains("Title: new groceries"));
+        assertTrue(output.contains("Description: Updated description"));
+        assertTrue(output.contains("Date: 01-01-2025"));
+        assertTrue(output.contains("Amount: 150.00"));
     }
+
 
     @Test
     void testFindExpenseNoMatch() {
@@ -512,7 +513,7 @@ class ExpenseCommandTest {
 
         // Simulate user input: "bus"
         provideInput("bus\n");
-        expenseCommand.findExpense();
+        expenseCommand.findExpense("find /bus");
 
         String output = outContent.toString();
         // Verify that the output indicates no matching expenses were found for the keyword "bus"

@@ -39,6 +39,15 @@ public class GroupManager {
         return false;
     }
 
+    public boolean isMemberInGroup(String groupName, String memberName) {
+        for (Group group : groups) {
+            if (group.getName().equals(groupName)) {
+                return group.isMemberInGroup(memberName);
+            }
+        }
+        return false;
+    }
+
     public List<Friend> getGroupMembers(String groupName) {
         for (Group group : groups) {
             if (group.getName().equals(groupName)) {
@@ -54,7 +63,6 @@ public class GroupManager {
 
         if (removed) {
             saveGroups(); // Save changes after removal
-            System.out.println("Group '" + groupName + "' has been removed.");
         } else {
             messages.displayMissingGroupMessage();
         }

@@ -64,12 +64,22 @@ public class FriendsCommandTest {
     }
 
     @Test
+    void testCreateGroupWithDuplicateName() {
+        groupManager = new GroupManager();
+        groupManager.addFriendToGroup("TestGroup", new Friend("Alice", "TestGroup"));
+        friendsCommands = new FriendsCommands(groupManager);
+        friendsCommands.createGroup("create-group /TestGroup");
+
+        assertTrue(outContent.toString().contains("Group 'TestGroup' already exists."));
+    }
+
+    @Test
     void testViewGroupExistingGroup() {
         groupManager = new GroupManager();
         groupManager.addFriendToGroup("TestGroup", new Friend("Alice", "TestGroup"));
         provideInput("TestGroup\n");
         friendsCommands = new FriendsCommands(groupManager);
-        friendsCommands.viewGroup();
+        friendsCommands.viewGroup("view-group /TestGroup");
 
         assertTrue(outContent.toString().contains("Group: TestGroup"));
     }
@@ -77,13 +87,14 @@ public class FriendsCommandTest {
     @Test
     void testViewGroupNonExistentGroup() {
         groupManager = new GroupManager();
-        provideInput("NonExistingGroup\n");
         friendsCommands = new FriendsCommands(groupManager);
 
-        friendsCommands.viewGroup();
+        // Use the new single-line command format
+        friendsCommands.viewGroup("view-group /NonExistingGroup");
 
         assertTrue(outContent.toString().contains("Group not found"));
     }
+
 
     @Test
     void testViewAllGroupsWithGroups() {
@@ -101,44 +112,152 @@ public class FriendsCommandTest {
     void testAddMemberToExistingGroup() {
         groupManager = new GroupManager();
         groupManager.addFriendToGroup("TestGroup", new Friend("Alice", "TestGroup"));
-        provideInput("Bob\nTestGroup\n");
         friendsCommands = new FriendsCommands(groupManager);
-        friendsCommands.addMember();
+
+        friendsCommands.addMember("add-member /Bob /TestGroup");
 
         List<Friend> friends = groupManager.getGroupMembers("TestGroup");
         assertEquals(2, friends.size());
+        assertTrue(friends.stream().anyMatch(friend -> friend.getName().equals("Bob")));
     }
 
     @Test
     void testAddMemberToNonExistentGroupCreatesGroup() {
         groupManager = new GroupManager();
-        provideInput("Charlie\nNewGroup\ny\n");
         friendsCommands = new FriendsCommands(groupManager);
-        friendsCommands.addMember();
+
+        provideInput("y\n");
+
+        friendsCommands.addMember("add-member /Charlie /NewGroup");
 
         assertTrue(groupManager.groupExists("NewGroup"));
         List<Friend> friends = groupManager.getGroupMembers("NewGroup");
         assertEquals(1, friends.size());
+        assertTrue(friends.stream().anyMatch(friend -> friend.getName().equals("Charlie")));
     }
+
+
 
     @Test
     void testAddMemberToNonExistentGroupUserRejects() {
         groupManager = new GroupManager();
-        provideInput("Charlie\nNonExistingGroup\nno\n");
         friendsCommands = new FriendsCommands(groupManager);
-        friendsCommands.addMember();
+
+        provideInput("n\n");
+
+        friendsCommands.addMember("add-member /Charlie /NonExistingGroup");
 
         assertFalse(groupManager.groupExists("NonExistingGroup"));
-        assertTrue(outContent.toString().contains("Operation cancelled"));
+        assertTrue(outContent.toString().contains("Operation cancelled. Charlie was not added."));
     }
 
     @Test
     void testRemoveMemberFromNonExistentGroup() {
         groupManager = new GroupManager();
-        provideInput("Alice\nNonExistingGroup\n");
         friendsCommands = new FriendsCommands(groupManager);
-        friendsCommands.removeMember();
 
-        assertTrue(outContent.toString().contains("Group does not exist"));
+        friendsCommands.removeMember("remove-member /Alice /NonExistingGroup");
+
+        assertTrue(outContent.toString().contains("Alice is not in NonExistingGroup"));
     }
+
+    @Test
+    void testRemoveMemberFromExistingGroup() {
+        groupManager = new GroupManager();
+        groupManager.addFriendToGroup("TestGroup", new Friend("Alice", "TestGroup"));
+        friendsCommands = new FriendsCommands(groupManager);
+
+        provideInput("y\n");
+
+        friendsCommands.removeMember("remove-member /Alice /TestGroup");
+
+        List<Friend> friends = groupManager.getGroupMembers("TestGroup");
+        assertTrue(friends.isEmpty());
+        assertTrue(outContent.toString().contains("Alice has been removed from TestGroup"));
+    }
+
+
+    @Test
+    void testRemoveMemberNotPresentInGroup() {
+        groupManager = new GroupManager();
+        groupManager.addFriendToGroup("TestGroup", new Friend("Alice", "TestGroup"));
+        friendsCommands = new FriendsCommands(groupManager);
+
+        friendsCommands.removeMember("remove-member /Bob /TestGroup");
+
+        assertTrue(outContent.toString().contains("Bob is not in TestGroup"));
+    }
+
+    @Test
+    void testRemoveExistingGroup() {
+        groupManager = new GroupManager();
+        groupManager.addFriendToGroup("TestGroup", new Friend("Alice", "TestGroup"));
+        friendsCommands = new FriendsCommands(groupManager);
+
+        // Simulate user confirmation for removal
+        provideInput("y\n");
+
+        friendsCommands.removeGroup("remove-group /TestGroup");
+
+        assertFalse(groupManager.groupExists("TestGroup"));
+        assertTrue(outContent.toString().contains("Group TestGroup has been removed."));
+    }
+
+
+    @Test
+    void testRemoveNonExistentGroup() {
+        groupManager = new GroupManager();
+        friendsCommands = new FriendsCommands(groupManager);
+
+        friendsCommands.removeGroup("remove-group /NonExistingGroup");
+
+        assertTrue(outContent.toString().contains("Group: NonExistingGroup does not exist."));
+    }
+
+    @Test
+    void testAddDuplicateMemberToExistingGroup() {
+        groupManager = new GroupManager();
+        groupManager.addFriendToGroup("TestGroup", new Friend("Alice", "TestGroup"));
+        friendsCommands = new FriendsCommands(groupManager);
+
+        friendsCommands.addMember("add-member /Alice /TestGroup");
+
+        assertTrue(outContent.toString().contains("Member 'Alice' already exists in group 'TestGroup'."));
+    }
+
+    @Test
+    void testAddMemberWithInvalidCharacters() {
+        groupManager = new GroupManager();
+        friendsCommands = new FriendsCommands(groupManager);
+
+        friendsCommands.addMember("add-member /@lice /NewGroup");
+
+        assertFalse(groupManager.groupExists("NewGroup"));
+        assertTrue(outContent.toString().contains("Invalid member name. " +
+                "Name cannot be empty or contain special characters."));
+    }
+
+    @Test
+    void testCreateGroupWithInvalidCharacters() {
+        groupManager = new GroupManager();
+        friendsCommands = new FriendsCommands(groupManager);
+
+        friendsCommands.createGroup("create-group /New@Group");
+
+        assertFalse(groupManager.groupExists("New@Group"));
+        assertTrue(outContent.toString().contains("Invalid group name. " +
+                "Name cannot be empty or contain special characters."));
+    }
+
+    @Test
+    void testViewAllGroupsNoGroupsExist() {
+        groupManager = new GroupManager();
+        friendsCommands = new FriendsCommands(groupManager);
+
+        friendsCommands.viewAllGroups();
+
+        assertTrue(outContent.toString().contains("You have no groups."));
+    }
+
+
 }

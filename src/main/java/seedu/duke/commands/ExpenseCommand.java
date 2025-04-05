@@ -852,9 +852,14 @@ public class ExpenseCommand {
     /**
      * Searches for expenses containing the given keyword in the title or description.
      */
-    public void findExpense() {
-        System.out.println("Enter keyword to search for expenses:");
-        String keyword = scanner.nextLine().trim();
+    public void findExpense(String command) {
+        String[] parts = command.trim().split(" */", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            System.out.println("Invalid command. Please use the format: find /<keyword>");
+            return;
+        }
+
+        String keyword = parts[1].trim();
 
         if (keyword.isEmpty()) {
             System.out.println("Keyword cannot be empty.");
@@ -871,7 +876,7 @@ public class ExpenseCommand {
         String lowerKeyword = keyword.toLowerCase();
 
         for (Expense expense : expenses) {
-            // Check if title or description contains the keyword
+
             if ((expense.getTitle() != null && expense.getTitle().toLowerCase().contains(lowerKeyword)) ||
                     (expense.getDescription() != null &&
                             expense.getDescription().toLowerCase().contains(lowerKeyword))) {
@@ -883,12 +888,14 @@ public class ExpenseCommand {
             System.out.println("No matching expenses found for keyword: " + keyword);
         } else {
             System.out.println("Found " + matchingExpenses.size() + " matching expense(s):");
-            for (int i = 0; i < matchingExpenses.size(); i++) {
-                System.out.println(matchingExpenses.get(i));
+            for (Expense expense : matchingExpenses) {
+                System.out.println(expense);
                 System.out.println();
             }
         }
     }
+
+
     //@@author
 
     //@@author matthewyeo1

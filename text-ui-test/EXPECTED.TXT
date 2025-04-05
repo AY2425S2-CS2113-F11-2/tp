@@ -256,7 +256,12 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Found 1 matching expense(s):
+Title: new groceries
+Description: Updated description
+Date: 01-01-2025
+Amount: 150.00
+
 
 ________________________________________________________________________________
 

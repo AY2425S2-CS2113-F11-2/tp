@@ -30,6 +30,24 @@ public class Group {
         return false; // Friend not found
     }
 
+    public boolean hasFriend(String friendName) {
+        for (Friend friend : friends) {
+            if (friend.getName().equals(friendName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isMemberInGroup(String memberName) {
+        for (Friend friend : friends) {
+            if (friend.getName().equals(memberName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<Friend> getFriends() {
         return friends;
     }
