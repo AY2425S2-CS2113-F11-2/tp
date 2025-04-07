@@ -240,9 +240,7 @@ public class FriendsCommands {
                             System.out.println("Warning: Unable to parse amount in record: " + line);
                         }
                     }
-                }
-                // Handle new format: detailed transaction record
-                else if (line.startsWith("Transaction: Expense:")) {
+                } else if (line.startsWith("Transaction: Expense:")) {
                     try {
                         int memberIdx = line.indexOf("Member: ");
                         int owesIdx = line.indexOf(" owes:");

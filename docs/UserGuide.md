@@ -47,8 +47,8 @@ the `add` keyword, followed by the `title`, `date` and `amount`, each separated 
 
 After that, you will be prompted to optionally add a `description` of maximum 200 characters.
 Please ensure the description is accurate and simple, because the summary analytics by category uses description to classify expenses.
-Please ensure the description is not wordy and it is to the point, to ensure your expenses are accurately classified. 
-Please also ensure that the description does not contain conflicting categories. 
+Please ensure the description is not wordy and it is to the point, to ensure your expenses are accurately classified.
+Please also ensure that the description does not contain conflicting categories.
 
 - **Example Usage:**
 
@@ -328,7 +328,7 @@ After exchange, the amount will be rounded off to 2dp.
 Shows total money the user needs to pay.
 
 - **Format and Usage:** `balance`
-- 
+-
 - **Output:**
   ```
   Balance Overview
@@ -354,7 +354,7 @@ If you would like to include yourself in the group, please add your name as well
   Who would you like to add to the group? (Type 'done' to finish)
   Enter name: name1
   Enter name: name2
-  Enter name: done 
+  Enter name: done
   Group created successfully!
   ```
 
@@ -388,15 +388,18 @@ Adds a user to a group.
 
 - **Output:**
   If the group exists, then adds to the existing group.
+
   ```
   hij has been added to test
   ```
-  
+
   If the group does not exist, the user is prompted to create the group first.
+
   ```
   Group does not exist. Would you like to create this group first? (y/n): y
   Group test1 has been created and hij has been added.
   ```
+
 ---
 
 #### Remove Friend from a group: `remove-member`
@@ -412,6 +415,7 @@ Removes a member from a group
   Are you sure you want to remove hij from test1? (y/n): y
   hij has been removed from test1
   ```
+
 ---
 
 #### View all groups created by user: `my-groups`
@@ -439,6 +443,7 @@ Shows all the groups that the user has created.
   - mango
   - carrot
   ```
+
 ---
 
 #### Removes an existing group: `remove-group`
@@ -453,6 +458,7 @@ Removes an entire group.
   Are you sure you want to remove the group test1? (y/n): y
   Group test1 has been removed.
   ```
+
 ---
 
 ### Manage Payments:
@@ -606,8 +612,8 @@ Displays comprehensive analytics of your expenses through different visualizatio
 
   [Pie chart visualization will appear in a separate window]
   ```
-  ![image](https://github.com/user-attachments/assets/5eb6f031-9924-43d2-ab6b-3540e15fcefb)
 
+  ![image](https://github.com/user-attachments/assets/5eb6f031-9924-43d2-ab6b-3540e15fcefb)
 
 - **Notes about Pie Chart Visualization:**
   - Only available for category-wise summary
@@ -616,6 +622,7 @@ Displays comprehensive analytics of your expenses through different visualizatio
     - Very small expenses may not be clearly visible on the chart
     - Hover over segments to see exact values
     - Legend shows both amount and percentage for each category
+  - **IMPORTANT**: You must close the pie chart window before exiting the program. Due to a limitation in the visualization API, if you do not close the window, the program will not terminate properly.
   - Chart window will automatically close when program exits
   - Close the chart window to return to the application
 
@@ -768,5 +775,6 @@ Here's a quick reference for all available commands:
 | View All Groups | `my-groups`                                             | `my-groups`                            |
 | Remove Group    | `remove-group`                                          | `remove-group` (then enter group name) |
 | Split Expense   | `split`                                                 | `split` (then follow prompts)          |
-| View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`                |
+| View Summary    | `summary/<BY-MONTH\|BY-CATEGORY>/<Y\|N>`                | `summary/BY-CATEGORY/Y`                |
+| Export Summary  | `export/<monthly\|category wise>`                       | `export/monthly`                       |
 | Sort List       | `sort-list/<option>`                                    | `sort-list/1`                          |
