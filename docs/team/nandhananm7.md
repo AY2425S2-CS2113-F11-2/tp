@@ -35,8 +35,8 @@ Here is the list of features implemented:
 
 #### 4. Find/Search command for the expenses
 
-- **Function**: 
-- **Justification**: 
+- **Function**: Finds the expense based on the keyword
+- **Justification**: Users can quickly view relevant expenses at one go.
 
 ---
 
@@ -65,6 +65,7 @@ Here is the list of features implemented:
 #### Documented Sections
 - **Documentation in Section 3**:
     - Section 3.1.2 `Group Storage Class`
+    - Section 3.1.4 `ExpenseCommands Classes`
     - Section 3.1.5 `FriendsCommands class`
     - Section 3.1.9 `Friend Class`
     - Section 3.2.0 `Group Class`
@@ -83,8 +84,6 @@ Here is the list of features implemented:
 
 ### Review/Mentoring Contributions:
 **Bug Finding and Suggestions:** Periodic code review of teammates PRs as well as expanding coverage of JUnit Tests
-
-**Relevant Pull Requests:**
 
 ---
 
