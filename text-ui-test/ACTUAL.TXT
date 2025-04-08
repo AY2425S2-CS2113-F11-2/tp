@@ -42,6 +42,7 @@ list-settled
   Description: List all settled expenses
   Usage: list-settled
 
+
 list-unsettled
   Description: List all unsettled expenses
   Usage: list-unsettled
@@ -56,34 +57,36 @@ edit
   Note: Use 'x' to keep existing values for title, date, amount or category
 
 balance
-  Description: Show the balance overview (total expenses and amount owed)
+  Description: Show the balance overview (total unsettled expenses)
   Usage: balance
 
 create-group
   Description: Create a new group and add members to it
-  Usage: create-group
+  Usage: create-group/<group-name>
   You will be prompted to:
-    - Enter group name
     - Enter members to add one by one
     - Enter done to create and save the group
 
 view-group
   Description: View the members of a specific group
-  Usage: view-group
-  You will be prompted to enter:
-    - Enter group name
+  Usage: view-group/<group-name>
+
+view-member
+  Description: View a specific member and their past transaction history
+  Usage: view-member/<group-name>/<member-name>
 
 add-member
   Description: Add a member to an existing group/ create a new group and add
-  Usage: add-member /<member name> /<group-name>
+  Usage: add-member/<member-name>/<group-name>
     -If the group exists, adds to group. Else prompts the user to create a new group first
 
 remove-group
+  Description: Remove an entire group
+  Usage: remove-group/<group-name>
+
+remove-member
   Description: Remove a member from a group
-  Usage: remove-group
-  You will be prompted to enter:
-    - Enter name of member to remove
-    - Enter group to remove member from
+  Usage: remove-member/<member-name>/<group-name>
 
 my-groups
   Description: View all groups and their members
@@ -91,8 +94,8 @@ my-groups
 
 split
   Description: Split an expense between the members of an existing group
-  Usage: split/<equal | assign>/<expense index>/<group name>
-    -If assign, you will be prompted for
+  Usage: split/<equal|assign>/<expense index>/<group name>
+    -If assign, you will be prompted to choose between percentage or absolute value.
 
 summary
   Description: View expense summaries in different formats
@@ -105,7 +108,6 @@ summary
 export
   Description: Export expense summaries to text files
   Usage: export/<monthly | category-wise>
-
 
 change-currency
   Description: Change all your expenses to a different currency
@@ -126,8 +128,7 @@ sort-list
 
 find
   Description: Search for expenses by keyword
-  Usage: find
-  You will be prompted to enter a search keyword
+  Usage: find/keyword
 
 exit
   Description: Exit the program
@@ -136,151 +137,104 @@ exit
 
 ________________________________________________________________________________
 
-Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
+Enter command: Expense added successfully:
+Title: groceries
+Category: Food
+Date: 01-01-2025
+Amount: 100.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense added successfully:
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense added successfully:
+Title: lunch
+Category: Food
+Date: 03-01-2025
+Amount: 20.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
+Enter command: All expenses are in SGD
+List of Expenses:
+Expense #1
+Title: groceries
+Category: Food
+Date: 01-01-2025
+Amount: 100.00
+
+Expense #2
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
+
+Expense #3
+Title: lunch
+Category: Food
+Date: 03-01-2025
+Amount: 20.00
+
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Are you sure you want to delete this expense? (y/n)
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
+Owed amounts file not found. No amounts to update.
+Expense deleted successfully:
+Title: dinner
+Category: Food
+Date: 02-01-2025
+Amount: 50.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense edited successfully:
+Title: new groceries
+Category: Food
+Date: 01-01-2025
+Amount: 150.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
+Enter command: Expense 1 successfully marked!
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
+Enter command: Expense 1 successfully unmarked!
 
 ________________________________________________________________________________
 
-Enter command: Error verifying checksum: expenses.chk
-Tampering detected in expenses file. Deleting file...
-Expenses file deleted successfully.
-Error loading expenses: expenses.txt
-No expenses found in the list.
+Enter command: Found 1 matching expense(s):
+Title: new groceries
+Category: Food
+Date: 01-01-2025
+Amount: 150.00
+
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Error verifying checksum: expenses.txt
-Tampering detected in expenses file. Deleting file...
-Expenses file does not exist.
-Error loading expenses: expenses.txt
-No expenses found. The file may have been tampered with and cleared.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid format. Usage: edit/<expense ID>/<new title>/<new category>/<new date>/<new amount>
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Please enter a valid expense number.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Please enter a valid expense number.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: No expenses found.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid format. Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: No expenses to export!
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
+Enter command: Monthly summary exported to monthly_summary.txt
 
 ________________________________________________________________________________
 
 Enter command: Balance Overview
 ----------------
-Total number of unsettled expenses: 0
-Total unsettled amount: 0.00
+Total number of unsettled expenses: 2
+Total unsettled amount: 170.00
 
 ________________________________________________________________________________
 
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid format. Usage: change-currency/1/<currency to change to>/<exchange rate>
-OR change-currency/2/<currency to change to>
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
+Enter command: Currency successfully changed to EUR
 
 ________________________________________________________________________________
 
@@ -321,6 +275,7 @@ list-settled
   Description: List all settled expenses
   Usage: list-settled
 
+
 list-unsettled
   Description: List all unsettled expenses
   Usage: list-unsettled
@@ -335,34 +290,36 @@ edit
   Note: Use 'x' to keep existing values for title, date, amount or category
 
 balance
-  Description: Show the balance overview (total expenses and amount owed)
+  Description: Show the balance overview (total unsettled expenses)
   Usage: balance
 
 create-group
   Description: Create a new group and add members to it
-  Usage: create-group
+  Usage: create-group/<group-name>
   You will be prompted to:
-    - Enter group name
     - Enter members to add one by one
     - Enter done to create and save the group
 
 view-group
   Description: View the members of a specific group
-  Usage: view-group
-  You will be prompted to enter:
-    - Enter group name
+  Usage: view-group/<group-name>
+
+view-member
+  Description: View a specific member and their past transaction history
+  Usage: view-member/<group-name>/<member-name>
 
 add-member
   Description: Add a member to an existing group/ create a new group and add
-  Usage: add-member /<member name> /<group-name>
+  Usage: add-member/<member-name>/<group-name>
     -If the group exists, adds to group. Else prompts the user to create a new group first
 
 remove-group
+  Description: Remove an entire group
+  Usage: remove-group/<group-name>
+
+remove-member
   Description: Remove a member from a group
-  Usage: remove-group
-  You will be prompted to enter:
-    - Enter name of member to remove
-    - Enter group to remove member from
+  Usage: remove-member/<member-name>/<group-name>
 
 my-groups
   Description: View all groups and their members
@@ -370,8 +327,8 @@ my-groups
 
 split
   Description: Split an expense between the members of an existing group
-  Usage: split/<equal | assign>/<expense index>/<group name>
-    -If assign, you will be prompted for
+  Usage: split/<equal|assign>/<expense index>/<group name>
+    -If assign, you will be prompted to choose between percentage or absolute value.
 
 summary
   Description: View expense summaries in different formats
@@ -384,7 +341,6 @@ summary
 export
   Description: Export expense summaries to text files
   Usage: export/<monthly | category-wise>
-
 
 change-currency
   Description: Change all your expenses to a different currency
@@ -405,17 +361,12 @@ sort-list
 
 find
   Description: Search for expenses by keyword
-  Usage: find
-  You will be prompted to enter a search keyword
+  Usage: find/keyword
 
 exit
   Description: Exit the program
   Usage: exit
 
-
-________________________________________________________________________________
-
-Enter command: Invalid command.
 
 ________________________________________________________________________________
 

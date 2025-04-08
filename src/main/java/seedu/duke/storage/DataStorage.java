@@ -47,12 +47,12 @@ public class DataStorage {
             ensureFileExists();
             PrintWriter writer = new PrintWriter(dataFile);
             for (Expense expense : expenses) {
-                writer.println(expense.getTitle() + "|" + 
-                             expense.getCategory() + "|" + 
-                             expense.getDate() + "|" + 
-                             expense.getAmount() + "|" + 
-                             expense.getDone() + "|" + 
-                             expense.getGroupName());
+                writer.println(expense.getTitle() + "|" +
+                        expense.getCategory() + "|" +
+                        expense.getDate() + "|" +
+                        expense.getAmount() + "|" +
+                        expense.getDone() + "|" +
+                        expense.getGroupName());
             }
             writer.close();
             return true;
@@ -74,17 +74,17 @@ public class DataStorage {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split("\\|");
-                if (parts.length >= 4) {
+                if (parts.length >= 6) {
                     String title = parts[0];
                     Categories category = Categories.valueOf(parts[1]);
                     String date = parts[2];
                     double amount = Double.parseDouble(parts[3]);
-                    //boolean isDone = Boolean.parseBoolean(parts[4]);
-                    //String groupName = parts[5];
-                    
+                    boolean isDone = Boolean.parseBoolean(parts[4]);
+                    String groupName = parts[5];
+
                     Expense expense = new Expense(title, category, date, amount);
-                    //expense.setDone(isDone);
-                    //expense.setGroupName(groupName);
+                    expense.setDone(isDone);
+                    expense.setGroupName(groupName);
                     expenses.add(expense);
                 }
             }

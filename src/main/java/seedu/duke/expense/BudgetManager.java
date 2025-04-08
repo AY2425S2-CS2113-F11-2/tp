@@ -3,7 +3,6 @@ package seedu.duke.expense;
 import java.util.ArrayList;
 import java.util.List;
 
-//import seedu.duke.commands.ExpenseStorage;
 import seedu.duke.messages.Messages;
 import seedu.duke.storage.DataStorage;
 import seedu.duke.summary.Categories;
@@ -33,7 +32,7 @@ public class BudgetManager {
             throw new IllegalArgumentException("Expense and category cannot be null");
         }
         expenses.add(expense);
-        //DataStorage.saveExpenses(expenses);
+        DataStorage.saveExpenses(expenses);
     }
 
     /**
@@ -69,7 +68,7 @@ public class BudgetManager {
             throw new IndexOutOfBoundsException(messages.invalidIndexMessage());
         }
         Expense expense = expenses.get(index);
-        
+
         // Only update fields that are not null (for title, category, date) or not negative (for amount)
         if (title != null) {
             expense.setTitle(title);
@@ -83,7 +82,7 @@ public class BudgetManager {
         if (amount >= 0) {
             expense.setAmount(amount);
         }
-        
+
         DataStorage.saveExpenses(expenses);
         return expense;
     }

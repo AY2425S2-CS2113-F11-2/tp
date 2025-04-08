@@ -59,19 +59,20 @@ public class Duke {
         ExpenseCommand expenseCommand = new ExpenseCommand(budgetManager, scanner, currency);
 
         UI ui = new UI(scanner,
-            messages,
-            storageFilePath,
-            expenseCommand,
-            commands,
-            friendsCommand,
-            splitCommand,
-            currency,
-            expenseClassifier
+                messages,
+                storageFilePath,
+                expenseCommand,
+                commands,
+                friendsCommand,
+                splitCommand,
+                currency,
+                expenseClassifier
         );
 
         // Add a shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down gracefully...");
+            budgetManager.saveAllExpenses(); // Save all expenses before exiting
             System.out.println("All expenses have been saved!");
         }));
 
