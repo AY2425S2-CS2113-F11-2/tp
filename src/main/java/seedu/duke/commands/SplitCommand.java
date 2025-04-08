@@ -89,7 +89,7 @@ public class SplitCommand {
                 throw new IllegalArgumentException("No members in group '" +
                     groupName + "'. Cannot perform split.");
             }
-            
+
             // Set the group name on the expense before checking for duplicate splits
             selectedExpense.setGroupName(groupName);
 
@@ -99,8 +99,8 @@ public class SplitCommand {
             File owesFile = new File(OwesStorage.owesFile);
             if (owesFile.exists() && owesFile.length() > 0) {
                 try {
-                    List<String> lines = Files.readAllLines(owesFile.toPath());
-                    for (String line : lines) {
+                    List < String > lines = Files.readAllLines(owesFile.toPath());
+                    for (String line: lines) {
                         if (line.contains("Expense: " + selectedExpense.getTitle()) &&
                             line.contains("Date: " + selectedExpense.getDate()) &&
                             line.contains("Group: " + groupName)) {
@@ -131,6 +131,8 @@ public class SplitCommand {
                 String method = "";
                 while (true) {
                     System.out.print("Type '/a' for absolute amounts OR '/p' for percentages: ");
+                    System.out.print("As mentioned in the UG, " +
+                        "total percentage/amount can be less than the overall. ");
                     if (!scanner.hasNextLine()) {
                         System.out.println("No input available. Exiting split command.");
                         return;
@@ -223,24 +225,24 @@ public class SplitCommand {
     }
 
     private String createTransactionRecord(Expense expense,
-                                           String groupName, String memberName, double amount) {
+        String groupName, String memberName, double amount) {
         return "Transaction: Expense: " + expense.getTitle() +
-                ", Date: " + expense.getDate() +
-                ", Group: " + groupName +
-                ", Member: " + memberName +
-                " owes: " + String.format("%.2f", amount);
+            ", Date: " + expense.getDate() +
+            ", Group: " + groupName +
+            ", Member: " + memberName +
+            " owes: " + String.format("%.2f", amount);
     }
 
-    private void handleEqualSplit(Expense expense, List<Friend> members) {
+    private void handleEqualSplit(Expense expense, List < Friend > members) {
         double totalAmount = expense.getAmount();
         double share = totalAmount / members.size();
-        
+
         // Get the group name from the first member
         String groupName = members.isEmpty() ? null : members.get(0).getGroup();
         // Set group name on the expense
         expense.setGroupName(groupName);
-        
-        for (Friend member : members) {
+
+        for (Friend member: members) {
             String transaction = String.format("Transaction: Expense: %s, Date: %s, Group: %s, Member: %s owes: %.2f",
                 expense.getTitle(), expense.getDate(), expense.getGroupName(), member.getName(), share);
             OwesStorage.saveTransaction(transaction);
@@ -248,10 +250,10 @@ public class SplitCommand {
         }
     }
 
-    private void handleManualSplit(Expense expense, List<Friend> members, Scanner scanner) {
+    private void handleManualSplit(Expense expense, List < Friend > members, Scanner scanner) {
         System.out.println("Enter '/a' for absolute amounts or '/p' for percentages:");
         String method = scanner.nextLine().trim();
-        
+
         if (method.equals("/a")) {
             handleAbsoluteSplit(expense, members, scanner);
         } else if (method.equals("/p")) {
@@ -262,20 +264,20 @@ public class SplitCommand {
         }
     }
 
-    private void handleAbsoluteSplit(Expense expense, List<Friend> members, Scanner scanner) {
+    private void handleAbsoluteSplit(Expense expense, List < Friend > members, Scanner scanner) {
         double totalAmount = expense.getAmount();
         double remainingAmount = totalAmount;
-        
+
         // Get the group name from the first member
         String groupName = members.isEmpty() ? null : members.get(0).getGroup();
         // Set group name on the expense
         expense.setGroupName(groupName);
-        
+
         for (int i = 0; i < members.size() - 1; i++) {
             Friend member = members.get(i);
             System.out.println("Enter amount for " + member.getName() + ":");
             String input = scanner.nextLine().trim();
-            
+
             try {
                 double amount = Double.parseDouble(input);
                 if (amount < 0 || amount > remainingAmount) {
@@ -283,20 +285,20 @@ public class SplitCommand {
                     i--; // Retry for this member
                     continue;
                 }
-                
+
                 String transaction = String.format("Transaction: Expense: %s, Date: %s, Group: %s, " +
-                                "Member: %s owes: %.2f",
+                    "Member: %s owes: %.2f",
                     expense.getTitle(), expense.getDate(), expense.getGroupName(), member.getName(), amount);
                 OwesStorage.saveTransaction(transaction);
                 System.out.println(transaction);
-                
+
                 remainingAmount -= amount;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid amount format for " + member.getName());
                 i--; // Retry for this member
             }
         }
-        
+
         // Last member gets the remaining amount
         Friend lastMember = members.get(members.size() - 1);
         String transaction = String.format("Transaction: Expense: %s, Date: %s, Group: %s, Member: %s owes: %.2f",
@@ -305,20 +307,20 @@ public class SplitCommand {
         System.out.println(transaction);
     }
 
-    private void handlePercentageSplit(Expense expense, List<Friend> members, Scanner scanner) {
+    private void handlePercentageSplit(Expense expense, List < Friend > members, Scanner scanner) {
         double totalAmount = expense.getAmount();
         double remainingPercentage = 100.0;
-        
+
         // Get the group name from the first member
         String groupName = members.isEmpty() ? null : members.get(0).getGroup();
         // Set group name on the expense
         expense.setGroupName(groupName);
-        
+
         for (int i = 0; i < members.size() - 1; i++) {
             Friend member = members.get(i);
             System.out.println("Enter percentage for " + member.getName() + ":");
             String input = scanner.nextLine().trim();
-            
+
             try {
                 double percentage = Double.parseDouble(input);
                 if (percentage < 0 || percentage > remainingPercentage) {
@@ -326,21 +328,21 @@ public class SplitCommand {
                     i--; // Retry for this member
                     continue;
                 }
-                
+
                 double amount = totalAmount * (percentage / 100.0);
                 String transaction = String.format("Transaction: Expense: %s," +
-                                " Date: %s, Group: %s, Member: %s owes: %.2f",
+                    " Date: %s, Group: %s, Member: %s owes: %.2f",
                     expense.getTitle(), expense.getDate(), expense.getGroupName(), member.getName(), amount);
                 OwesStorage.saveTransaction(transaction);
                 System.out.println(transaction);
-                
+
                 remainingPercentage -= percentage;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid percentage format for " + member.getName());
                 i--; // Retry for this member
             }
         }
-        
+
         // Last member gets the remaining percentage
         Friend lastMember = members.get(members.size() - 1);
         double amount = totalAmount * (remainingPercentage / 100.0);
