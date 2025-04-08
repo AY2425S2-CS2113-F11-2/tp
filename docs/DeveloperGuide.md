@@ -65,7 +65,7 @@ of their spending across multiple categories.
 1.  Ensure you have Java 17 or above installed on your PC. **[Version 17 is preferred]**
 2.  You may download [here](https://se-education.org/guides/tutorials/javaInstallationMac.html) for Mac users and [here](https://www.oracle.com/sg/java/technologies/downloads/) for Windows users.
 3.  If you have it installed already, you may check it by running `java -version` in your terminal.
-4.  Download the latest `.jar` file from here. **[link will be updated once v1 is ready]**
+4.  Download the latest release page.
 5.  Copy the file to the folder you want to use as the home folder for your **O\$P$ budget tracking app** 🙂.
 6.  Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar tp.jar` command to run the application.
 7.  Type the command in the command box and press **Enter** to execute it.
@@ -109,8 +109,7 @@ This method processes user input by mapping commands to their corresponding func
 
 ### 3.1.1 DataStorage Class
 
-The data storage class initializes the expense.txt file to store expenses created by the user on app start-up and its contents
-are saved upon exit.
+The data storage class initializes the expense.txt file to store expenses created by the user on app start-up and its contents are saved upon exit.
 
 ### File Handling
 
@@ -201,30 +200,32 @@ that checks if the user input matches any of these commands and handles invalid 
 
 Below are the commands supported by the application:
 
-| Command            | Description                                    |
-| ------------------ | ---------------------------------------------- |
-| `HELP`             | Displays the list of available commands.       |
-| `EXIT`             | Exits the application.                         |
-| `ADD`              | Adds a new expense.                            |
-| `LIST`             | Displays all recorded expenses.                |
-| `DELETE`           | Deletes an expense.                            |
-| `EDIT`             | Edits an existing expense.                     |
-| `BALANCE`          | Shows the balance overview.                    |
-| `SETTLED_LIST`     | Displays a list of settled expenses.           |
-| `UNSETTLED_LIST`   | Displays a list of unsettled expenses.         |
-| `MARK`             | Marks an expense as settled.                   |
-| `UNMARK`           | Unmarks an expense as unsettled.               |
-| `CREATE_GROUP`     | Creates a new group for expense sharing.       |
-| `VIEW_GROUP`       | Views details of a specific group.             |
-| `ADD_MEMBER`       | Adds a member to an existing group.            |
-| `REMOVE_MEMBER`    | Removes a member from a group.                 |
-| `REMOVE_GROUP`     | Deletes an entire group.                       |
-| `VIEW_ALL_GROUPS`  | Displays all user-created groups.              |
-| `SPLIT`            | Splits expenses among group members.           |
-| `CHANGE_CURRENCY`  | Changes the default currency for transactions. |
-| `DEFAULT_CURRENCY` | The default currency (SGD).                    |
-| `SUMMARY`          | Displays an expense summary.                   |
-| `EXPORT`           | Exports expense summary data.                  |
+| Command           | Description                                    |
+| ----------------- | ---------------------------------------------- |
+| `HELP`            | Displays the list of available commands.       |
+| `EXIT`            | Exits the application.                         |
+| `ADD`             | Adds a new expense.                            |
+| `LIST`            | Displays all recorded expenses.                |
+| `DELETE`          | Deletes an expense.                            |
+| `EDIT`            | Edits an existing expense.                     |
+| `BALANCE`         | Shows the balance overview.                    |
+| `SETTLED_LIST`    | Displays a list of settled expenses.           |
+| `UNSETTLED_LIST`  | Displays a list of unsettled expenses.         |
+| `MARK`            | Marks an expense as settled.                   |
+| `UNMARK`          | Unmarks an expense as unsettled.               |
+| `CREATE_GROUP`    | Creates a new group for expense sharing.       |
+| `VIEW_GROUP`      | Views details of a specific group.             |
+| `ADD_MEMBER`      | Adds a member to an existing group.            |
+| `VIEW_MEMBER`     | View member details of an existing group.      |
+| `REMOVE_MEMBER`   | Removes a member from a group.                 |
+| `REMOVE_GROUP`    | Deletes an entire group.                       |
+| `VIEW_ALL_GROUPS` | Displays all user-created groups.              |
+| `SPLIT`           | Splits expenses among group members.           |
+| `CHANGE_CURRENCY` | Changes the default currency for transactions. |
+| `SUMMARY`         | Displays an expense summary.                   |
+| `EXPORT`          | Exports expense summary data.                  |
+| `FIND`            | Find the expense with the relevent keyword.    |
+| `SORT_LIST`       | Sorts the list of expenses in various ways.    |
 
 ### 3.1.4 ExpenseCommands Classes
 
@@ -434,6 +435,64 @@ The `removeGroup(String command)` is used to delete an entire group from the gro
 
 #### Viewing the Transactions of a Member in a Group
 
+The viewMember(String command) method is responsible for displaying the transactions of a particular member in a group. It lists all the expenses owed/attributed to the particular user. It is useful to track and log the expenses.
+
+- Input:
+
+  - Parses user input to retrieve the group name and member name.
+  - Trims any extra whitespaces from the input.
+
+- Group Existence Check:
+
+  - Checks whether the group exists, and whether the entered member name is part of the mentioned group.
+
+- Tampering Checking:
+
+  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+
+- Loading Expense Data:
+
+  - The method reads from the owedAmounts.txt file, which contains expense data.
+    -For each transaction, it will print out the relevant transaction.
+  - It also processes malformed data and skips it.
+
+#### Viewing an existing group
+
+The viewGroup(String command) method is responsible for displaying the details of a specific group.
+
+- Input:
+
+  - Parses user input to retrieve the group name.
+  - Trims any extra whitespaces from the input and converts input to lower case.
+
+- Group Existence Check:
+
+  - Uses the groupManager.groupExists(String groupName) method to check whether the specified group exists.
+  - If the group does not exist, the method prints a "Group not found" message and terminates.
+
+  - Tampering Checking:
+
+  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+
+- Loading Expense Data:
+
+  - The method reads from the owedAmounts.txt file, which contains expense data.
+  - It loads this data into a map owedAmounts, where:
+    - The key is the member's name.
+    - The value is the accumulated amount they owe.
+  - The method ensures that the amounts are accumulated for each member instead of being overwritten.
+
+- Display Group Members and Expenses:
+  - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
+  - If the group has no members, it displays "No members in this group."
+  - For each member, it:
+    - Retrieves their name.
+    - Checks the owedAmounts map for any recorded expenses.
+    - Displays the member's name along with the accumulated expense amount.
+  - If a member has no recorded expense, the amount displayed is 0.00.
+
+#### Viewing the Transactions of a Member in a Group
+
 The `viewMember(String command)` method is responsible for displaying the transactions of a particular member in a group. It lists all the expenses owed/attributed to the particular user. It is useful to track and log the expenses.
 
 - **Input:**
@@ -490,36 +549,6 @@ The `viewGroup(String command)` method is responsible for displaying the details
     - Displays the member's name along with the accumulated expense amount.
   - If a member has no recorded expense, the amount displayed is 0.00.
 
-
-#### Viewing an existing group
-
-The `viewGroup()` method is responsible for displaying the details of a specific group, it includes its members and the expense attributes to them from the split of the entered group.
-This method is essential for users who wish to view group members and how much they owe in a certain group.
-
-- **Input:**
-
-  - Prompts user to enter the group name that they want to view.
-  - Trims any extra whitespaces from the input.
-
-- **Group Existence Check:**
-
-  - Uses the `groupManager.groupExists()` method to check whether the specified group exists.
-  - If the group does not exist, the method prints a "Group not found" message and terminates.
-
-- **Loading Expense Data:**
-
-  - The method reads from the `owedAmounts.txt` file, which contains member data.
-  - The method ensures that the amounts are accumulated for each member instead of being overwritten.
-
-- **Display Group Members and Expenses:**
-  - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
-  - If the group has no members, it displays "No members in this group."
-  - For each member, it:
-    - Retrieves their name.
-    - Checks the owedAmounts map for any recorded expenses.
-    - Displays the member's name along with the accumulated expense amount for that group.
-    - If a member has no recorded expense, the amount displayed is 0.00.
-
 #### Viewing all user's Groups
 
 The `viewAllGroups()` method is designed to display a list of all the groups that the user has created or is a part of. It provides a quick overview of the existing groups managed by the application.
@@ -535,7 +564,7 @@ The `viewAllGroups()` method is designed to display a list of all the groups tha
 
 #### Viewing group directly
 
-The `viewGroupDirect()` method is responsible for displaying the details of a specific group, it includes its members and associated expenses. The user cannot call it directly but it is called by the split function. It takes in the groupname from the  `executeSplit()` method so that the user is not required to enter the group name and it acts as a summary after the split operation.
+The `viewGroupDirect()` method is responsible for displaying the details of a specific group, it includes its members and associated expenses. The user cannot call it directly but it is called by the split function. It takes in the groupname from the `executeSplit()` method so that the user is not required to enter the group name and it acts as a summary after the split operation.
 
 This method is essential for users who wish to view group details and any expenses related to group members.
 
@@ -612,7 +641,6 @@ The `SplitCommand` class handles the functionality of splitting expenses among m
 - Parse and validate the split command format:  
   `split/<equal|assign>/<expense index>/<group name>`
 
-
 - **Equal Split:**  
   Divides the total expense amount equally among all group members.
 
@@ -647,37 +675,38 @@ Executes the flow for splitting an expense. Follows the format as required above
 
 `split/<equal or assign>/<expense index>/<group name>`
 
-  - Parses the command
-  - Handles validation of group, index, format
-  - Executes equal or manual splitting
-  - Updates file and calls group display
+- Parses the command
+- Handles validation of group, index, format
+- Executes equal or manual splitting
+- Updates file and calls group display
 
-  - **Equal Split:**
+- **Equal Split:**
 
-    - Divides total amount equally among all members.
-    - Appends individual owed shares to the transaction log.
+  - Divides total amount equally among all members.
+  - Appends individual owed shares to the transaction log.
 
-  - **Manual Split:**
-    - Prompts user to choose between absolute amounts (`/a`) or percentages (`/p`).
-    - **Manual Split – Absolute:**
-      - Prompts for each member's assigned amount.
-      - Tracks remaining amount and prevents over-allocation.
-      - Logs each owed amount to storage.
-    - **Manual Split – Percentage:**
-      - Prompts for each member's share percentage.
-      - Computes owed amount as `totalAmount * (percentage / 100)`.
-      - Validates total assigned percentages.
+- **Manual Split:**
+
+  - Prompts user to choose between absolute amounts (`/a`) or percentages (`/p`).
+  - **Manual Split – Absolute:**
+    - Prompts for each member's assigned amount.
+    - Tracks remaining amount and prevents over-allocation.
+    - Logs each owed amount to storage.
+  - **Manual Split – Percentage:**
+    - Prompts for each member's share percentage.
+    - Computes owed amount as `totalAmount * (percentage / 100)`.
+    - Validates total assigned percentages.
 
 - Calls `friendsCommands.viewGroupDirect()` to update group display after split.
 
 #### `createTransactionRecord(...)`
-  - Formats and returns a string log of one member's owed transaction
+
+- Formats and returns a string log of one member's owed transaction
 
 #### `OwesStorage.appendOwes(...)`
-  - Appends a transaction record to `owedAmounts.txt`
-  - Wrapped in try-catch for IO handling
 
-
+- Appends a transaction record to `owedAmounts.txt`
+- Wrapped in try-catch for IO handling
 
 ### 3.1.7 BudgetManager Class
 
@@ -1343,14 +1372,18 @@ after the command duration has ended and upon exiting the program, handled by th
 
 ### 4.2 Expense CRUD Feature
 
-Below is the UML sequence diagram for the classes involved in the CRUD operations regarding user-created expenses. The main application class calls the constructor for the UI class, which calls its own method processCommand() that takes in the user input as a parameter and processes the addition, editing, deletion and saving of expenses depending on specific user inputs as shown in the diagram.
-
-![ExpenseCRUDFeatureSequenceDiagram.drawio.png](diagrams/ExpenseCRUDFeatureSequenceDiagram.drawio.png)
-### 4.3 Split Expense Feature
+Below is the UML sequence diagram for the split class. It requires external dependencies such as DataStorage, GRoupManager, OwesStorage, and FriendsCommands to seamlessly integrate the split function. A large part of the calls are to get data from the other classes. Another part is validating input and ensuring that the input is all valid and that the operation is not illegal. Afterwards, it calls the `executeSplit()` method to divide it, with the method prompting for more information regarding the type of split (manual assignment, via absolute values and percentages or via equal splitting). It has to get the data of groups and friends from other classes, and saves and loads using the OwesStorage class. The OwesStorage class implements tamper-checking to help ensure that the data has not been manipulated while being stored.
 
 ![SplitClassSequenceDiagram.png](diagrams/SplitClassSequenceDiagram.png)
 
-Below is the UML sequence diagram for the split class. It requires external dependencies such as DataStorage, GRoupManager, OwesStorage, and FriendsCommands to seamlessly integrate the split function. A large part of the calls are to get data from the other classes. Another part is validating input and ensuring that the input is all valid and that the operation is not illegal. Afterwards, it calls the `executeSplit()` method to divide it, with the method prompting for more information regarding the type of split (manual assignment, via absolute values and percentages or via equal splitting). It has to get the data of groups and friends from other classes, and saves and loads using the OwesStorage class. The OwesStorage class implements tamper-checking to help ensure that the data has not been manipulated while being stored.
+### 4.3 Split Expense Feature
+
+![ApplicationFlowChart.drawio.png](diagrams/ApplicationFlowChart.drawio.png)
+
+O\$P\$ is the main class of application which the user can interact with directly. The command input from the user is processed by the UI class which validates and parses the command.
+This class will check for any valid keywords in the input. Once the keywords are present, it will pass the input to its respective classes that the command is related to (see above diagram)
+to validate the format and details of the command. Upon successful validation and execution of the command, the new data is written to the .txt files within the program directory and saved
+after the command duration has ended and upon exiting the program, handled by the DataStorage class.
 
 ### 4.4 Change Currency Feature
 
