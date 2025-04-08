@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 
 import seedu.duke.currency.Currency;
 import seedu.duke.expense.BudgetManager;
-//import seedu.duke.expense.Expense;
-//import seedu.duke.summary.Categories;
+import seedu.duke.expense.Expense;
+import seedu.duke.summary.Categories;
 
 class ExpenseCommandTest {
     private ExpenseCommand expenseCommand;
@@ -93,7 +93,7 @@ class ExpenseCommandTest {
         assertTrue(output.contains("Invalid category." +
                 " Please use one of: Food, Shopping, Travel, Entertainment, Miscellaneous"));
     }
-    /*
+
     @Test
     void testExecuteAddExpenseValidInput() {
         String input = "add/Lunch/Food/01-01-2025/10.50";
@@ -156,7 +156,7 @@ class ExpenseCommandTest {
         assertEquals("01-01-2025", editedExpense.getDate());
         assertEquals(20.50, editedExpense.getAmount());
     }
-    */
+
     //@@author
     //@@author mohammedhamdhan
     @Test
@@ -171,7 +171,7 @@ class ExpenseCommandTest {
         String output = outContent.toString();
         assertTrue(output.contains("Please enter a valid expense number"));
     }
-    /*
+
     @Test
     void testExportCategorySummary() {
         // Add expenses from different categories
@@ -281,7 +281,7 @@ class ExpenseCommandTest {
         String output = outContent.toString();
         assertTrue(output.contains("Please enter a valid expense number."));
     }
-    */
+
 
     @Test
     void testExecuteAddExpenseEmptyTitle() {
@@ -473,7 +473,7 @@ class ExpenseCommandTest {
         String output = outContent.toString();
         assertTrue(output.contains("No expenses found."));
     }
-    /*
+
     @Test
     void testShowMonthlySummaryMultipleMonths() {
         // Add expenses from different months
@@ -511,6 +511,5 @@ class ExpenseCommandTest {
         assertTrue(output.contains("Shopping: $200.00"));
         assertTrue(output.contains("Travel: $300.00"));
     }
-*/
 }
 //@@author

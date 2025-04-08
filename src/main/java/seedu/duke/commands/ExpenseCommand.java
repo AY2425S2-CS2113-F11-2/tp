@@ -5,17 +5,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.io.FileNotFoundException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -39,8 +38,8 @@ import seedu.duke.summary.Categories;
 import seedu.duke.summary.ExpenseClassifier;
 
 /**
- * Handles expense-related commands entered by the user.
- */
+* Handles expense-related commands entered by the user.
+*/
 public class ExpenseCommand {
     private static final List<JFrame> activeChartWindows = new ArrayList<>();
 
@@ -271,9 +270,7 @@ public class ExpenseCommand {
 
             // Create and add the expense
             Expense expense = new Expense(title, category, date, amount);
-            //budgetManager.addExpense(expense);
-            String transaction = String.format("%s|%s|%s|%.2f", title, categoryStr, date, amount);
-            ExpenseStorage.saveTransaction(transaction);
+            budgetManager.addExpense(expense);
             System.out.println("Expense added successfully:");
             System.out.println(expense);
 
@@ -288,9 +285,9 @@ public class ExpenseCommand {
      * Executes the delete expense command by setting the expense amount to 0.0.
      */
     public void executeDeleteExpense(String userInput) {
+
         try {
-            // Split into command and expense ID
-            String[] parts = userInput.split("/", 2);
+            String[] parts = userInput.split("/", 2); // Split into command and expense ID
             if (!isDeleteCommandValid(parts)) {
                 System.out.println("Invalid format. Usage: delete/<expense ID>");
                 return;
@@ -298,66 +295,26 @@ public class ExpenseCommand {
 
             int index = Integer.parseInt(parts[1].trim()) - 1; // Convert to 0-based index
 
-            // Load expenses from the file with checksum verification
-            List<String> rawExpenses = ExpenseStorage.loadExpenses();
-            if (rawExpenses.isEmpty()) {
-                System.out.println("No expenses found. The file may have been tampered with and cleared.");
-                return;
-            }
-
-            // Validate the index
-            if (index < 0 || index >= rawExpenses.size()) {
+            if (index < 0 || index >= budgetManager.getExpenseCount()) {
                 System.out.println("Please enter a valid expense number.");
                 return;
             }
 
-            // Parse the expense to be deleted
-            String rawExpense = rawExpenses.get(index);
-            String[] expenseParts = rawExpense.split("\\|");
-            if (expenseParts.length < 4) { // Ensure the record has all required fields
-                System.out.println("Malformed expense record detected at index " + index);
-                return;
-            }
-
-            // Extract details for confirmation
-            String title = expenseParts[0];
-            String category = expenseParts[1];
-            String date = expenseParts[2];
-            double amount = Double.parseDouble(expenseParts[3]);
-
+            Expense expenseToDelete = budgetManager.getExpense(index);
             System.out.println("Are you sure you want to delete this expense? (y/n)");
-            System.out.println("Title: " + title);
-            System.out.println("Category: " + category);
-            System.out.println("Date: " + date);
-            System.out.println("Amount: " + String.format("%.2f", amount));
-
+            System.out.println(expenseToDelete);
             String confirmation = scanner.nextLine().trim().toLowerCase();
+
             if (!confirmation.equals("y")) {
                 System.out.println("Deletion aborted.");
                 return;
             }
 
-            // Remove the expense from the list
-            rawExpenses.remove(index);
-
-            // Save the updated list back to the file and update the checksum
-            try (PrintWriter writer = new PrintWriter(new FileWriter(ExpenseStorage.expensesFile))) {
-                for (String record : rawExpenses) {
-                    writer.println(record);
-                }
-            } catch (IOException e) {
-                System.out.println("Error writing to expenses file: " + e.getMessage());
-                return;
-            }
-
-            // Update the checksum
-            ExpenseStorage.updateChecksum();
-
+            // Delete the expense
+            Expense deletedExpense = budgetManager.deleteExpense(index);
+            updateOwesDataFile(deletedExpense);
             System.out.println("Expense deleted successfully:");
-            System.out.println("Title: " + title);
-            System.out.println("Category: " + category);
-            System.out.println("Date: " + date);
-            System.out.println("Amount: " + String.format("%.2f", amount));
+            System.out.println(deletedExpense);
         } catch (NumberFormatException e) {
             System.out.println("Invalid input format. Please enter a valid expense ID.");
         } catch (IndexOutOfBoundsException e) {
@@ -372,25 +329,6 @@ public class ExpenseCommand {
     /**
      * Executes the edit expense command.
      */
-    private int getExpenseCountFromFile() {
-        List<String> rawExpenses = ExpenseStorage.loadExpenses();
-        int validExpenseCount = 0;
-
-        for (String rawExpense : rawExpenses) {
-            if (rawExpense == null || rawExpense.trim().isEmpty()) {
-                continue; // Skip empty or malformed lines
-            }
-
-            // Ensure the line has all required fields
-            String[] parts = rawExpense.split("\\|");
-            if (parts.length >= 4) {
-                validExpenseCount++;
-            }
-        }
-
-        return validExpenseCount;
-    }
-
     public void executeEditExpense(String userInput) {
         try {
             // Split by forward slash and handle multiple spaces
@@ -416,43 +354,20 @@ public class ExpenseCommand {
             }
 
             int index = Integer.parseInt(expenseIdStr) - 1; // Convert to 0-based index
-            if (index < 0 || index >= getExpenseCountFromFile()) {
+            if (index < 0 || index >= budgetManager.getExpenseCount()) {
                 System.out.println("Please enter a valid expense number.");
                 return;
             }
 
-            // Load expenses from the file with checksum verification
-            List<String> rawExpenses = ExpenseStorage.loadExpenses();
-            if (rawExpenses.isEmpty()) {
-                System.out.println("No expenses found. The file may have been tampered with and cleared.");
-                return;
-            }
-
-            // Parse the existing expense record
-            String existingRecord = rawExpenses.get(index);
-            String[] existingParts = existingRecord.split("\\|");
-            if (existingParts.length < 4) {
-                System.out.println("Malformed expense record detected at index " + index);
-                return;
-            }
-
-            // Extract existing values
-            String existingTitle = existingParts[0];
-            String existingCategory = existingParts[1];
-            String existingDate = existingParts[2];
-            double existingAmount = Double.parseDouble(existingParts[3]);
-            //boolean existingDone = Boolean.parseBoolean(existingParts[4]);
-            //String existingGroupName = existingParts[5];
-
             // Handle 'x' values for fields to keep unchanged
-            title = title.equalsIgnoreCase("x") ? existingTitle : title;
-            categoryStr = categoryStr.equalsIgnoreCase("x") ? existingCategory : categoryStr;
-            date = date.equalsIgnoreCase("x") ? existingDate : date;
-            double amount = amountStr.equalsIgnoreCase("x") ? existingAmount : Double.parseDouble(amountStr);
+            title = title.equalsIgnoreCase("x") ? null : title;
+            categoryStr = categoryStr.equalsIgnoreCase("x") ? null : categoryStr;
+            date = date.equalsIgnoreCase("x") ? null : date;
+            amountStr = amountStr.equalsIgnoreCase("x") ? null : amountStr;
 
             // Validate category if provided
             Categories category = null;
-            if (!categoryStr.equals(existingCategory)) {
+            if (categoryStr != null) {
                 try {
                     // Convert to proper case format (first letter uppercase, rest lowercase)
                     categoryStr = categoryStr.toLowerCase();
@@ -466,13 +381,15 @@ public class ExpenseCommand {
             }
 
             // Validate date if provided
-            if (!date.equals(existingDate) && !isValidDate(date)) {
+            if (date != null && !isValidDate(date)) {
                 System.out.println("Invalid date format. Please enter a valid date in DD-MM-YYYY format.");
                 return;
             }
 
             // Validate amount if provided
-            if (amount != existingAmount) {
+            double amount = -1; // Sentinel value for no change
+            if (amountStr != null) {
+                amount = Double.parseDouble(amountStr);
                 if (amount < 0) {
                     System.out.println("Amount cannot be negative.");
                     return;
@@ -486,27 +403,11 @@ public class ExpenseCommand {
                 }
             }
 
-            // Create the updated expense record
-            String updatedRecord = String.format("%s|%s|%s|%.2f",
-                    title, categoryStr, date, amount);
-
-            // Replace the old record with the updated record
-            rawExpenses.set(index, updatedRecord);
-
-            // Save the updated list back to the file and update the checksum
-            try (PrintWriter writer = new PrintWriter(new FileWriter(ExpenseStorage.expensesFile))) {
-                for (String record : rawExpenses) {
-                    writer.println(record);
-                }
-            } catch (IOException e) {
-                System.out.println("Error writing to expenses file: " + e.getMessage());
-                return;
-            }
-
-            // Update the checksum
-            ExpenseStorage.updateChecksum();
-
+            // Edit the expense
+            Expense editedExpense = budgetManager.editExpense(index, title, category, date, amount);
+            assert editedExpense != null : "Edited expense should not be null";
             System.out.println("Expense edited successfully:");
+            System.out.println(editedExpense);
         } catch (NumberFormatException e) {
             System.out.println("Invalid input format. Please enter a valid number.");
         } catch (IndexOutOfBoundsException e) {
@@ -519,60 +420,22 @@ public class ExpenseCommand {
      * Displays all expenses in chronological order (most recent first).
      */
     public void displayAllExpenses() {
-        File expensesFile = new File(ExpenseStorage.expensesFile);
-        if (!expensesFile.exists()) {
-            System.out.println("Expense file not found.");
-            System.out.println("Use the add command.");
-            return;
-        }
+        List<Expense> expenses = budgetManager.getAllExpenses();
+        assert expenses != null : "Expenses list should not be null";
 
-        // Load expenses directly from the file with checksum verification
-        List<String> rawExpenses = ExpenseStorage.loadExpenses();
-
-        // Handle inherently empty file or tampered file
-        if (rawExpenses.isEmpty()) {
-            System.out.println("No expenses found in the list.");
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found.");
             return;
         }
 
         System.out.println("All expenses are in " + currency.getCurrentCurrency());
+
         System.out.println("List of Expenses:");
-
-        int expenseNumber = 1;
-        for (String rawExpense : rawExpenses) {
-            if (rawExpense == null || rawExpense.trim().isEmpty()) {
-                continue; // Skip empty or malformed lines
-            }
-
-            // Parse and display the expense
-            String[] parts = rawExpense.split("\\|");
-            if (parts.length == 4) { // Ensure the line has all required fields
-                String title = parts[0];
-                String category = parts[1];
-                String date = parts[2];
-                double amount = Double.parseDouble(parts[3]);
-                //boolean isDone = Boolean.parseBoolean(parts[4]);
-                //String groupName = parts[5];
-
-
-                System.out.println("Expense #" + expenseNumber);
-                System.out.println("Title: " + title);
-                System.out.println("Category: " + category);
-                System.out.println("Date: " + date);
-                System.out.println("Amount: " + String.format("%.2f", amount));
-                //System.out.println("Settled: " + (isDone ? "Yes" : "No"));
-                //System.out.println("Group: " + groupName);
-
-
-                System.out.println();
-            } else {
-                System.out.println("Warning: Skipping malformed expense record: " + rawExpense);
-            }
-            expenseNumber++;
-        }
-
-        if (expenseNumber == 1) {
-            System.out.println("No valid expenses found in the file.");
+        for (int i = 0; i < expenses.size(); i++) {
+            assert expenses.get(i) != null : "Expense at index " + i + " should not be null";
+            System.out.println("Expense #" + (i + 1));
+            System.out.println(expenses.get(i));
+            System.out.println();
         }
     }
     //@@author
@@ -730,7 +593,7 @@ public class ExpenseCommand {
     public void showExpenseSummary(String userInput) {
         try {
             String[] parts = userInput.split("/", 3);
-            
+
             if (parts.length < 3 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
                 System.out.println("Invalid format. Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>");
                 return;
@@ -772,7 +635,7 @@ public class ExpenseCommand {
     public void showMonthlySummary() {
         List<Expense> expenses = budgetManager.getAllExpenses();
         assert expenses != null : "Expenses list should not be null";
-        
+
         if (expenses.isEmpty()) {
             System.out.println("No expenses found.");
             return;
@@ -781,16 +644,16 @@ public class ExpenseCommand {
         // Group expenses by month
         Map<String, List<Expense>> monthlyExpenses = new HashMap<>();
         Map<String, Double> monthlyTotals = new HashMap<>();
-        
+
         for (Expense expense : expenses) {
             String month = expense.getDate().substring(3, 10); // Get MM-YYYY
-            
+
             // Add expense to the month's list
             if (!monthlyExpenses.containsKey(month)) {
                 monthlyExpenses.put(month, new ArrayList<>());
             }
             monthlyExpenses.get(month).add(expense);
-            
+
             // Update month's total amount
             monthlyTotals.merge(month, expense.getAmount(), Double::sum);
         }
@@ -801,15 +664,15 @@ public class ExpenseCommand {
             String month = entry.getKey();
             List<Expense> monthExpenses = entry.getValue();
             double total = monthlyTotals.get(month);
-            
+
             System.out.printf("%s: $%.2f (%d expenses)%n", month, total, monthExpenses.size());
-            
+
             // List all expense titles for this month
             System.out.println("  Expenses:");
             for (Expense expense : monthExpenses) {
-                System.out.printf("  - %s (%s): $%.2f%n", 
-                        expense.getTitle(), 
-                        expense.getDate(), 
+                System.out.printf("  - %s (%s): $%.2f%n",
+                        expense.getTitle(),
+                        expense.getDate(),
                         expense.getAmount());
             }
             System.out.println();
@@ -818,13 +681,13 @@ public class ExpenseCommand {
 
     /**
      * Shows a category-wise summary of expenses with optional visualization.
-     * 
+     *
      * @param showVisualization Whether to show the pie chart visualization
      */
     public void showCategorySummary(boolean showVisualization) {
         List<Expense> expenses = budgetManager.getAllExpenses();
         assert expenses != null : "Expenses list should not be null";
-        
+
         if (expenses.isEmpty()) {
             System.out.println("No expenses found.");
             return;
@@ -838,24 +701,24 @@ public class ExpenseCommand {
         // Display the summary
         System.out.println("\nCategory-wise Expense Summary:");
         System.out.println("----------------------------");
-        
+
         // Prepare data for pie chart
         List<String> categoryNames = new ArrayList<>();
         List<Number> categoryValues = new ArrayList<>();
-        
+
         for (Categories category : Categories.values()) {
             double total = categoryTotals.get(category);
             int count = categoryCounts.get(category);
             if (count > 0) {  // Only show categories with expenses
-                System.out.printf("%s: $%.2f (%d expenses)%n", 
+                System.out.printf("%s: $%.2f (%d expenses)%n",
                         category.toString(), total, count);
-                
+
                 // Add to chart data
                 categoryNames.add(category.toString());
                 categoryValues.add(total);
             }
         }
-        
+
         if (showVisualization && !categoryNames.isEmpty()) {
             showPieChart(categoryNames, categoryValues);
         }
@@ -905,7 +768,7 @@ public class ExpenseCommand {
         chart.getStyler().setLabelsDistance(1.15);
         // Add an annotation panel with summary info
         chart.addAnnotation(new AnnotationTextPanel(
-            String.format("Total Expenses: $%.2f", total), 40, 40, true));
+                String.format("Total Expenses: $%.2f", total), 40, 40, true));
 
         // Create custom series names with formatted amounts and percentages
         for (int i = 0; i < categoryNames.size(); i++) {
@@ -914,13 +777,13 @@ public class ExpenseCommand {
             double percentage = (value / total) * 100;
 
             // Format with amount and percentage
-            String formattedName = String.format("%s: $%.2f (%.1f%%)", 
-                name, value, percentage);
+            String formattedName = String.format("%s: $%.2f (%.1f%%)",
+                    name, value, percentage);
 
             // Add series with custom colors based on index
             Color seriesColor = getColorForIndex(i);
             chart.addSeries(formattedName, value)
-                .setFillColor(seriesColor);
+                    .setFillColor(seriesColor);
         }
 
         // Display the chart in a custom frame
@@ -988,17 +851,17 @@ public class ExpenseCommand {
             System.out.println("No expenses to export!");
             return;
         }
-        
+
         // Split and trim to handle multiple spaces
         String[] parts = userInput.split("/", 2);
-        
+
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             System.out.println("Invalid format. Usage: export/<monthly | category-wise>");
             return;
         }
-        
+
         String exportType = parts[1].trim().toLowerCase();
-        
+
         if (exportType.equals("monthly")) {
             exportMonthlySummary();
         } else if (exportType.equals("category-wise")) {
@@ -1008,6 +871,7 @@ public class ExpenseCommand {
         }
     }
 
+
     /**
      * Exports monthly summary to a file.
      */
@@ -1015,27 +879,25 @@ public class ExpenseCommand {
         try (FileWriter writer = new FileWriter("monthly_summary.txt")) {
             List<Expense> expenses = budgetManager.getAllExpenses();
             assert expenses != null : "Expenses list should not be null";
-            
+
             if (expenses.isEmpty()) {
-                // This check is now redundant since we check in exportExpenseSummary,
-                // but keeping for defensive programming
-                System.out.println("No expenses to export!");
+                writer.write("No expenses found.");
                 return;
             }
 
             // Group expenses by month
             Map<String, List<Expense>> monthlyExpenses = new HashMap<>();
             Map<String, Double> monthlyTotals = new HashMap<>();
-            
+
             for (Expense expense : expenses) {
                 String month = expense.getDate().substring(3, 10);
-                
+
                 // Add expense to the month's list
                 if (!monthlyExpenses.containsKey(month)) {
                     monthlyExpenses.put(month, new ArrayList<>());
                 }
                 monthlyExpenses.get(month).add(expense);
-                
+
                 // Update month's total amount
                 monthlyTotals.merge(month, expense.getAmount(), Double::sum);
             }
@@ -1046,16 +908,16 @@ public class ExpenseCommand {
                 String month = entry.getKey();
                 List<Expense> monthExpenses = entry.getValue();
                 double total = monthlyTotals.get(month);
-                
-                writer.write(String.format("%s: $%.2f (%d expenses)%n", 
+
+                writer.write(String.format("%s: $%.2f (%d expenses)%n",
                         month, total, monthExpenses.size()));
-                
+
                 // List all expense titles for this month
                 writer.write("  Expenses:\n");
                 for (Expense expense : monthExpenses) {
-                    writer.write(String.format("  - %s (%s): $%.2f%n", 
-                            expense.getTitle(), 
-                            expense.getDate(), 
+                    writer.write(String.format("  - %s (%s): $%.2f%n",
+                            expense.getTitle(),
+                            expense.getDate(),
                             expense.getAmount()));
                 }
                 writer.write("\n");
@@ -1073,11 +935,9 @@ public class ExpenseCommand {
         try (FileWriter writer = new FileWriter("category_summary.txt")) {
             List<Expense> expenses = budgetManager.getAllExpenses();
             assert expenses != null : "Expenses list should not be null";
-            
+
             if (expenses.isEmpty()) {
-                // This check is now redundant since we check in exportExpenseSummary,
-                // but keeping for defensive programming
-                System.out.println("No expenses to export!");
+                writer.write("No expenses found.");
                 return;
             }
 
@@ -1092,7 +952,7 @@ public class ExpenseCommand {
                 double total = categoryTotals.get(category);
                 int count = categoryCounts.get(category);
                 if (count > 0) {  // Only show categories with expenses
-                    writer.write(String.format("%s: $%.2f (%d expenses)%n", 
+                    writer.write(String.format("%s: $%.2f (%d expenses)%n",
                             category.toString(), total, count));
                 }
             }

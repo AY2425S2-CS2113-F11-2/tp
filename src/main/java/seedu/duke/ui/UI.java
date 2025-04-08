@@ -42,16 +42,16 @@ public class UI {
      * @param currency          Handles currency-related operations.
      * @param expenseClassifier Categorizes expenses for summary.
      */
-    public UI(Scanner scanner, 
-            Messages messages,
-            String storageFilePath,
-            ExpenseCommand expenseCommand, 
-            Commands commands, 
-            FriendsCommands friendsCommand, 
-            SplitCommand splitCommand,
-            Currency currency,
-            ExpenseClassifier expenseClassifier) {
-      
+    public UI(Scanner scanner,
+              Messages messages,
+              String storageFilePath,
+              ExpenseCommand expenseCommand,
+              Commands commands,
+              FriendsCommands friendsCommand,
+              SplitCommand splitCommand,
+              Currency currency,
+              ExpenseClassifier expenseClassifier) {
+
         this.scanner = scanner;
         this.messages = messages;
         this.storageFilePath = storageFilePath;
@@ -71,7 +71,7 @@ public class UI {
     public void handleUserInput() {
         while (isRunning) {
             messages.enterCommandMessage();
-            
+
             // Check if input exists before reading
             if (scanner.hasNextLine()) {
                 String userInput = scanner.nextLine();
@@ -82,7 +82,7 @@ public class UI {
                 isRunning = false;
                 break;
             }
-            
+
             if (isRunning) {
                 messages.setDivider();
             }
@@ -111,6 +111,7 @@ public class UI {
         if(command.equals(Commands.HELP)){
             messages.displayCommandList();
         } else if(command.equals(Commands.EXIT)){
+            budgetManager.saveAllExpenses();
             messages.displayExitMessage();
             isRunning = false;
         } else if(command.startsWith(Commands.ADD_MEMBER)){

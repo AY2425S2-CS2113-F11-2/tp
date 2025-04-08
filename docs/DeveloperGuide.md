@@ -175,8 +175,8 @@ Saves a list of groups and their members to the data file.
 
 - Iterates through the `groups` list and writes each group to `groups.txt`
 - Each group is stored with the following format:
-  - Group header: `[GROUP]|<group_name>`
-  - Friend entries: `<group_name>|<friend_name>`
+    - Group header: `[GROUP]|<group_name>`
+    - Friend entries: `<group_name>|<friend_name>`
 - Uses `FileWriter` for file operations.
 - Handles `IOException` to manage file writing errors.
 
@@ -237,12 +237,12 @@ The `executeAddExpense()` method manages the addition of new expenses with the f
 
 - Ensures the user input follows the correct format (`add/<title>/<category>/<date>/<amount>`). If the format is invalid, it prompts the user with the correct usage instructions.
 - Performs comprehensive validation of all input fields:
-  - Checks that none of the required fields (title, category, date, amount) are empty.
-  - Validates that the provided title is unique among existing expenses.
-  - Verifies the category is one of the valid predefined categories (Food, Shopping, Travel, Entertainment, Miscellaneous).
-  - Ensures the date adheres to the `DD-MM-YYYY` format and represents a valid calendar date (with proper days per month and leap year handling).
-  - Validates that the amount is a valid number, not negative, and not zero.
-  - Checks that the amount does not exceed the maximum allowed limit of 50,000 SGD (or its equivalent in other currencies).
+    - Checks that none of the required fields (title, category, date, amount) are empty.
+    - Validates that the provided title is unique among existing expenses.
+    - Verifies the category is one of the valid predefined categories (Food, Shopping, Travel, Entertainment, Miscellaneous).
+    - Ensures the date adheres to the `DD-MM-YYYY` format and represents a valid calendar date (with proper days per month and leap year handling).
+    - Validates that the amount is a valid number, not negative, and not zero.
+    - Checks that the amount does not exceed the maximum allowed limit of 50,000 SGD (or its equivalent in other currencies).
 - Constructs a new `Expense` object with the validated inputs and adds it to the `budgetManager`. Upon success, it displays the added expense details.
 - Implements robust error handling for all validation steps, providing clear error messages to guide the user.
 
@@ -254,9 +254,9 @@ The `executeEditExpense()` method manages the editing of existing expenses with 
 - Validates that the expense ID is not empty and is a valid number within the range of existing expenses.
 - Allows users to skip updating specific fields (title, category, date, or amount) by entering `"x"`. This flexibility ensures only desired fields are modified.
 - Performs the same validation on the provided fields as during addition:
-  - For categories, verifies it's one of the predefined valid categories.
-  - For dates, ensures it adheres to the `DD-MM-YYYY` format and represents a valid calendar date.
-  - For amounts, validates that it's a valid number, not negative, and not zero, while also checking against the maximum allowed limit.
+    - For categories, verifies it's one of the predefined valid categories.
+    - For dates, ensures it adheres to the `DD-MM-YYYY` format and represents a valid calendar date.
+    - For amounts, validates that it's a valid number, not negative, and not zero, while also checking against the maximum allowed limit.
 - Calls the `budgetManager.editExpense()` method to apply the changes to the specified expense and displays the updated details upon success.
 - Implements comprehensive error handling for all validation steps and edge cases, including invalid input formats and out-of-range values.
 
@@ -328,27 +328,27 @@ The class provides comprehensive expense summary functionality:
 
 1. Viewing Summaries:
 
-   - Supports multiple view types with proper validation:
-     - Monthly Summary (`summary/BY-MONTH/N`): Shows total expenses and count per month
-     - Category-wise Summary (`summary/BY-CATEGORY/Y` or `summary/BY-CATEGORY/N`): Shows total expenses and count per category
-   - Validates the command format, ensuring it contains all required parameters (view type and visualization option)
-   - Enforces view-specific restrictions (e.g., BY-MONTH view only supports the N option without visualization)
-   - Validates that the visualization choice is either Y or N
-   - Gracefully handles empty expense lists with appropriate messages
-   - Processes multiple months or categories correctly when displaying data
+    - Supports multiple view types with proper validation:
+        - Monthly Summary (`summary/BY-MONTH/N`): Shows total expenses and count per month
+        - Category-wise Summary (`summary/BY-CATEGORY/Y` or `summary/BY-CATEGORY/N`): Shows total expenses and count per category
+    - Validates the command format, ensuring it contains all required parameters (view type and visualization option)
+    - Enforces view-specific restrictions (e.g., BY-MONTH view only supports the N option without visualization)
+    - Validates that the visualization choice is either Y or N
+    - Gracefully handles empty expense lists with appropriate messages
+    - Processes multiple months or categories correctly when displaying data
 
 2. Exporting Summaries:
 
-   - Export to text files (monthly_summary.txt, category_summary.txt)
-   - Same formatting as view summaries
-   - Error handling for file operations
-   - Confirmation messages for successful exports
+    - Export to text files (monthly_summary.txt, category_summary.txt)
+    - Same formatting as view summaries
+    - Error handling for file operations
+    - Confirmation messages for successful exports
 
 3. Data Organization:
-   - Uses Maps to group and aggregate expenses
-   - Maintains both totals and counts
-   - Sorts data for better readability
-   - Handles empty expense lists gracefully
+    - Uses Maps to group and aggregate expenses
+    - Maintains both totals and counts
+    - Sorts data for better readability
+    - Handles empty expense lists gracefully
 
 #### Error Handling
 
@@ -378,17 +378,17 @@ The `isValidName(String name)` method is a utility function used to validate inp
 
 - **Input validation:**
 
-  - Accepts a single `String` parameter `name`.
+    - Accepts a single `String` parameter `name`.
 
 - **Null and empty check:**
 
-  - Method checks if the input is `null` or an empty string after trimming the whitespace.
-  - If either condition is met, the method returns `false`.
+    - Method checks if the input is `null` or an empty string after trimming the whitespace.
+    - If either condition is met, the method returns `false`.
 
 - **Name format validation**
-  - Uses a regular expression to validate that the name contains only letters (both uppercase and lowercase), numbers, and spaces.
-  - If all conditions are met, the method returns `true`
-  - If even one is violated, it returns `false`.
+    - Uses a regular expression to validate that the name contains only letters (both uppercase and lowercase), numbers, and spaces.
+    - If all conditions are met, the method returns `true`
+    - If even one is violated, it returns `false`.
 
 #### Creating a new group
 
@@ -396,19 +396,19 @@ The `createGroup(String command)` method is responsible for creating a new group
 
 - **Group name Input:**
 
-  - The method takes in the `command` and is parsed.
-  - The parsed input is then validated using the `isValidName(String name)` method.
+    - The method takes in the `command` and is parsed.
+    - The parsed input is then validated using the `isValidName(String name)` method.
 
 - **Adding Group Members:**
 
-  - Once a valid group is created, user is prompted to add members.
-  - User can continue to input multiple member names, each name is validated by the `isValidName(String name)` method.
-  - Process continues until user types 'done'.
-  - Each valid member name is used to create a new `Friend` object, which is then added to the group using `groupManager.addFriendToGroup(String groupName, new Friend(name, groupName))`.
+    - Once a valid group is created, user is prompted to add members.
+    - User can continue to input multiple member names, each name is validated by the `isValidName(String name)` method.
+    - Process continues until user types 'done'.
+    - Each valid member name is used to create a new `Friend` object, which is then added to the group using `groupManager.addFriendToGroup(String groupName, new Friend(name, groupName))`.
 
 - **Saving the Group:**
-  - Once the group creation is complete, the method saves the group using `groupManager.saveGroups()`
-  - A success message is displayed upon creation.
+    - Once the group creation is complete, the method saves the group using `groupManager.saveGroups()`
+    - A success message is displayed upon creation.
 
 #### Remove a Group
 
@@ -416,22 +416,22 @@ The `removeGroup(String command)` is used to delete an entire group from the gro
 
 - **Input:**
 
-  - Parses the input command to retrieve the group name.
-  - Trims any leading or trailing whitespaces from the input.
+    - Parses the input command to retrieve the group name.
+    - Trims any leading or trailing whitespaces from the input.
 
 - **Group Existence Check:**
 
-  - Uses `groupManager.groupExists(groupName)` to verify whether the specified group exists.
-  - If group does not exist, the method prints "Group does not exist."
+    - Uses `groupManager.groupExists(groupName)` to verify whether the specified group exists.
+    - If group does not exist, the method prints "Group does not exist."
 
 - **Delete confirmation:**
 
-  - Before removal, the method prompts the user to confirm: "Are you sure you want to remove [groupName]? (y/n)"
-  - If the user does not input "y", the operation to remove is cancelled.
+    - Before removal, the method prompts the user to confirm: "Are you sure you want to remove [groupName]? (y/n)"
+    - If the user does not input "y", the operation to remove is cancelled.
 
 - **Group Removal:**
-  - If confirmed, the method calls `groupManager.removeGroup(groupName)` to remove the group from the group management system.
-  - The updated group list is saved using `groupManager.saveGroups()`.
+    - If confirmed, the method calls `groupManager.removeGroup(groupName)` to remove the group from the group management system.
+    - The updated group list is saved using `groupManager.saveGroups()`.
 
 #### Viewing the Transactions of a Member in a Group
 
@@ -439,22 +439,22 @@ The viewMember(String command) method is responsible for displaying the transact
 
 - Input:
 
-  - Parses user input to retrieve the group name and member name.
-  - Trims any extra whitespaces from the input.
+    - Parses user input to retrieve the group name and member name.
+    - Trims any extra whitespaces from the input.
 
 - Group Existence Check:
 
-  - Checks whether the group exists, and whether the entered member name is part of the mentioned group.
+    - Checks whether the group exists, and whether the entered member name is part of the mentioned group.
 
 - Tampering Checking:
 
-  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+    - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
 
 - Loading Expense Data:
 
-  - The method reads from the owedAmounts.txt file, which contains expense data.
-    -For each transaction, it will print out the relevant transaction.
-  - It also processes malformed data and skips it.
+    - The method reads from the owedAmounts.txt file, which contains expense data.
+      -For each transaction, it will print out the relevant transaction.
+    - It also processes malformed data and skips it.
 
 #### Viewing an existing group
 
@@ -462,34 +462,34 @@ The viewGroup(String command) method is responsible for displaying the details o
 
 - Input:
 
-  - Parses user input to retrieve the group name.
-  - Trims any extra whitespaces from the input and converts input to lower case.
+    - Parses user input to retrieve the group name.
+    - Trims any extra whitespaces from the input and converts input to lower case.
 
 - Group Existence Check:
 
-  - Uses the groupManager.groupExists(String groupName) method to check whether the specified group exists.
-  - If the group does not exist, the method prints a "Group not found" message and terminates.
+    - Uses the groupManager.groupExists(String groupName) method to check whether the specified group exists.
+    - If the group does not exist, the method prints a "Group not found" message and terminates.
 
-  - Tampering Checking:
+    - Tampering Checking:
 
-  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+    - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
 
 - Loading Expense Data:
 
-  - The method reads from the owedAmounts.txt file, which contains expense data.
-  - It loads this data into a map owedAmounts, where:
-    - The key is the member's name.
-    - The value is the accumulated amount they owe.
-  - The method ensures that the amounts are accumulated for each member instead of being overwritten.
+    - The method reads from the owedAmounts.txt file, which contains expense data.
+    - It loads this data into a map owedAmounts, where:
+        - The key is the member's name.
+        - The value is the accumulated amount they owe.
+    - The method ensures that the amounts are accumulated for each member instead of being overwritten.
 
 - Display Group Members and Expenses:
-  - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
-  - If the group has no members, it displays "No members in this group."
-  - For each member, it:
-    - Retrieves their name.
-    - Checks the owedAmounts map for any recorded expenses.
-    - Displays the member's name along with the accumulated expense amount.
-  - If a member has no recorded expense, the amount displayed is 0.00.
+    - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
+    - If the group has no members, it displays "No members in this group."
+    - For each member, it:
+        - Retrieves their name.
+        - Checks the owedAmounts map for any recorded expenses.
+        - Displays the member's name along with the accumulated expense amount.
+    - If a member has no recorded expense, the amount displayed is 0.00.
 
 #### Viewing the Transactions of a Member in a Group
 
@@ -497,22 +497,22 @@ The `viewMember(String command)` method is responsible for displaying the transa
 
 - **Input:**
 
-  - Parses user input to retrieve the group name and member name.
-  - Trims any extra whitespaces from the input.
+    - Parses user input to retrieve the group name and member name.
+    - Trims any extra whitespaces from the input.
 
 - **Group Existence Check:**
 
-  - Checks whether the group exists, and whether the entered member name is part of the mentioned group.
+    - Checks whether the group exists, and whether the entered member name is part of the mentioned group.
 
 - **Tampering Checking:**
 
-  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+    - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
 
 - **Loading Expense Data:**
 
-  - The method reads from the `owedAmounts.txt` file, which contains expense data.
-    -For each transaction, it will print out the relevant transaction.
-  - It also processes malformed data and skips it.
+    - The method reads from the `owedAmounts.txt` file, which contains expense data.
+      -For each transaction, it will print out the relevant transaction.
+    - It also processes malformed data and skips it.
 
 #### Viewing an existing group
 
@@ -520,34 +520,34 @@ The `viewGroup(String command)` method is responsible for displaying the details
 
 - **Input:**
 
-  - Parses user input to retrieve the group name.
-  - Trims any extra whitespaces from the input and converts input to lower case.
+    - Parses user input to retrieve the group name.
+    - Trims any extra whitespaces from the input and converts input to lower case.
 
 - **Group Existence Check:**
 
-  - Uses the `groupManager.groupExists(String groupName)` method to check whether the specified group exists.
-  - If the group does not exist, the method prints a "Group not found" message and terminates.
+    - Uses the `groupManager.groupExists(String groupName)` method to check whether the specified group exists.
+    - If the group does not exist, the method prints a "Group not found" message and terminates.
 
-  - **Tampering Checking:**
+    - **Tampering Checking:**
 
-  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
+    - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
 
 - **Loading Expense Data:**
 
-  - The method reads from the `owedAmounts.txt` file, which contains expense data.
-  - It loads this data into a map owedAmounts, where:
-    - The key is the member's name.
-    - The value is the accumulated amount they owe.
-  - The method ensures that the amounts are accumulated for each member instead of being overwritten.
+    - The method reads from the `owedAmounts.txt` file, which contains expense data.
+    - It loads this data into a map owedAmounts, where:
+        - The key is the member's name.
+        - The value is the accumulated amount they owe.
+    - The method ensures that the amounts are accumulated for each member instead of being overwritten.
 
 - **Display Group Members and Expenses:**
-  - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
-  - If the group has no members, it displays "No members in this group."
-  - For each member, it:
-    - Retrieves their name.
-    - Checks the owedAmounts map for any recorded expenses.
-    - Displays the member's name along with the accumulated expense amount.
-  - If a member has no recorded expense, the amount displayed is 0.00.
+    - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
+    - If the group has no members, it displays "No members in this group."
+    - For each member, it:
+        - Retrieves their name.
+        - Checks the owedAmounts map for any recorded expenses.
+        - Displays the member's name along with the accumulated expense amount.
+    - If a member has no recorded expense, the amount displayed is 0.00.
 
 #### Viewing all user's Groups
 
@@ -555,12 +555,12 @@ The `viewAllGroups()` method is designed to display a list of all the groups tha
 
 - **Check for existing groups:**
 
-  - Uses `groupManager.getGroups()` to retrieve a list of all groups.
-  - If the list is empty, the method prints "You have no groups".
+    - Uses `groupManager.getGroups()` to retrieve a list of all groups.
+    - If the list is empty, the method prints "You have no groups".
 
 - **Displaying Groups:**
-  - If the list is not empty, the method iterates over each group and prints its details using the `toString()` method of the Group class.
-  - This allows the user to see a comprehensive list of all group names and any other associated information that the Group class's `toString()` method returns.
+    - If the list is not empty, the method iterates over each group and prints its details using the `toString()` method of the Group class.
+    - This allows the user to see a comprehensive list of all group names and any other associated information that the Group class's `toString()` method returns.
 
 #### Viewing group directly
 
@@ -574,34 +574,34 @@ The `addMember(String command)` method allows the user to add a new member to an
 
 - **Input:**
 
-  - Member name:
-    - Parses the user input `command` to retrieve the name of new member to be added.
-    - Uses `isValidName(String name)` to validate the input, ensuring it does not contain special characters or empty spaces.
-    - Repeats the prompt until a valid name is entered.
-  - Group name:
-    - Parses user input `command` to retrieve group name to which the member should be added.
-    - Similarly, the name is validated to avoid empty or invalid names.
+    - Member name:
+        - Parses the user input `command` to retrieve the name of new member to be added.
+        - Uses `isValidName(String name)` to validate the input, ensuring it does not contain special characters or empty spaces.
+        - Repeats the prompt until a valid name is entered.
+    - Group name:
+        - Parses user input `command` to retrieve group name to which the member should be added.
+        - Similarly, the name is validated to avoid empty or invalid names.
 
 - **Group Existence Check:**
 
-  - Uses `groupManager.groupExists(groupName)` to verify whether the specified group already exists.
+    - Uses `groupManager.groupExists(groupName)` to verify whether the specified group already exists.
 
 - **Adding Member to existing group:**
 
-  - If the group exists:
-    - Uses `groupManager.addFriendToGroup(groupName, new Friend(name, groupName))` to add the member.
-    - Calls `groupManager.saveGroups()` to save the updated group data.
-    - Displays a success message indicating that the member has been added to the group.
+    - If the group exists:
+        - Uses `groupManager.addFriendToGroup(groupName, new Friend(name, groupName))` to add the member.
+        - Calls `groupManager.saveGroups()` to save the updated group data.
+        - Displays a success message indicating that the member has been added to the group.
 
 - **Handling non-existent groups:**
-  - If the group does not exist:
-    - Asks the user if they would like to create the group.
-  - If the user enters "y":
-    - Creates the group and adds the member directly.
-    - Saves the new group and member data.
-    - Displays a message confirming the creation and addition.
-  - If the user enters "no":
-    - Cancels the operation and notifies the user that the member was not added.
+    - If the group does not exist:
+        - Asks the user if they would like to create the group.
+    - If the user enters "y":
+        - Creates the group and adds the member directly.
+        - Saves the new group and member data.
+        - Displays a message confirming the creation and addition.
+    - If the user enters "no":
+        - Cancels the operation and notifies the user that the member was not added.
 
 #### Remove a member
 
@@ -609,28 +609,28 @@ The `removeMember(String command)` method allows the user to add a new member to
 
 - **Input:**
 
-  - Member name:
-    - Parses the input `command` to retrieve the name of new member to be removed.
-    - Trims any leading or trailing whitespaces from the input.
-  - Group name:
-    - Parses the input `command` to retrieve the group name to which the member should be removed.
-    - Trims whitespace for the input.
+    - Member name:
+        - Parses the input `command` to retrieve the name of new member to be removed.
+        - Trims any leading or trailing whitespaces from the input.
+    - Group name:
+        - Parses the input `command` to retrieve the group name to which the member should be removed.
+        - Trims whitespace for the input.
 
 - **Group Existence Check:**
 
-  - Uses `groupManager.groupExists(groupName)` to verify whether the specified group exists.
-  - If group does not exist, the method prints "Group does not exist."
+    - Uses `groupManager.groupExists(groupName)` to verify whether the specified group exists.
+    - If group does not exist, the method prints "Group does not exist."
 
 - **Delete confirmation:**
 
-  - Before removal, the method prompts the user to confirm: "Are you sure you want to remove [memberName] from [groupName]? (y/n)"
-  - If the user does not input "y", the operation to remove is cancelled.
+    - Before removal, the method prompts the user to confirm: "Are you sure you want to remove [memberName] from [groupName]? (y/n)"
+    - If the user does not input "y", the operation to remove is cancelled.
 
 - **Member Removal:**
-  - If confirmed, the method iterates through the list of groups returned by `groupManager.getGroups()`.
-  - Locates the specified group by comparing the group name.
-  - Uses the `removeFriend(String friendName)` method to attempt to remove the specified member from the group.
-  - If successful, it sets the removed flag to true and breaks out of the loop.
+    - If confirmed, the method iterates through the list of groups returned by `groupManager.getGroups()`.
+    - Locates the specified group by comparing the group name.
+    - Uses the `removeFriend(String friendName)` method to attempt to remove the specified member from the group.
+    - If successful, it sets the removed flag to true and breaks out of the loop.
 
 ### 3.1.6 SplitCommand Class
 
@@ -682,20 +682,20 @@ Executes the flow for splitting an expense. Follows the format as required above
 
 - **Equal Split:**
 
-  - Divides total amount equally among all members.
-  - Appends individual owed shares to the transaction log.
+    - Divides total amount equally among all members.
+    - Appends individual owed shares to the transaction log.
 
 - **Manual Split:**
 
-  - Prompts user to choose between absolute amounts (`/a`) or percentages (`/p`).
-  - **Manual Split – Absolute:**
-    - Prompts for each member's assigned amount.
-    - Tracks remaining amount and prevents over-allocation.
-    - Logs each owed amount to storage.
-  - **Manual Split – Percentage:**
-    - Prompts for each member's share percentage.
-    - Computes owed amount as `totalAmount * (percentage / 100)`.
-    - Validates total assigned percentages.
+    - Prompts user to choose between absolute amounts (`/a`) or percentages (`/p`).
+    - **Manual Split – Absolute:**
+        - Prompts for each member's assigned amount.
+        - Tracks remaining amount and prevents over-allocation.
+        - Logs each owed amount to storage.
+    - **Manual Split – Percentage:**
+        - Prompts for each member's share percentage.
+        - Computes owed amount as `totalAmount * (percentage / 100)`.
+        - Validates total assigned percentages.
 
 - Calls `friendsCommands.viewGroupDirect()` to update group display after split.
 
@@ -818,80 +818,80 @@ The `Expense` class in the `seedu.duke.expense` package represents an individual
 #### Expense Initialization
 
 - **Constructors:**
-  - `Expense(String title, String description, String date, double amount)`
-    - Initializes the `title`, `description`, `date`, and `amount` fields with the provided values.
-    - Sets the default completion status (`isDone`) to `false`.
-  - `Expense(String title, String description, String date, double amount, boolean isDone)`
-    - Initializes the `title`, `description`, `date`, `amount`, and `isDone` fields with the provided values.
-    - Allows specifying whether the expense is marked as completed during initialization.
+    - `Expense(String title, String description, String date, double amount)`
+        - Initializes the `title`, `description`, `date`, and `amount` fields with the provided values.
+        - Sets the default completion status (`isDone`) to `false`.
+    - `Expense(String title, String description, String date, double amount, boolean isDone)`
+        - Initializes the `title`, `description`, `date`, `amount`, and `isDone` fields with the provided values.
+        - Allows specifying whether the expense is marked as completed during initialization.
 
 #### Getting and Setting Attributes
 
 - **Title:**
 
-  - **Method:** `getTitle()`
-    - Returns the title of the expense.
-    - Provides a way to access the short name or summary of the expense.
-  - **Method:** `setTitle(String title)`
-    - Updates the title of the expense.
-    - Enables modification of the expense's summary.
+    - **Method:** `getTitle()`
+        - Returns the title of the expense.
+        - Provides a way to access the short name or summary of the expense.
+    - **Method:** `setTitle(String title)`
+        - Updates the title of the expense.
+        - Enables modification of the expense's summary.
 
 - **Description:**
 
-  - **Method:** `getDescription()`
-    - Returns the description of the expense.
-    - Provides detailed information about the expense.
-  - **Method:** `setDescription(String description)`
-    - Updates the description of the expense.
-    - Allows modifying the detailed information.
+    - **Method:** `getDescription()`
+        - Returns the description of the expense.
+        - Provides detailed information about the expense.
+    - **Method:** `setDescription(String description)`
+        - Updates the description of the expense.
+        - Allows modifying the detailed information.
 
 - **Date:**
 
-  - **Method:** `getDate()`
-    - Returns the date of the expense.
-    - Provides the date when the expense was incurred.
-  - **Method:** `setDate(String date)`
-    - Updates the date of the expense.
-    - Enables correction or adjustment of the expense date.
+    - **Method:** `getDate()`
+        - Returns the date of the expense.
+        - Provides the date when the expense was incurred.
+    - **Method:** `setDate(String date)`
+        - Updates the date of the expense.
+        - Enables correction or adjustment of the expense date.
 
 - **Amount:**
 
-  - **Method:** `getAmount()`
-    - Returns the monetary value of the expense.
-    - Provides the expense amount for calculations or display.
-  - **Method:** `setAmount(double amount)`
-    - Updates the monetary value of the expense.
-    - Allows modifying the expense amount.
+    - **Method:** `getAmount()`
+        - Returns the monetary value of the expense.
+        - Provides the expense amount for calculations or display.
+    - **Method:** `setAmount(double amount)`
+        - Updates the monetary value of the expense.
+        - Allows modifying the expense amount.
 
 - **Completion Status:**
 
-  - **Method:** `getDone()`
-    - Returns the completion status of the expense (`true` if completed, `false` otherwise).
-    - Indicates whether the expense has been settled or marked as done.
-  - **Method:** `setDone(Boolean isDone)`
-    - Updates the completion status of the expense.
-    - Allows marking the expense as completed or uncompleted.
+    - **Method:** `getDone()`
+        - Returns the completion status of the expense (`true` if completed, `false` otherwise).
+        - Indicates whether the expense has been settled or marked as done.
+    - **Method:** `setDone(Boolean isDone)`
+        - Updates the completion status of the expense.
+        - Allows marking the expense as completed or uncompleted.
 
 - **Group Name:**
-  - **Method:** `getGroupName()`
-    - Returns the name of the group associated with the expense.
-    - Useful for organizing expenses by groups.
-  - **Method:** `setGroupName(String groupName)`
-    - Updates the group name associated with the expense.
-    - Enables assigning the expense to a specific group.
+    - **Method:** `getGroupName()`
+        - Returns the name of the group associated with the expense.
+        - Useful for organizing expenses by groups.
+    - **Method:** `setGroupName(String groupName)`
+        - Updates the group name associated with the expense.
+        - Enables assigning the expense to a specific group.
 
 #### String Representation
 
 - **Method:** `toString()`
-  - Returns a string representation of the expense.
-  - Includes the title, description, date, and formatted amount (to two decimal places).
-  - Example Output:
-    ```
-    Title: Groceries
-    Description: Weekly food shopping
-    Date: 01-01-2025
-    Amount: 100.00
-    ```
+    - Returns a string representation of the expense.
+    - Includes the title, description, date, and formatted amount (to two decimal places).
+    - Example Output:
+      ```
+      Title: Groceries
+      Description: Weekly food shopping
+      Date: 01-01-2025
+      Amount: 100.00
+      ```
 
 #### Design Considerations
 
@@ -909,22 +909,22 @@ The `Friend` class in the `seedu.duke.friends` package represents an individual 
 
 - **Constructor:** `Friend(String name, String group)`
 - **Features:**
-  - Initializes the `name` and `group` fields with the provided values.
-  - Represents a friend as part of a specific group.
+    - Initializes the `name` and `group` fields with the provided values.
+    - Represents a friend as part of a specific group.
 
 #### Getting Friend's Name
 
 - **Method:** `getName()`
 - **Features:**
-  - Returns the name of the friend.
-  - Provides a way to access the friend's name for display or processing.
+    - Returns the name of the friend.
+    - Provides a way to access the friend's name for display or processing.
 
 #### Getting Friend's Group
 
 - **Method:** `getGroup()`
 - **Features:**
-  - Returns the group to which the friend belongs.
-  - Useful for organizing friends by their associated groups.
+    - Returns the group to which the friend belongs.
+    - Useful for organizing friends by their associated groups.
 
 #### Design Considerations
 
@@ -940,48 +940,48 @@ The `Group` class in the `seedu.duke.friends` package manages a collection of `F
 
 - **Constructor:** `Group(String name)`
 - **Features:**
-  - Sets the group name.
-  - Initializes an empty list of `Friend` objects.
+    - Sets the group name.
+    - Initializes an empty list of `Friend` objects.
 
 #### Adding Friends
 
 - **Method:** `addFriend(Friend friend)`
 - **Features:**
-  - Adds a `Friend` object to the group.
+    - Adds a `Friend` object to the group.
 
 #### Removing Friends
 
 - **Method:** `removeFriend(String friendName)`
 - **Features:**
-  - Searches for the first friend with a matching name and removes them.
-  - Returns `true` if removal is successful; otherwise returns `false`.
-  - Note: Uses a for-each loop for removal, which may require caution regarding concurrent modifications.
+    - Searches for the first friend with a matching name and removes them.
+    - Returns `true` if removal is successful; otherwise returns `false`.
+    - Note: Uses a for-each loop for removal, which may require caution regarding concurrent modifications.
 
 #### Checking for friends in group
 
 - **Method:** `isMemberInGroup(String friendName)`
 - **Features:**
-  - Returns `true` if the friend exists in the friend group.
+    - Returns `true` if the friend exists in the friend group.
 
 #### Retrieving Friends
 
 - **Method:** `getFriends()`
 - **Features:**
-  - Returns the list of `Friend` objects in the group.
+    - Returns the list of `Friend` objects in the group.
 
 #### Getting Group Name
 
 - **Method:** `getName()`
 - **Features:**
-  - Returns the group's name.
+    - Returns the group's name.
 
 #### String Representation
 
 - **Method:** `toString()`
 - **Features:**
-  - Constructs a formatted string showing the group name and member names.
-  - If the group is empty, calls `messages.displayEmptyGroupMessage()` to display an appropriate message.
-  - **Important:** Ensure that the `messages` field is initialized externally to prevent a `NullPointerException`.
+    - Constructs a formatted string showing the group name and member names.
+    - If the group is empty, calls `messages.displayEmptyGroupMessage()` to display an appropriate message.
+    - **Important:** Ensure that the `messages` field is initialized externally to prevent a `NullPointerException`.
 
 ### 3.2.1 GroupManager Class
 
@@ -991,8 +991,8 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Constructor:** `GroupManager()`
 - **Features:**
-  - Initializes the list of groups by loading existing groups from the storage using `GroupStorage.loadGroups()`.
-  - Uses the `Messages` object to display user messages.
+    - Initializes the list of groups by loading existing groups from the storage using `GroupStorage.loadGroups()`.
+    - Uses the `Messages` object to display user messages.
 
 ---
 
@@ -1000,10 +1000,10 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Method:** `addFriendToGroup(String groupName, Friend friend)`
 - **Features:**
-  - Searches for an existing group with the given name.
-  - If found, adds the `Friend` object to that group.
-  - If not found, creates a new group with the specified name and adds the friend.
-  - Ensures that the group is updated efficiently by adding the friend directly to the existing group if possible.
+    - Searches for an existing group with the given name.
+    - If found, adds the `Friend` object to that group.
+    - If not found, creates a new group with the specified name and adds the friend.
+    - Ensures that the group is updated efficiently by adding the friend directly to the existing group if possible.
 
 ---
 
@@ -1011,8 +1011,8 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Method:** `groupExists(String groupName)`
 - **Features:**
-  - Iterates through the list of groups to check whether a group with the specified name exists.
-  - Returns `true` if the group is found, otherwise returns `false`.
+    - Iterates through the list of groups to check whether a group with the specified name exists.
+    - Returns `true` if the group is found, otherwise returns `false`.
 
 ---
 
@@ -1020,9 +1020,9 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Method:** `getGroupMembers(String groupName)`
 - **Features:**
-  - Searches for the specified group by name.
-  - If found, returns a list of `Friend` objects from that group.
-  - If not found, returns an empty list to indicate that the group does not exist.
+    - Searches for the specified group by name.
+    - If found, returns a list of `Friend` objects from that group.
+    - If not found, returns an empty list to indicate that the group does not exist.
 
 ---
 
@@ -1030,9 +1030,9 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Method:** `removeGroup(String groupName)`
 - **Features:**
-  - Removes the specified group using a `removeIf` lambda function for efficiency.
-  - If the group is successfully removed, it calls `saveGroups()` to persist changes.
-  - Displays a success message if the group is deleted, otherwise uses `messages.displayMissingGroupMessage()` to indicate that the group was not found.
+    - Removes the specified group using a `removeIf` lambda function for efficiency.
+    - If the group is successfully removed, it calls `saveGroups()` to persist changes.
+    - Displays a success message if the group is deleted, otherwise uses `messages.displayMissingGroupMessage()` to indicate that the group was not found.
 
 ---
 
@@ -1040,7 +1040,7 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Method:** `isMemberInGroup(String groupName, String memberName)`
 - **Features:**
-  - Checks if the member exists in the specific group.
+    - Checks if the member exists in the specific group.
 
 ---
 
@@ -1048,8 +1048,8 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Method:** `saveGroups()`
 - **Features:**
-  - Saves the current list of groups to the storage using `GroupStorage.saveGroups(groups)`.
-  - Ensures that changes made to group structures are persistent across application sessions.
+    - Saves the current list of groups to the storage using `GroupStorage.saveGroups(groups)`.
+    - Ensures that changes made to group structures are persistent across application sessions.
 
 ---
 
@@ -1057,8 +1057,8 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
 
 - **Method:** `getGroups()`
 - **Features:**
-  - Returns the current list of groups.
-  - Useful for displaying all available groups in the application.
+    - Returns the current list of groups.
+    - Useful for displaying all available groups in the application.
 
 ---
 
@@ -1170,121 +1170,121 @@ The Summary functionality is implemented through the `ExpenseCommand` class, whi
 
 1. **Multiple Viewing Options:**
 
-   - **Monthly View (`summary/BY-MONTH/N`):** Organizes expenses by month, showing totals and detailed expense listings for each month
-   - **Category View (`summary/BY-CATEGORY/Y` or `summary/BY-CATEGORY/N`):** Groups expenses by category with the option to display visualization
+    - **Monthly View (`summary/BY-MONTH/N`):** Organizes expenses by month, showing totals and detailed expense listings for each month
+    - **Category View (`summary/BY-CATEGORY/Y` or `summary/BY-CATEGORY/N`):** Groups expenses by category with the option to display visualization
 
 2. **Data Visualization:**
 
-   - Implements an interactive pie chart for category-wise summary using the XChart library
-   - Displays percentages, amounts, and color-coded segments for each expense category
-   - Provides tooltips and annotations with additional information
-   - Includes proper cleanup of visualization resources when the application closes
+    - Implements an interactive pie chart for category-wise summary using the XChart library
+    - Displays percentages, amounts, and color-coded segments for each expense category
+    - Provides tooltips and annotations with additional information
+    - Includes proper cleanup of visualization resources when the application closes
 
 3. **Export Functionality:**
 
-   - Supports exporting summaries to text files via the `export/<type>` command
-   - Where `<type>` can be either `monthly` or `category-wise`
-   - Monthly summaries are exported to `monthly_summary.txt`
-   - Category-wise summaries are exported to `category_summary.txt`
+    - Supports exporting summaries to text files via the `export/<type>` command
+    - Where `<type>` can be either `monthly` or `category-wise`
+    - Monthly summaries are exported to `monthly_summary.txt`
+    - Category-wise summaries are exported to `category_summary.txt`
 
 4. **Data Processing:**
-   - Uses `ExpenseClassifier` to calculate category proportions and counts
-   - Groups expenses by month or category using Java's HashMap for efficient lookups
-   - Handles empty expense lists and edge cases gracefully
-   - Provides consistent formatting and currency display
+    - Uses `ExpenseClassifier` to calculate category proportions and counts
+    - Groups expenses by month or category using Java's HashMap for efficient lookups
+    - Handles empty expense lists and edge cases gracefully
+    - Provides consistent formatting and currency display
 
 #### Key Methods:
 
 1. **`showExpenseSummary(String userInput)`**
 
-   - **Purpose:** Main entry point for processing summary commands
-   - **Parameters:** `userInput` - The command string from the user
-   - **Functionality:**
-     - Parses the input format (`summary/BY-MONTH/N` or `summary/BY-CATEGORY/{Y|N}`)
-     - Validates command format and parameters
-     - Delegates to appropriate summary method based on view type
-     - Handles error cases and provides feedback to users
-     - Ensures BY-MONTH view only supports non-visualization option
+    - **Purpose:** Main entry point for processing summary commands
+    - **Parameters:** `userInput` - The command string from the user
+    - **Functionality:**
+        - Parses the input format (`summary/BY-MONTH/N` or `summary/BY-CATEGORY/{Y|N}`)
+        - Validates command format and parameters
+        - Delegates to appropriate summary method based on view type
+        - Handles error cases and provides feedback to users
+        - Ensures BY-MONTH view only supports non-visualization option
 
 2. **`showMonthlySummary()`**
 
-   - **Purpose:** Displays expenses grouped by month
-   - **Functionality:**
-     - Retrieves all expenses from the budget manager
-     - Groups expenses by month using HashMap data structures
-     - Calculates monthly totals and expense counts
-     - Formats and displays a comprehensive monthly breakdown
-     - Lists individual expenses under each month with details
-     - Handles empty expense lists gracefully
+    - **Purpose:** Displays expenses grouped by month
+    - **Functionality:**
+        - Retrieves all expenses from the budget manager
+        - Groups expenses by month using HashMap data structures
+        - Calculates monthly totals and expense counts
+        - Formats and displays a comprehensive monthly breakdown
+        - Lists individual expenses under each month with details
+        - Handles empty expense lists gracefully
 
 3. **`showCategorySummary(boolean showVisualization)`**
 
-   - **Purpose:** Displays expenses grouped by category
-   - **Parameters:** `showVisualization` - Whether to show a pie chart
-   - **Functionality:**
-     - Retrieves all expenses from the budget manager
-     - Uses `ExpenseClassifier` to calculate category totals and counts
-     - Displays category-wise summary with amounts and expense counts
-     - Optionally calls `showPieChart()` to display visualization
-     - Prepares data for visualization by collecting category names and values
+    - **Purpose:** Displays expenses grouped by category
+    - **Parameters:** `showVisualization` - Whether to show a pie chart
+    - **Functionality:**
+        - Retrieves all expenses from the budget manager
+        - Uses `ExpenseClassifier` to calculate category totals and counts
+        - Displays category-wise summary with amounts and expense counts
+        - Optionally calls `showPieChart()` to display visualization
+        - Prepares data for visualization by collecting category names and values
 
 4. **`showPieChart(List<String> categoryNames, List<Number> categoryValues)`**
 
-   - **Purpose:** Creates and displays an interactive pie chart visualization
-   - **Parameters:**
-     - `categoryNames` - List of category names to display
-     - `categoryValues` - Corresponding monetary values for each category
-   - **Functionality:**
-     - Closes any existing chart windows to prevent resource leaks
-     - Creates a pie chart using XChart library with professional styling
-     - Calculates percentages for each category
-     - Applies custom colors and formatting for visual clarity
-     - Adds tooltips and annotations with total expense information
-     - Creates and displays a JFrame window with the chart
-     - Handles window events including proper cleanup on close
-   - **Known Limitations:**
-     - **IMPORTANT**: Due to a limitation in the XChart visualization API, users must close the pie chart window before exiting the program. If the visualization window remains open when attempting to exit, the application will not terminate properly. This is a known API issue and not a bug in the application.
+    - **Purpose:** Creates and displays an interactive pie chart visualization
+    - **Parameters:**
+        - `categoryNames` - List of category names to display
+        - `categoryValues` - Corresponding monetary values for each category
+    - **Functionality:**
+        - Closes any existing chart windows to prevent resource leaks
+        - Creates a pie chart using XChart library with professional styling
+        - Calculates percentages for each category
+        - Applies custom colors and formatting for visual clarity
+        - Adds tooltips and annotations with total expense information
+        - Creates and displays a JFrame window with the chart
+        - Handles window events including proper cleanup on close
+    - **Known Limitations:**
+        - **IMPORTANT**: Due to a limitation in the XChart visualization API, users must close the pie chart window before exiting the program. If the visualization window remains open when attempting to exit, the application will not terminate properly. This is a known API issue and not a bug in the application.
 
 5. **`exportExpenseSummary(String userInput)`**
 
-   - **Purpose:** Handles exporting summaries to text files
-   - **Parameters:** `userInput` - The command string from the user
-   - **Functionality:**
-     - Parses the input format (`export/<monthly | category-wise>`)
-     - Validates the export type parameter
-     - Delegates to appropriate export method based on the specified type
-     - Handles invalid formats and provides helpful error messages
-     - Supports "monthly" and "category-wise" export types
+    - **Purpose:** Handles exporting summaries to text files
+    - **Parameters:** `userInput` - The command string from the user
+    - **Functionality:**
+        - Parses the input format (`export/<monthly | category-wise>`)
+        - Validates the export type parameter
+        - Delegates to appropriate export method based on the specified type
+        - Handles invalid formats and provides helpful error messages
+        - Supports "monthly" and "category-wise" export types
 
 6. **`exportMonthlySummary()`** and **`exportCategorySummary()`**
-   - **Purpose:** Export specific summary types to text files
-   - **Functionality:**
-     - Create and write to their respective output files
-     - Format data consistently with the displayed summary
-     - Handle file I/O operations with proper exception handling
-     - Provide confirmation messages upon successful export
-     - Handle edge cases like empty expense lists
+    - **Purpose:** Export specific summary types to text files
+    - **Functionality:**
+        - Create and write to their respective output files
+        - Format data consistently with the displayed summary
+        - Handle file I/O operations with proper exception handling
+        - Provide confirmation messages upon successful export
+        - Handle edge cases like empty expense lists
 
 #### Implementation:
 
 - **Data Aggregation:**
 
-  - Uses Maps to efficiently group expenses by month or category
-  - Implements running totals and counts for statistical analysis
-  - Maintains original expense objects for detailed reporting
+    - Uses Maps to efficiently group expenses by month or category
+    - Implements running totals and counts for statistical analysis
+    - Maintains original expense objects for detailed reporting
 
 - **Visualization Engine:**
 
-  - Creates customized PieChart instances with professional styling
-  - Implements consistent color coding for categories
-  - Handles window management and proper cleanup of resources
-  - Provides descriptive labels and tooltips for user interaction
+    - Creates customized PieChart instances with professional styling
+    - Implements consistent color coding for categories
+    - Handles window management and proper cleanup of resources
+    - Provides descriptive labels and tooltips for user interaction
 
 - **Export Module:**
-  - Writes formatted summaries to external text files
-  - Maintains consistent formatting between displayed and exported summaries
-  - Handles file operations with proper exception management
-  - Provides confirmation messages for successful exports
+    - Writes formatted summaries to external text files
+    - Maintains consistent formatting between displayed and exported summaries
+    - Handles file operations with proper exception management
+    - Provides confirmation messages for successful exports
 
 The Summary functionality integrates with the `BudgetManager` for accessing expense data, the `ExpenseClassifier` for categorical analysis, and the `Currency` class to ensure consistent currency representation.
 
@@ -1402,22 +1402,22 @@ The data visualization feature provides users with interactive and informative v
 
 1. **Data Processing Layer**
 
-   - Aggregates expense data from storage
-   - Performs statistical calculations
-   - Prepares data for visualization
+    - Aggregates expense data from storage
+    - Performs statistical calculations
+    - Prepares data for visualization
 
 2. **Visualization Engine**
 
-   - Generates charts and graphs
-   - Supports multiple visualization types
-   - Handles currency formatting
-   - Manages color schemes and layouts
+    - Generates charts and graphs
+    - Supports multiple visualization types
+    - Handles currency formatting
+    - Manages color schemes and layouts
 
 3. **User Interface Layer**
-   - Provides interactive controls
-   - Handles view selection
-   - Manages display preferences
-   - Supports export functionality
+    - Provides interactive controls
+    - Handles view selection
+    - Manages display preferences
+    - Supports export functionality
 
 #### Important Implementation Note:
 
@@ -1501,7 +1501,6 @@ solution that accurately records costs, updates balances in real time, and keeps
 | **Error Hunter**                  | Receive error messages if I enter an invalid command                                                          | Fix mistakes                                                              |
 | **Confirmation Seeker**           | Confirm before deleting an expense                                                                            | Not accidentally lose data                                                |
 | **Search Wizard**                 | A search function to find expenses based on keywords                                                          | Quickly locate past transactions                                          |
-| **Shortcut Lover**                | Shortcut commands for frequent actions                                                                        | Use the app more efficiently                                              |
 | **Instant Balance Checker**       | View my balance at any time with a single command                                                             | Check how much I owe                                                      |
 | **UI Perfectionist**              | The app to have an easy-to-understand UI                                                                      | Easily navigate my data                                                   |
 | **New Adventure Starter**         | Start a new trip                                                                                              | Track expenses separately for different trips                             |
