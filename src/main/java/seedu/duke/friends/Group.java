@@ -47,21 +47,6 @@ public class Group {
     }
 
     /**
-     * Checks if a friend is in the group.
-     *
-     * @param friendName the name to check.
-     * @return true if the friend is in the group, false otherwise.
-     */
-    public boolean hasFriend(String friendName) {
-        for (Friend friend : friends) {
-            if (friend.getName().equals(friendName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Checks if a member is in the group.
      *
      * @param memberName the name to check.

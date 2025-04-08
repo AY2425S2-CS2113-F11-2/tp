@@ -59,8 +59,6 @@ Here is the list of feature implemented:
     - View unsettled expenses: `list-unsettled`
     - Change currency: `change-currency`
 
-**Relevant Pull Request:** [PR #138](https://github.com/AY2425S1-CS2113-W10-1/tp/pull/138/files)
-
 ---
 
 ### Contributions to Developer Guide
@@ -89,6 +87,8 @@ Here is the list of feature implemented:
   - Object Diagram for currency
   - Code reviews for teammates
   - Pasting screenshots for version 1.0 during tutorials
+  - Sequence Diagram for change currency
+  - Object diagram for change currency
 
 ### Review/mentoring contributions:
 - **Bug Finding and Suggestions:** https://github.com/AY2425S2-CS2113-F11-2/tp/pull/34/files

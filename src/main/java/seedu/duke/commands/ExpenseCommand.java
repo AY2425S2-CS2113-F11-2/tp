@@ -727,7 +727,7 @@ public class ExpenseCommand {
             String[] parts = userInput.split("/", 3);
             
             if (parts.length < 3 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
-                System.out.println("Invalid format. Usage: summary/BY-MONTH/N or BY-CATEGORY/Y or N");
+                System.out.println("Invalid format. Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>");
                 return;
             }
 
@@ -977,11 +977,18 @@ public class ExpenseCommand {
      * Exports the expense summary to a file.
      */
     public void exportExpenseSummary(String userInput) {
+        // Check if there are any expenses to export first
+        List<Expense> expenses = budgetManager.getAllExpenses();
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses to export!");
+            return;
+        }
+        
         // Split and trim to handle multiple spaces
         String[] parts = userInput.split("/", 2);
         
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            System.out.println("Invalid format. Usage: export/<monthly | category wise>");
+            System.out.println("Invalid format. Usage: export/<monthly | category-wise>");
             return;
         }
         
@@ -989,10 +996,10 @@ public class ExpenseCommand {
         
         if (exportType.equals("monthly")) {
             exportMonthlySummary();
-        } else if (exportType.equals("category wise")) {
+        } else if (exportType.equals("category-wise")) {
             exportCategorySummary();
         } else {
-            System.out.println("Invalid export type. Please use 'monthly' or 'category wise'.");
+            System.out.println("Invalid export type. Please use 'monthly' or 'category-wise'.");
         }
     }
 
@@ -1005,7 +1012,9 @@ public class ExpenseCommand {
             assert expenses != null : "Expenses list should not be null";
             
             if (expenses.isEmpty()) {
-                writer.write("No expenses found.");
+                // This check is now redundant since we check in exportExpenseSummary,
+                // but keeping for defensive programming
+                System.out.println("No expenses to export!");
                 return;
             }
 
@@ -1061,7 +1070,9 @@ public class ExpenseCommand {
             assert expenses != null : "Expenses list should not be null";
             
             if (expenses.isEmpty()) {
-                writer.write("No expenses found.");
+                // This check is now redundant since we check in exportExpenseSummary,
+                // but keeping for defensive programming
+                System.out.println("No expenses to export!");
                 return;
             }
 
