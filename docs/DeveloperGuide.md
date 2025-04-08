@@ -607,7 +607,7 @@ The `removeMember(String command)` method allows the user to add a new member to
 
 The `SplitCommand` class handles the functionality of splitting expenses among members in a group. It supports both equal and manual assignment (absolute or percentage-based) and ensures transaction details are logged with tamper prevention through checksum verification.
 
-`split/<equal | assign>/<expense index>/<group name>`
+`split/<equal|assign>/<expense index>/<group name>`
 
 - Parse and validate the split command format:  
   `split/<equal|assign>/<expense index>/<group name>`

@@ -99,5 +99,5 @@ Here is the list of features implemented:
 - **Documentation in Section 3.1.5**:
 - Viewing an existing group (`viewGroup()` method, `viewMember()` method)
 - **UML Sequence Diagram in Section 4.3**:
-- Split Expense Feature  in `Overall Application Architecture`, includng a Sequence Diagram
+- Split Expense Feature  in `Overall Application Architecture`, including a Sequence Diagram
 ---
