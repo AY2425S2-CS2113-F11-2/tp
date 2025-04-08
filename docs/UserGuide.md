@@ -174,13 +174,17 @@ View all the expenses.
 - **Format:** `list`
 - **Usage:** `list`
 - **Example:**
+
   ```
   List of Expenses:
+  All expenses are in SGD
+  List of Expenses:
   Expense #1
-  Title: test expense
-  Description: testing testing
-  Date: 01-01-2025
-  Amount: $50.00
+  Title: test1
+  Category: Food
+  Date: 10-10-2020
+  Amount: 400.00
+
   ```
 
 ---
@@ -329,7 +333,7 @@ If you would like to include yourself in the group, please add your name as well
 
 #### View friends and expenses in a certain group: `view-member`
 
-View a specific group and see how much each member owes.
+View a specific member and see their past transactions.
 
 - **Format:** `view-member/<group-name>/<member name>`
 - **Usage:** `view-member/testGroup/john`
@@ -345,7 +349,9 @@ View a specific group and see how much each member owes.
 
   ```
 
----
+  - **Notes:**
+
+- Since members with the same name are taken to be the same person across the entire program, `view-member` gives the list of all the split expenses the member is associated with.
 
 ---
 
@@ -365,9 +371,10 @@ View a specific group and its constituent members.
   robert - Expense: $50.00
 
   ```
+
   - **Notes:**
 
-- The expenses are summed from the member in that group. (If John exists in both testGroup and testGroup1, running `view-group/testGroup` will not sum the split expenses attributed to him from when the user split with `testGroup1`).
+- If the same user is there in two different groups, the `view-group` command only shows the split across members for that particular group. If you would like to view transactions of a single member across multiple groups, use `view-member`
 
 ---
 
@@ -461,10 +468,10 @@ Splits a selected expense among members of a specific group, either **equally** 
 (using absolute amounts or percentages).
 
 - **Format:**
-`split/<equal | assign>/<expense index>/<group name>`
+  `split/<equal|assign>/<expense index>/<group name>`
 
 - **Usage:**
-`split/equal/1/testGroup`
+  `split/equal/1/testGroup`
 
 - **Constraints:**
 
@@ -472,6 +479,7 @@ Splits a selected expense among members of a specific group, either **equally** 
 - The group must already exist and contain at least one member.
 - The same expense cannot be split more than once by the same group.
 - You can split either:
+
   - Equally among all members, or
   - Manually assign amounts using absolute values (`/a`) or percentages (`/p`).
 
@@ -544,13 +552,13 @@ Splits a selected expense among members of a specific group, either **equally** 
 
 - **Notes:**
 
-- Names are taken to be unique throughout the entire program. "John" in group1 is the same as "John" in group2. Splitting is within each group.
+- While names are taken to be unique throughout the entire program, "John" in group1 is the same as "John" in group2. Splitting is within each group.
 - For the manual `assign` option, the absolute amount and percentage does not need to add up to 100% the full amount. While it cannot exceed the total value of the expense, the sum can be smaller than the full amount.
 - The split function does not take into account you as the user. Add yourself as a member to the group if you'd like to keep track of your split expenses in that particular group.
 - Each expense can only be split once per group.
 - Splitting an expense bakes in the value for that member, when the expense is edited/deleted, the amount owed for the members (when it was split) does not change.
 - Avoid using floating point numbers in the percentage ("/p" > "33.3") as it may be inprecise due to the way the number are stored.
-- Calling the split function does not mark or settle the expense. THe user has to manually trigger those events through the prescribed commands.
+- Calling the split function does not mark or settle the expense. The user has to manually trigger those events through the prescribed commands.
 - An expense can be split multiple times (by different groups).
 - All transaction details are stored per member and per group for tracking and retrieval.
 
@@ -619,65 +627,6 @@ Displays comprehensive analytics of your expenses through different visualizatio
 
 ---
 
-### Export Summary Reports:
-
-#### Export expense summaries: `export`
-
-Exports your expense summaries to text files for record-keeping, sharing, or external analysis.
-
-- **Format:** `export/<monthly|category-wise>`
-
-  - Parameter must be either `monthly` or `category-wise`
-
-- **Features:**
-
-  1. **Monthly Summary Export (`export/monthly`)**
-
-     - Exports data to `monthly_summary.txt`
-     - Contains total expenses for each month
-     - Lists all expenses within each month with details
-     - Maintains the same format as the monthly summary display
-
-  2. **Category-wise Summary Export (`export/category-wise`)**
-     - Exports data to `category_summary.txt`
-     - Contains breakdown of expenses by category
-     - Shows total amount and count for each category
-     - Displays percentage distribution across categories
-
-- **Example Usage:**
-
-  ```
-  export/monthly
-  ```
-
-- **Output:**
-
-  ```
-  Monthly summary exported to monthly_summary.txt
-  ```
-
-- **Example File Content (monthly_summary.txt):**
-
-  ```
-  Monthly Expense Summary:
-  ----------------------
-  03-2025: $300.00 (1 expenses)
-    Expenses:
-    - March Expense (15-03-2025): $300.00
-
-  04-2025: $400.00 (1 expenses)
-    Expenses:
-    - April Expense (15-04-2025): $400.00
-  ```
-
-- **Notes:**
-  - Files are created in the same directory as the application
-  - Existing files with the same name will be overwritten
-  - The export uses the same formatting as the in-app summary display
-  - Text files can be opened with any text editor
-
----
-
 ### Viewing Method for Expenses:
 
 #### Select Viewing Method: `sort-list`
@@ -688,6 +637,9 @@ Allows the user to choose a method to view their expenses with the following opt
 [2] Title (descending alphabetically)
 [3] Amount (ascending)
 [4] Amount (descending)
+
+If all expenses start with the same letter, sorting using options 1 and 2 will sort the expenses
+according to shortest length first and largest length first respectively.
 
 - **Format:** `sort-list/N`, where N = 1,2,3 or 4
 
@@ -803,28 +755,29 @@ Amount: 10.00
 
 Here's a quick reference for all available commands:
 
-| Command         | Format                                                  | Example Usage                 |
-| --------------- | ------------------------------------------------------- | ----------------------------- |
-| Help            | `help`                                                  | `help`                        |
-| Exit            | `exit`                                                  | `exit`                        |
-| Add Expense     | `add/<title>/<date>/<amount>`                           | `add/lunch/01-01-2024/15.50`  |
-| Edit Expense    | `edit/<expense ID>/<new title>/<new date>/<new amount>` | `edit/1/dinner/x/20.00`       |
-| Delete Expense  | `delete/<expense ID>`                                   | `delete/1`                    |
-| List All        | `list`                                                  | `list`                        |
-| List Unsettled  | `list-unsettled`                                        | `list-unsettled`              |
-| List Settled    | `list-settled`                                          | `list-settled`                |
-| Mark Settled    | `mark/<expense ID>`                                     | `mark/1`                      |
-| Unmark Settled  | `unmark/<expense ID>`                                   | `unmark/1`                    |
-| Find Expense    | `find/<keyword>`                                        | `find/taxi`                   |
-| Change Currency | `change-currency/<method>/<currency>[/<rate>]`          | `change-currency/1/USD/0.75`  |
-| View Balance    | `balance`                                               | `balance`                     |
-| Create Group    | `create-group/<group-name>`                             | `create-group/test`           |
-| View Group      | `view-group/<group-name>`                               | `view-group/test`             |
-| Add Member      | `add-member/<member name>/<group-name>`                 | `add-member/John/Friends`     |
-| Remove Member   | `remove-member/<member-name>/<group-name>`              | `remove-member/John/Friends`  |
-| View All Groups | `my-groups`                                             | `my-groups`                   |
-| Remove Group    | `remove-group/<group-name>`                             | `remove-group/test`           |
-| Split Expense   | `split`                                                 | `split` (then follow prompts) |
-| View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`       |
-| Export Summary  | `export/<monthly\|category-wise>`                       | `export/monthly`              |
-| Sort List       | `sort-list/<option>`                                    | `sort-list/1`                 |
+| Command         | Format                                                  | Example Usage                |
+| --------------- | ------------------------------------------------------- | ---------------------------- |
+| Help            | `help`                                                  | `help`                       |
+| Exit            | `exit`                                                  | `exit`                       |
+| Add Expense     | `add/<title>/<date>/<amount>`                           | `add/lunch/01-01-2024/15.50` |
+| Edit Expense    | `edit/<expense ID>/<new title>/<new date>/<new amount>` | `edit/1/dinner/x/20.00`      |
+| Delete Expense  | `delete/<expense ID>`                                   | `delete/1`                   |
+| List All        | `list`                                                  | `list`                       |
+| List Unsettled  | `list-unsettled`                                        | `list-unsettled`             |
+| List Settled    | `list-settled`                                          | `list-settled`               |
+| Mark Settled    | `mark/<expense ID>`                                     | `mark/1`                     |
+| Unmark Settled  | `unmark/<expense ID>`                                   | `unmark/1`                   |
+| Find Expense    | `find/<keyword>`                                        | `find/taxi`                  |
+| Change Currency | `change-currency/<method>/<currency>[/<rate>]`          | `change-currency/1/USD/0.75` |
+| View Balance    | `balance`                                               | `balance`                    |
+| Create Group    | `create-group/<group-name>`                             | `create-group/test`          |
+| View Group      | `view-group/<group-name>`                               | `view-group/test`            |
+| Add Member      | `add-member/<member name>/<group-name>`                 | `add-member/John/Friends`    |
+| Remove Member   | `remove-member/<member-name>/<group-name>`              | `remove-member/John/Friends` |
+| View All Groups | `my-groups`                                             | `my-groups`                  |
+| View Member     | `view-member/<group-name>/<member-name>`                | `view-member/Friends/John`   |
+| Remove Group    | `remove-group/<group-name>`                             | `remove-group/test`          |
+| Split Expense   | `split/<equal\|assign>/<expense-index>/<group-name>`    | `split/equal/1/Friends`      |
+| View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`      |
+| Export Summary  | `export/<monthly\|category-wise>`                       | `export/monthly`             |
+| Sort List       | `sort-list/<option>`                                    | `sort-list/1`                |
