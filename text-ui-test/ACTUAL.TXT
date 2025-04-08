@@ -1,4 +1,5 @@
-file not found...
+Created a new file!
+File not found...
 A new file to load your current currency will be created for you!
 
 ________________________________________________________________________________
@@ -12,9 +13,15 @@ help
 
 add
   Description: Add a new expense
-  Usage: add/<title>/<date>/<amount>
+  Usage: add/<title>/<category>/<date>/<amount>
   Format:
     - Title: Short name for the expense
+    - Category: Input one of the following:
+                - Food
+                - Travel
+                - Entertainment
+                - Shopping
+                - Miscellaneous
     - Date: In DD-MM-YYYY format
     - Amount: The monetary value (must be a positive number)
   You will then be prompted to enter a description (optional)
@@ -45,9 +52,8 @@ delete
 
 edit
   Description: Edit an existing expense
-  Usage: edit/<expense number>/<new title>/<new date>/<new amount>
-  Note: Use 'x' to keep existing values for title, date, or amount
-  You will then be prompted to change the description (optional)
+  Usage: edit/<expense number>/<new title>/<new category>/<new date>/<new amount>
+  Note: Use 'x' to keep existing values for title, date, amount or category
 
 balance
   Description: Show the balance overview (total expenses and amount owed)
@@ -85,14 +91,12 @@ my-groups
 
 split
   Description: Split an expense between the members of an existing group
-  Usage: split
-  You will be prompted to enter:
-    - Expense
-    - Group to split it among
+  Usage: split/<equal | assign>/<expense index>/<group name>
+    -If assign, you will be prompted for
 
 summary
   Description: View expense summaries in different formats
-  Usage: summary/[BY-MONTH|BY-CATEGORY]/[Y|N]
+  Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>
   Format:
     - First parameter must be either BY-MONTH or BY-CATEGORY
     - Second parameter must be Y or N for visualization
@@ -100,11 +104,8 @@ summary
 
 export
   Description: Export expense summaries to text files
-  Usage: export
-  You will be prompted to choose:
-    1. Monthly Summary: Exports to monthly_summary.txt
-    2. Category-wise Summary: Exports to category_summary.txt
-    3. Back to main menu
+  Usage: export/<monthly | category-wise>
+
 
 change-currency
   Description: Change all your expenses to a different currency
@@ -135,12 +136,7 @@ exit
 
 ________________________________________________________________________________
 
-Enter command: Enter the description (press Enter to skip):
-Expense added successfully:
-Title: groceries
-Description: Weekly food shopping
-Date: 01-01-2025
-Amount: 100.00
+Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
 
 ________________________________________________________________________________
 
@@ -148,12 +144,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Enter the description (press Enter to skip):
-Expense added successfully:
-Title: dinner
-Description: Italian restaurant
-Date: 02-01-2025
-Amount: 50.00
+Enter command: Invalid command.
+
+________________________________________________________________________________
+
+Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
 
 ________________________________________________________________________________
 
@@ -161,35 +156,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Enter the description (press Enter to skip):
-Expense added successfully:
-Title: lunch
-Description: nil
-Date: 03-01-2025
-Amount: 20.00
+Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: All expenses are in SGD
-List of Expenses:
-Expense #1
-Title: groceries
-Description: Weekly food shopping
-Date: 01-01-2025
-Amount: 100.00
-
-Expense #2
-Title: dinner
-Description: Italian restaurant
-Date: 02-01-2025
-Amount: 50.00
-
-Expense #3
-Title: lunch
-Description: nil
-Date: 03-01-2025
-Amount: 20.00
-
+Enter command: Invalid format. Usage: add/<title>/<category>/<date>/<amount>
 
 ________________________________________________________________________________
 
@@ -197,17 +168,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Are you sure you want to delete this expense? (y/n)
-Title: dinner
-Description: Italian restaurant
-Date: 02-01-2025
-Amount: 50.00
-Owed amounts file not found. No amounts to update.
-Expense deleted successfully:
-Title: dinner
-Description: Italian restaurant
-Date: 02-01-2025
-Amount: 50.00
+Enter command: Error verifying checksum: expenses.chk
+Tampering detected in expenses file. Deleting file...
+Expenses file deleted successfully.
+Error loading expenses: expenses.txt
+No expenses found in the list.
 
 ________________________________________________________________________________
 
@@ -215,12 +180,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Enter new description (press Enter to keep current):
-Expense edited successfully:
-Title: new groceries
-Description: Updated description
-Date: 01-01-2025
-Amount: 150.00
+Enter command: Error verifying checksum: expenses.txt
+Tampering detected in expenses file. Deleting file...
+Expenses file does not exist.
+Error loading expenses: expenses.txt
+No expenses found. The file may have been tampered with and cleared.
 
 ________________________________________________________________________________
 
@@ -228,7 +192,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Expense 1 successfully marked!
+Enter command: Invalid command.
+
+________________________________________________________________________________
+
+Enter command: Invalid format. Usage: edit/<expense ID>/<new title>/<new category>/<new date>/<new amount>
 
 ________________________________________________________________________________
 
@@ -236,7 +204,11 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Expense 1 successfully unmarked!
+Enter command: Invalid command.
+
+________________________________________________________________________________
+
+Enter command: Please enter a valid expense number.
 
 ________________________________________________________________________________
 
@@ -244,12 +216,7 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Found 1 matching expense(s):
-Title: new groceries
-Description: Updated description
-Date: 01-01-2025
-Amount: 150.00
-
+Enter command: Please enter a valid expense number.
 
 ________________________________________________________________________________
 
@@ -257,7 +224,7 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Invalid format. Usage: summary/BY-MONTH/N or BY-CATEGORY/Y or N
+Enter command: No expenses found.
 
 ________________________________________________________________________________
 
@@ -265,11 +232,19 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Choose export format:
-1. Monthly Summary
-2. Category-wise Summary
-3. Back to main menu
-Monthly summary exported to monthly_summary.txt
+Enter command: Invalid format. Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>
+
+________________________________________________________________________________
+
+Enter command: Invalid command.
+
+________________________________________________________________________________
+
+Enter command: No expenses to export!
+
+________________________________________________________________________________
+
+Enter command: Invalid command.
 
 ________________________________________________________________________________
 
@@ -279,8 +254,8 @@ ________________________________________________________________________________
 
 Enter command: Balance Overview
 ----------------
-Total number of unsettled expenses: 2
-Total amount owed: 170.00
+Total number of unsettled expenses: 0
+Total unsettled amount: 0.00
 
 ________________________________________________________________________________
 
@@ -288,7 +263,8 @@ Enter command: Invalid command.
 
 ________________________________________________________________________________
 
-Enter command: Please give input in correct format
+Enter command: Invalid format. Usage: change-currency/1/<currency to change to>/<exchange rate>
+OR change-currency/2/<currency to change to>
 
 ________________________________________________________________________________
 
@@ -316,9 +292,15 @@ help
 
 add
   Description: Add a new expense
-  Usage: add/<title>/<date>/<amount>
+  Usage: add/<title>/<category>/<date>/<amount>
   Format:
     - Title: Short name for the expense
+    - Category: Input one of the following:
+                - Food
+                - Travel
+                - Entertainment
+                - Shopping
+                - Miscellaneous
     - Date: In DD-MM-YYYY format
     - Amount: The monetary value (must be a positive number)
   You will then be prompted to enter a description (optional)
@@ -349,9 +331,8 @@ delete
 
 edit
   Description: Edit an existing expense
-  Usage: edit/<expense number>/<new title>/<new date>/<new amount>
-  Note: Use 'x' to keep existing values for title, date, or amount
-  You will then be prompted to change the description (optional)
+  Usage: edit/<expense number>/<new title>/<new category>/<new date>/<new amount>
+  Note: Use 'x' to keep existing values for title, date, amount or category
 
 balance
   Description: Show the balance overview (total expenses and amount owed)
@@ -389,14 +370,12 @@ my-groups
 
 split
   Description: Split an expense between the members of an existing group
-  Usage: split
-  You will be prompted to enter:
-    - Expense
-    - Group to split it among
+  Usage: split/<equal | assign>/<expense index>/<group name>
+    -If assign, you will be prompted for
 
 summary
   Description: View expense summaries in different formats
-  Usage: summary/[BY-MONTH|BY-CATEGORY]/[Y|N]
+  Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>
   Format:
     - First parameter must be either BY-MONTH or BY-CATEGORY
     - Second parameter must be Y or N for visualization
@@ -404,11 +383,8 @@ summary
 
 export
   Description: Export expense summaries to text files
-  Usage: export
-  You will be prompted to choose:
-    1. Monthly Summary: Exports to monthly_summary.txt
-    2. Category-wise Summary: Exports to category_summary.txt
-    3. Back to main menu
+  Usage: export/<monthly | category-wise>
+
 
 change-currency
   Description: Change all your expenses to a different currency
