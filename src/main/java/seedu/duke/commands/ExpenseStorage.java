@@ -89,13 +89,6 @@ public class ExpenseStorage {
                 System.out.println("WARNING: if you have tampered with the expenses file: " + expensesFile
                         + " it will be deleted, and a new one will be created following an add command.");
                 System.out.println();
-                /*
-                if (!deleted) {
-                    System.out.println("Error deleting expenses file. File may be in use or inaccessible.");
-                } else {
-                    System.out.println("Expenses file deleted successfully.");
-                }
-                */
             } else {
                 System.out.println("No expense file found.");
             }
