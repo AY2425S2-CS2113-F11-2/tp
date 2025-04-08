@@ -58,7 +58,6 @@ public class ExpenseStorage {
             String storedChecksum = lines.get(0).trim();
             return currentChecksum.equals(storedChecksum);
         } catch (IOException | NoSuchAlgorithmException e) {
-            System.out.println("Error verifying checksum: " + e.getMessage());
             return false;
         }
     }
@@ -83,19 +82,22 @@ public class ExpenseStorage {
      */
     public static void clearFileIfTampered() {
         if (!verifyChecksum()) {
-            System.out.println("Tampering detected in expenses file. Deleting file...");
-
             // Delete the expenses file
             File expensesFileObj = new File(expensesFile);
             if (expensesFileObj.exists()) {
                 boolean deleted = expensesFileObj.delete();
+                System.out.println("WARNING: if you have tampered with the expenses file: " + expensesFile
+                + " it will be deleted, and a new one will be created following an add command.");
+                System.out.println();
+                /*
                 if (!deleted) {
                     System.out.println("Error deleting expenses file. File may be in use or inaccessible.");
                 } else {
                     System.out.println("Expenses file deleted successfully.");
                 }
+                */
             } else {
-                System.out.println("Expenses file does not exist.");
+                System.out.println("No expense file found.");
             }
 
             // Reset the checksum file as well
@@ -104,8 +106,6 @@ public class ExpenseStorage {
             } catch (IOException e) {
                 System.out.println("Error clearing checksum file: " + e.getMessage());
             }
-        } else {
-            System.out.println("Expenses file is intact. No tampering detected.");
         }
     }
 
@@ -120,11 +120,10 @@ public class ExpenseStorage {
      * Loads all expenses from the file after verifying the checksum.
      */
     public static List<String> loadExpenses() {
-        clearFileIfTampered(); // Check for tampering before loading
+        clearFileIfTampered();
         try {
             return Files.readAllLines(new File(expensesFile).toPath());
         } catch (IOException e) {
-            System.out.println("Error loading expenses: " + e.getMessage());
             return List.of(); // Return an empty list if there's an error
         }
     }

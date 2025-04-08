@@ -272,6 +272,7 @@ public class ExpenseCommand {
             // Create and add the expense
             Expense expense = new Expense(title, category, date, amount);
             //budgetManager.addExpense(expense);
+            List<String> rawExpenses = ExpenseStorage.loadExpenses();
             String transaction = String.format("%s|%s|%s|%.2f", title, categoryStr, date, amount);
             ExpenseStorage.saveTransaction(transaction);
             System.out.println("Expense added successfully:");
@@ -520,12 +521,6 @@ public class ExpenseCommand {
      */
     public void displayAllExpenses() {
         File expensesFile = new File(ExpenseStorage.expensesFile);
-        if (!expensesFile.exists()) {
-            System.out.println("Expense file not found.");
-            System.out.println("Use the add command.");
-            return;
-        }
-
         // Load expenses directly from the file with checksum verification
         List<String> rawExpenses = ExpenseStorage.loadExpenses();
 
