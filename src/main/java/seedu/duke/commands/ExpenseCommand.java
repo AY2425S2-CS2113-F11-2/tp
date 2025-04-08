@@ -192,9 +192,9 @@ public class ExpenseCommand {
         }
         return true;
     }
-    //@@author
 
-    //@@author mohammedhamdhan
+
+
     /**
      * Executes the add expense command.
      */
@@ -272,6 +272,7 @@ public class ExpenseCommand {
             // Create and add the expense
             Expense expense = new Expense(title, category, date, amount);
             //budgetManager.addExpense(expense);
+            List<String> rawExpenses = ExpenseStorage.loadExpenses();
             String transaction = String.format("%s|%s|%s|%.2f", title, categoryStr, date, amount);
             ExpenseStorage.saveTransaction(transaction);
             System.out.println("Expense added successfully:");
@@ -281,9 +282,9 @@ public class ExpenseCommand {
             System.out.println("Error adding expense: " + e.getMessage());
         }
     }
-    //@@author
 
-    //@@author matthewyeo1
+
+
     /**
      * Executes the delete expense command by setting the expense amount to 0.0.
      */
@@ -350,10 +351,11 @@ public class ExpenseCommand {
                 return;
             }
 
+            ExpenseStorage.loadExpenses();
             // Update the checksum
             ExpenseStorage.updateChecksum();
 
-            System.out.println("Expense deleted successfully:");
+            System.out.println("Expense deleted successfully: ");
             System.out.println("Title: " + title);
             System.out.println("Category: " + category);
             System.out.println("Date: " + date);
@@ -506,7 +508,7 @@ public class ExpenseCommand {
             // Update the checksum
             ExpenseStorage.updateChecksum();
 
-            System.out.println("Expense edited successfully:");
+            System.out.println("Expense edited successfully");
         } catch (NumberFormatException e) {
             System.out.println("Invalid input format. Please enter a valid number.");
         } catch (IndexOutOfBoundsException e) {
@@ -520,12 +522,6 @@ public class ExpenseCommand {
      */
     public void displayAllExpenses() {
         File expensesFile = new File(ExpenseStorage.expensesFile);
-        if (!expensesFile.exists()) {
-            System.out.println("Expense file not found.");
-            System.out.println("Use the add command.");
-            return;
-        }
-
         // Load expenses directly from the file with checksum verification
         List<String> rawExpenses = ExpenseStorage.loadExpenses();
 
@@ -732,7 +728,7 @@ public class ExpenseCommand {
             String[] parts = userInput.split("/", 3);
             
             if (parts.length < 3 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
-                System.out.println("Invalid format. Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>");
+                System.out.println("Invalid format. Usage: summary/BY-MONTH/N or BY-CATEGORY/Y or N");
                 return;
             }
 
@@ -982,18 +978,11 @@ public class ExpenseCommand {
      * Exports the expense summary to a file.
      */
     public void exportExpenseSummary(String userInput) {
-        // Check if there are any expenses to export first
-        List<Expense> expenses = budgetManager.getAllExpenses();
-        if (expenses.isEmpty()) {
-            System.out.println("No expenses to export!");
-            return;
-        }
-        
         // Split and trim to handle multiple spaces
         String[] parts = userInput.split("/", 2);
         
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            System.out.println("Invalid format. Usage: export/<monthly | category-wise>");
+            System.out.println("Invalid format. Usage: export/<monthly | category wise>");
             return;
         }
         
@@ -1001,10 +990,10 @@ public class ExpenseCommand {
         
         if (exportType.equals("monthly")) {
             exportMonthlySummary();
-        } else if (exportType.equals("category-wise")) {
+        } else if (exportType.equals("category wise")) {
             exportCategorySummary();
         } else {
-            System.out.println("Invalid export type. Please use 'monthly' or 'category-wise'.");
+            System.out.println("Invalid export type. Please use 'monthly' or 'category wise'.");
         }
     }
 
@@ -1017,9 +1006,7 @@ public class ExpenseCommand {
             assert expenses != null : "Expenses list should not be null";
             
             if (expenses.isEmpty()) {
-                // This check is now redundant since we check in exportExpenseSummary,
-                // but keeping for defensive programming
-                System.out.println("No expenses to export!");
+                writer.write("No expenses found.");
                 return;
             }
 
@@ -1075,9 +1062,7 @@ public class ExpenseCommand {
             assert expenses != null : "Expenses list should not be null";
             
             if (expenses.isEmpty()) {
-                // This check is now redundant since we check in exportExpenseSummary,
-                // but keeping for defensive programming
-                System.out.println("No expenses to export!");
+                writer.write("No expenses found.");
                 return;
             }
 
