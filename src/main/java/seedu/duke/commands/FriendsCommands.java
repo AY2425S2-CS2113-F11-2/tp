@@ -358,7 +358,6 @@ public class FriendsCommands {
             }
         }
     }
-
     //@@author
 
     //@@author Ashertan256
@@ -516,6 +515,7 @@ public class FriendsCommands {
             }
         }
     }
+
     //@@author
 
     //@@author nandhananm7
