@@ -82,7 +82,7 @@ Here is the list of features implemented:
 
 ---
 
-### Review/Mentoring Contributions:
+### Review/Mentoring Contributions::
 **Bug Finding and Suggestions:** Periodic code review of teammates PRs as well as expanding coverage of JUnit Tests
 
 ---
