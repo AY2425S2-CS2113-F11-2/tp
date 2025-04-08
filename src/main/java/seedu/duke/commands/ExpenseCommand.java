@@ -272,6 +272,7 @@ public class ExpenseCommand {
             // Create and add the expense
             Expense expense = new Expense(title, category, date, amount);
             //budgetManager.addExpense(expense);
+            List<String> rawExpenses = ExpenseStorage.loadExpenses();
             String transaction = String.format("%s|%s|%s|%.2f", title, categoryStr, date, amount);
             ExpenseStorage.saveTransaction(transaction);
             System.out.println("Expense added successfully:");
@@ -350,10 +351,11 @@ public class ExpenseCommand {
                 return;
             }
 
+            ExpenseStorage.loadExpenses();
             // Update the checksum
             ExpenseStorage.updateChecksum();
 
-            System.out.println("Expense deleted successfully:");
+            System.out.println("Expense deleted successfully: ");
             System.out.println("Title: " + title);
             System.out.println("Category: " + category);
             System.out.println("Date: " + date);
@@ -506,7 +508,7 @@ public class ExpenseCommand {
             // Update the checksum
             ExpenseStorage.updateChecksum();
 
-            System.out.println("Expense edited successfully:");
+            System.out.println("Expense edited successfully");
         } catch (NumberFormatException e) {
             System.out.println("Invalid input format. Please enter a valid number.");
         } catch (IndexOutOfBoundsException e) {
@@ -520,12 +522,6 @@ public class ExpenseCommand {
      */
     public void displayAllExpenses() {
         File expensesFile = new File(ExpenseStorage.expensesFile);
-        if (!expensesFile.exists()) {
-            System.out.println("Expense file not found.");
-            System.out.println("Use the add command.");
-            return;
-        }
-
         // Load expenses directly from the file with checksum verification
         List<String> rawExpenses = ExpenseStorage.loadExpenses();
 
