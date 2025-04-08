@@ -101,22 +101,25 @@ public class FriendsCommands {
             System.out.println("Error: Command cannot be empty.");
             return;
         }
-        if (!OwesStorage.verifyChecksum()) {
-            System.out.println("Error: The owedAmounts file has likely been tampered with.");
-            System.out.println("Clearing contents of the file");
+        File file = new File("owedAmounts.txt");
+        if (file.exists() && file.length() > 0) {
+            if (!OwesStorage.verifyChecksum()) {
+                System.out.println("Error: The owedAmounts file has likely been tampered with.");
+                System.out.println("Clearing contents of the file");
 
-            // clear the file
-            try (PrintWriter writer = new PrintWriter("owedAmounts.txt")) {
-                writer.print("");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try (PrintWriter writer = new PrintWriter("owedAmounts.chk")) {
-                writer.print("");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                // clear the file
+                try (PrintWriter writer = new PrintWriter("owedAmounts.txt")) {
+                    writer.print("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try (PrintWriter writer = new PrintWriter("owedAmounts.chk")) {
+                    writer.print("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+            }
         }
 
         // Expected format: view-member/<groupname>/<member name>
@@ -139,7 +142,6 @@ public class FriendsCommands {
             System.out.println("Error: Group name and member name cannot be empty.");
             return;
         }
-        File file = new File("owedAmounts.txt");
         if (!file.exists()) {
             System.out.println("Error: Owed transactions file does not exist. No data available.");
             return;
@@ -210,6 +212,26 @@ public class FriendsCommands {
             return;
         }
 
+        File file = new File("owedAmounts.txt");
+        if (file.exists() && file.length() > 0) {
+            if (!OwesStorage.verifyChecksum()) {
+                System.out.println("Error: The owedAmounts file has likely been tampered with.");
+                System.out.println("Clearing contents of the file");
+
+                // clear the file
+                try (PrintWriter writer = new PrintWriter("owedAmounts.txt")) {
+                    writer.print("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try (PrintWriter writer = new PrintWriter("owedAmounts.chk")) {
+                    writer.print("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
         String groupName = parts[1].trim();
         if (groupName.isEmpty() || !isValidName(groupName)) {
             System.out.println("Invalid group name. Name cannot be empty or " +
@@ -224,7 +246,7 @@ public class FriendsCommands {
         System.out.println("Group: " + groupName);
 
         Map < String, Double > owedAmounts = new HashMap < > ();
-        File file = new File("owedAmounts.txt");
+
         try (Scanner fileScanner = new Scanner(file)) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine().trim();
@@ -338,7 +360,9 @@ public class FriendsCommands {
     }
     //@@author
 
+
     //@@author Ashertan256
+
     /**
      * Displays the members and their total owed amounts for a given group.
      * This method is called directly without requiring user input.
@@ -353,6 +377,26 @@ public class FriendsCommands {
                 "contain special characters.");
             return;
         }
+        File file = new File("owedAmounts.txt");
+        if (file.exists() && file.length() > 0) {
+            if (!OwesStorage.verifyChecksum()) {
+                System.out.println("Error: The owedAmounts file has likely been tampered with.");
+                System.out.println("Clearing contents of the file");
+
+                // clear the file
+                try (PrintWriter writer = new PrintWriter("owedAmounts.txt")) {
+                    writer.print("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try (PrintWriter writer = new PrintWriter("owedAmounts.chk")) {
+                    writer.print("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
 
         if (!groupManager.groupExists(groupName)) {
             System.out.println("Group not found");
@@ -361,7 +405,7 @@ public class FriendsCommands {
         System.out.println("Group: " + groupName);
 
         Map < String, Double > owedAmounts = new HashMap < > ();
-        File file = new File("owedAmounts.txt");
+
         try (Scanner fileScanner = new Scanner(file)) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine().trim();

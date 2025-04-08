@@ -1343,18 +1343,14 @@ after the command duration has ended and upon exiting the program, handled by th
 
 ### 4.2 Expense CRUD Feature
 
-Below is the UML sequence diagram for the split class. It requires external dependencies such as DataStorage, GRoupManager, OwesStorage, and FriendsCommands to seamlessly integrate the split function. A large part of the calls are to get data from the other classes. Another part is validating input and ensuring that the input is all valid and that the operation is not illegal. Afterwards, it calls the `executeSplit()` method to divide it, with the method prompting for more information regarding the type of split (manual assignment, via absolute values and percentages or via equal splitting). It has to get the data of groups and friends from other classes, and saves and loads using the OwesStorage class. The OwesStorage class implements tamper-checking to help ensure that the data has not been manipulated while being stored.
+Below is the UML sequence diagram for the classes involved in the CRUD operations regarding user-created expenses. The main application class calls the constructor for the UI class, which calls its own method processCommand() that takes in the user input as a parameter and processes the addition, editing, deletion and saving of expenses depending on specific user inputs as shown in the diagram.
+
+![ExpenseCRUDFeatureSequenceDiagram.drawio.png](diagrams/ExpenseCRUDFeatureSequenceDiagram.drawio.png)
+### 4.3 Split Expense Feature
 
 ![SplitClassSequenceDiagram.png](diagrams/SplitClassSequenceDiagram.png)
 
-### 4.3 Split Expense Feature
-
-![ApplicationFlowChart.drawio.png](diagrams/ApplicationFlowChart.drawio.png)
-
-O\$P\$ is the main class of application which the user can interact with directly. The command input from the user is processed by the UI class which validates and parses the command.
-This class will check for any valid keywords in the input. Once the keywords are present, it will pass the input to its respective classes that the command is related to (see above diagram)
-to validate the format and details of the command. Upon successful validation and execution of the command, the new data is written to the .txt files within the program directory and saved
-after the command duration has ended and upon exiting the program, handled by the DataStorage class.
+Below is the UML sequence diagram for the split class. It requires external dependencies such as DataStorage, GRoupManager, OwesStorage, and FriendsCommands to seamlessly integrate the split function. A large part of the calls are to get data from the other classes. Another part is validating input and ensuring that the input is all valid and that the operation is not illegal. Afterwards, it calls the `executeSplit()` method to divide it, with the method prompting for more information regarding the type of split (manual assignment, via absolute values and percentages or via equal splitting). It has to get the data of groups and friends from other classes, and saves and loads using the OwesStorage class. The OwesStorage class implements tamper-checking to help ensure that the data has not been manipulated while being stored.
 
 ### 4.4 Change Currency Feature
 
