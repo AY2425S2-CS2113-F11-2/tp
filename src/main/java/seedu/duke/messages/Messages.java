@@ -157,29 +157,27 @@ public class Messages {
 
             create-group
               Description: Create a new group and add members to it
-              Usage: create-group
+              Usage: create-group/<group-name>
               You will be prompted to:
-                - Enter group name
                 - Enter members to add one by one
                 - Enter done to create and save the group
 
             view-group
               Description: View the members of a specific group
-              Usage: view-group
-              You will be prompted to enter:
-                - Enter group name
+              Usage: view-group/<group-name>
 
             add-member
               Description: Add a member to an existing group/ create a new group and add
-              Usage: add-member /<member name> /<group-name>
+              Usage: add-member/<member name>/<group-name>
                 -If the group exists, adds to group. Else prompts the user to create a new group first
 
             remove-group
+              Description: Remove a group
+              Usage: remove-group/<group-name>
+            
+            remove-member
               Description: Remove a member from a group
-              Usage: remove-group
-              You will be prompted to enter:
-                - Enter name of member to remove
-                - Enter group to remove member from
+              Usage: remove-group/<member-name>/<group-name>
 
             my-groups
               Description: View all groups and their members
@@ -187,10 +185,7 @@ public class Messages {
 
             split
               Description: Split an expense between the members of an existing group
-              Usage: split
-              You will be prompted to enter:
-                - Expense
-                - Group to split it among
+              Usage: split/<equal|assign>/<expense index>/<group name>
 
             summary
               Description: View expense summaries in different formats
@@ -227,8 +222,7 @@ public class Messages {
 
             find
               Description: Search for expenses by keyword
-              Usage: find
-              You will be prompted to enter a search keyword
+              Usage: find/<keyword>
 
             exit
               Description: Exit the program

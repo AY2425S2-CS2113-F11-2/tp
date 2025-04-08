@@ -88,7 +88,6 @@ public class FriendsCommands {
         groupManager.saveGroups();
         System.out.println("Group created successfully!");
     }
-
     //@@author
 
     //@@author Ashertan256
@@ -162,7 +161,9 @@ public class FriendsCommands {
             System.out.println("No transactions found for member '" + memberName + "' in group '" + groupName + "'.");
         }
     }
+    //@@author
 
+    //@@author nandhananm7
     /**
      * Displays the details of a specified group based on the command.
      * Command format: view-group /group name.
@@ -250,8 +251,9 @@ public class FriendsCommands {
         }
 
     }
+    //@@author
 
-
+    //@@author Ashertan256
     /**
      * Displays the members and their total owed amounts for a given group.
      * This method is called directly without requiring user input.
@@ -318,7 +320,6 @@ public class FriendsCommands {
             }
         }
     }
-
     //@@author
 
     //@@author nandhananm7
@@ -327,14 +328,22 @@ public class FriendsCommands {
      * If there are no groups, informs the user.
      */
     public void viewAllGroups() {
-        if (groupManager.getGroups().isEmpty()) {
-            System.out.println("You have no groups.");
-        } else {
-            for (Group group: groupManager.getGroups()) {
-                System.out.println(group);
+        try {
+            // Retrieve groups from the manager
+            List<Group> groups = groupManager.getGroups();
+
+            if (groups.isEmpty()) {
+                System.out.println("You have no groups.");
+            } else {
+                for (Group group : groups) {
+                    System.out.println(group);
+                }
             }
+        } catch (Exception e) {
+            System.out.println("An error occurred while loading groups due to file tampering with group.txt");
         }
     }
+
 
     /**
      * Adds a member to an existing group or creates a new group if it doesn't exist.
