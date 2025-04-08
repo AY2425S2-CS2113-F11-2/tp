@@ -158,7 +158,39 @@ Clears all data in `expenses.txt`. Used mainly for testing.
 
 ### 3.1.2 GroupStorage Class
 
-User-created groups are stored here, each containing the names of the members to be assigned an expense.
+The GroupStorage class is responsible for managing the storage of user-created groups and their associated members.
+The group data is saved in a text file named groups.txt, and it is loaded whenever the application starts.
+
+### File Handling
+
+- **Data File:** The expense data is stored in `groups.txt`.
+- **Separator:** Each entry in the file is delimited using `|`.
+- **Group Header:** Each group entry starts with `[GROUP]` followed by the group name.
+- **Assertions:** Used to ensure correct program behavior, such as non-null lists and group objects.
+
+### Methods
+
+#### `saveGroups(List<Group> groups)`
+
+Saves a list of groups and their members to the data file.
+
+- Iterates through the `groups` list and writes each group to `groups.txt`
+- Each group is stored with the following format:
+  - Group header: `[GROUP]|<group_name>`
+  - Friend entries: `<group_name>|<friend_name>`
+- Uses `FileWriter` for file operations.
+- Handles `IOException` to manage file writing errors.
+
+#### `loadGroups()`
+
+Loads groups and their members from the data file.
+
+- Reads each line from the file and splits it using the `|` separator.
+- Identifies group headers `([GROUP]|<group_name>)` and creates a new `Group` object.
+- For each friend entry, associates the friend with the current group.
+- Returns a list of `Group` objects.
+- Uses `Scanner` for file reading.
+- Handles `FileNotFoundException` when the file does not exist.
 
 ### 3.1.3 Commands Class
 
@@ -281,7 +313,7 @@ The `executeUnmarkCommand(String command)` method manages unmarking an expense a
 
 #### Finding Specific Expenses
 
-The `findExpense()` method in the `seedu.duke.budget` package is responsible for searching and displaying expenses that match a given keyword. It helps users efficiently locate expenses by title or description.
+The `findExpense(String command)` method in the `seedu.duke.commands` package is responsible for searching and displaying expenses that match a given keyword. It helps users efficiently locate expenses by title or description.
 
 - Prompts the user to enter a keyword to search for expenses.
 - Validates that the keyword is not empty.
@@ -341,7 +373,7 @@ The FriendsCommands class handles all friends and groups related operations in t
 
 #### Checking if a group/member name is valid
 
-The `isValidName()` method is a utility function used to validate input strings for group names and member names. It ensures that the input follows specific naming conventions and helps maintain data integrity.
+The `isValidName(String name)` method is a utility function used to validate input strings for group names and member names. It ensures that the input follows specific naming conventions and helps maintain data integrity.
 
 - **Input validation:**
 
@@ -359,20 +391,19 @@ The `isValidName()` method is a utility function used to validate input strings 
 
 #### Creating a new group
 
-The `createGroup()` method is responsible for creating a new group within the application. It follows a user-driven input process to define the group name and add members.
+The `createGroup(String command)` method is responsible for creating a new group within the application.
 
 - **Group name Input:**
 
-  - The method prompts the user to enter a group name.
-  - The input is validated using the `isValidName()` method.
-  - If name is invalid, the user is prompted to enter a name again.
+  - The method takes in the `command` and is parsed.
+  - The parsed input is then validated using the `isValidName(String name)` method.
 
 - **Adding Group Members:**
 
-  - Once a valid group name is added, user is prompted to add members.
-  - User can continue to input multiple member names, each name is validated by the `isValidName()` method.
+  - Once a valid group is created, user is prompted to add members.
+  - User can continue to input multiple member names, each name is validated by the `isValidName(String name)` method.
   - Process continues until user types 'done'.
-  - Each valid member name is used to create a new `Friend` object, which is then added to the group using `groupManager.addFriendToGroup()`.
+  - Each valid member name is used to create a new `Friend` object, which is then added to the group using `groupManager.addFriendToGroup(String groupName, new Friend(name, groupName))`.
 
 - **Saving the Group:**
   - Once the group creation is complete, the method saves the group using `groupManager.saveGroups()`
@@ -380,11 +411,11 @@ The `createGroup()` method is responsible for creating a new group within the ap
 
 #### Remove a Group
 
-The `removeGroup()` is used to delete an entire group from the group management system.
+The `removeGroup(String command)` is used to delete an entire group from the group management system.
 
 - **Input:**
 
-  - Prompts the user to enter the name of the group they want to remove.
+  - Parses the input command to retrieve the group name.
   - Trims any leading or trailing whitespaces from the input.
 
 - **Group Existence Check:**
@@ -403,16 +434,20 @@ The `removeGroup()` is used to delete an entire group from the group management 
 
 #### Viewing the Transactions of a Member in a Group
 
-The `viewMember()` method is responsible for displaying the transactions of a particular member in a group. It lists all the expenses owed/attributed to the particular user. It is useful to track and log the expenses.
+The `viewMember(String command)` method is responsible for displaying the transactions of a particular member in a group. It lists all the expenses owed/attributed to the particular user. It is useful to track and log the expenses.
 
 - **Input:**
 
-  - Prompts user to enter the member name and group name.
+  - Parses user input to retrieve the group name and member name.
   - Trims any extra whitespaces from the input.
 
 - **Group Existence Check:**
 
   - Checks whether the group exists, and whether the entered member name is part of the mentioned group.
+
+- **Tampering Checking:**
+
+  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
 
 - **Loading Expense Data:**
 
@@ -422,18 +457,21 @@ The `viewMember()` method is responsible for displaying the transactions of a pa
 
 #### Viewing an existing group
 
-The `viewGroup()` method is responsible for displaying the details of a specific group, it includes its members and associated expenses.
-This method is essential for users who wish to view group details and any expenses related to group members.
+The `viewGroup(String command)` method is responsible for displaying the details of a specific group.
 
 - **Input:**
 
-  - Prompts user to enter the group name that they want to view.
-  - Trims any extra whitespaces from the input.
+  - Parses user input to retrieve the group name.
+  - Trims any extra whitespaces from the input and converts input to lower case.
 
 - **Group Existence Check:**
 
-  - Uses the `groupManager.groupExists()` method to check whether the specified group exists.
+  - Uses the `groupManager.groupExists(String groupName)` method to check whether the specified group exists.
   - If the group does not exist, the method prints a "Group not found" message and terminates.
+
+  - **Tampering Checking:**
+
+  - Checks whether the file has been tampered with and clear the storage file if the file has likely been tampered with based on the storage file's checksum.
 
 - **Loading Expense Data:**
 
@@ -452,6 +490,36 @@ This method is essential for users who wish to view group details and any expens
     - Displays the member's name along with the accumulated expense amount.
   - If a member has no recorded expense, the amount displayed is 0.00.
 
+
+#### Viewing an existing group
+
+The `viewGroup()` method is responsible for displaying the details of a specific group, it includes its members and the expense attributes to them from the split of the entered group.
+This method is essential for users who wish to view group members and how much they owe in a certain group.
+
+- **Input:**
+
+  - Prompts user to enter the group name that they want to view.
+  - Trims any extra whitespaces from the input.
+
+- **Group Existence Check:**
+
+  - Uses the `groupManager.groupExists()` method to check whether the specified group exists.
+  - If the group does not exist, the method prints a "Group not found" message and terminates.
+
+- **Loading Expense Data:**
+
+  - The method reads from the `owedAmounts.txt` file, which contains member data.
+  - The method ensures that the amounts are accumulated for each member instead of being overwritten.
+
+- **Display Group Members and Expenses:**
+  - Uses groupManager.getGroupMembers(groupName) to fetch the list of group members.
+  - If the group has no members, it displays "No members in this group."
+  - For each member, it:
+    - Retrieves their name.
+    - Checks the owedAmounts map for any recorded expenses.
+    - Displays the member's name along with the accumulated expense amount for that group.
+    - If a member has no recorded expense, the amount displayed is 0.00.
+
 #### Viewing all user's Groups
 
 The `viewAllGroups()` method is designed to display a list of all the groups that the user has created or is a part of. It provides a quick overview of the existing groups managed by the application.
@@ -467,18 +535,22 @@ The `viewAllGroups()` method is designed to display a list of all the groups tha
 
 #### Viewing group directly
 
+The `viewGroupDirect()` method is responsible for displaying the details of a specific group, it includes its members and associated expenses. The user cannot call it directly but it is called by the split function. It takes in the groupname from the  `executeSplit()` method so that the user is not required to enter the group name and it acts as a summary after the split operation.
+
+This method is essential for users who wish to view group details and any expenses related to group members.
+
 #### Add a member
 
-The `addMember()` method allows the user to add a new member to an existing group. If the specified group does not exist, the method offers the option to create the group and add the member simultaneously.
+The `addMember(String command)` method allows the user to add a new member to an existing group. If the specified group does not exist, the method offers the option to create the group and add the member simultaneously.
 
 - **Input:**
 
   - Member name:
-    - Prompts the user to enter the name of the member they want to add.
-    - Uses isValidName() to validate the input, ensuring it does not contain special characters or empty spaces.
+    - Parses the user input `command` to retrieve the name of new member to be added.
+    - Uses `isValidName(String name)` to validate the input, ensuring it does not contain special characters or empty spaces.
     - Repeats the prompt until a valid name is entered.
   - Group name:
-    - Prompts the user to enter the group name to which the member should be added.
+    - Parses user input `command` to retrieve group name to which the member should be added.
     - Similarly, the name is validated to avoid empty or invalid names.
 
 - **Group Existence Check:**
@@ -504,15 +576,15 @@ The `addMember()` method allows the user to add a new member to an existing grou
 
 #### Remove a member
 
-The `removeMember()` method allows the user to add a new member to an existing group. If the specified group does not exist, the method offers the option to create the group and add the member simultaneously.
+The `removeMember(String command)` method allows the user to add a new member to an existing group. If the specified group does not exist, the method offers the option to create the group and add the member simultaneously.
 
 - **Input:**
 
   - Member name:
-    - Prompts the user to enter the name of the member they want to remove.
+    - Parses the input `command` to retrieve the name of new member to be removed.
     - Trims any leading or trailing whitespaces from the input.
   - Group name:
-    - Prompts the user to enter the group name to which the member should be removed.
+    - Parses the input `command` to retrieve the group name to which the member should be removed.
     - Trims whitespace for the input.
 
 - **Group Existence Check:**
@@ -528,15 +600,18 @@ The `removeMember()` method allows the user to add a new member to an existing g
 - **Member Removal:**
   - If confirmed, the method iterates through the list of groups returned by `groupManager.getGroups()`.
   - Locates the specified group by comparing the group name.
-  - Uses the `removeFriend()` method to attempt to remove the specified member from the group.
+  - Uses the `removeFriend(String friendName)` method to attempt to remove the specified member from the group.
   - If successful, it sets the removed flag to true and breaks out of the loop.
 
 ### 3.1.6 SplitCommand Class
 
-The SplitCommand class is responsible for splitting a selected expense among members of a specified group.
-It accepts a unified command in the following format:
+The `SplitCommand` class handles the functionality of splitting expenses among members in a group. It supports both equal and manual assignment (absolute or percentage-based) and ensures transaction details are logged with tamper prevention through checksum verification.
 
-`split/<equal or assign>/<expense index>/<group name>`
+`split/<equal | assign>/<expense index>/<group name>`
+
+- Parse and validate the split command format:  
+  `split/<equal|assign>/<expense index>/<group name>`
+
 
 - **Equal Split:**  
   Divides the total expense amount equally among all group members.
@@ -550,11 +625,14 @@ It accepts a unified command in the following format:
 - **Error and Exception Handling:**  
   Before proceeding, the parser also checks to ensure that all the input is valid and raises the appropriate exceptions. This check is done for negative index, NULL, and other invalid inputs and parameters.
 
+- **Tamper Checking:**  
+  The program writes the checksum of the `owedAmounts.txt` file to a seperate file to ensure data integrity. When the `owedAmounts.txt` is accessed by other functions, the program uses the checksum to determine if the file has been tampered with. If it has, the data files are then purged. This behavior should not occur under normal circumstances and only happens if a user accidentally/maliciously modifies the file's contents.
+
 - **Transaction Logging:**  
   For every split operation, detailed transaction records are created in the format:  
   `Transaction: Expense: <title>, Date: <date>, Group: <group>, Member: <member> owes: <amount>`
 
-#### Methods
+#### Key Methods for Split
 
 #### `SplitCommand(Scanner scanner, GroupManager groupManager, FriendsCommands friendsCommands)`
 
@@ -569,13 +647,10 @@ Executes the flow for splitting an expense. Follows the format as required above
 
 `split/<equal or assign>/<expense index>/<group name>`
 
-- Prompts the user to choose:
-  - `[1]` Equal Split
-  - `[2]` Manual Split
-  - `[x]` Cancel
-- Displays available expenses and validates the selected index.
-- Retrieves group and validates its existence and membership.
-- Delegates to the chosen split method:
+  - Parses the command
+  - Handles validation of group, index, format
+  - Executes equal or manual splitting
+  - Updates file and calls group display
 
   - **Equal Split:**
 
@@ -595,28 +670,14 @@ Executes the flow for splitting an expense. Follows the format as required above
 
 - Calls `friendsCommands.viewGroupDirect()` to update group display after split.
 
-#### Internal Logic (within `executeSplit()`)
+#### `createTransactionRecord(...)`
+  - Formats and returns a string log of one member's owed transaction
 
-- **Equal Split:**
+#### `OwesStorage.appendOwes(...)`
+  - Appends a transaction record to `owedAmounts.txt`
+  - Wrapped in try-catch for IO handling
 
-  - Computes `share = totalAmount / numMembers`.
-  - Loops through group members and logs each person's owed amount.
-  - Writes each owed entry to `OwesStorage`.
 
-- **Manual Split – Absolute:**
-
-  - Prompts for each member's assigned amount.
-  - Tracks remaining amount and prevents over-allocation.
-  - Logs each owed amount to storage.
-
-- **Manual Split – Percentage:**
-  - Prompts for each member's share percentage.
-  - Computes owed amount as `totalAmount * (percentage / 100)`.
-  - Validates total assigned percentages.
-
-Below is the UML sequence diagram for the `SplitCommand` class.
-
-![SplitClassSequenceDiagram.png](diagrams/SplitClassSequenceDiagram.png)
 
 ### 3.1.7 BudgetManager Class
 
@@ -867,6 +928,12 @@ The `Group` class in the `seedu.duke.friends` package manages a collection of `F
   - Returns `true` if removal is successful; otherwise returns `false`.
   - Note: Uses a for-each loop for removal, which may require caution regarding concurrent modifications.
 
+#### Checking for friends in group
+
+- **Method:** `isMemberInGroup(String friendName)`
+- **Features:**
+  - Returns `true` if the friend exists in the friend group.
+
 #### Retrieving Friends
 
 - **Method:** `getFriends()`
@@ -889,7 +956,7 @@ The `Group` class in the `seedu.duke.friends` package manages a collection of `F
 
 ### 3.2.1 GroupManager Class
 
-The `GroupManager` class in the `seedu.duke.friends` package is responsible for managing groups and their members. It provides methods to add members, check group existence, retrieve group members, remove groups, and persist group data.
+The `GroupManager` class in the `seedu.duke.friends` package is responsible for managing groups and their members.
 
 #### GroupManager Initialization
 
@@ -937,6 +1004,14 @@ The `GroupManager` class in the `seedu.duke.friends` package is responsible for 
   - Removes the specified group using a `removeIf` lambda function for efficiency.
   - If the group is successfully removed, it calls `saveGroups()` to persist changes.
   - Displays a success message if the group is deleted, otherwise uses `messages.displayMissingGroupMessage()` to indicate that the group was not found.
+
+---
+
+#### Checking for member in a group
+
+- **Method:** `isMemberInGroup(String groupName, String memberName)`
+- **Features:**
+  - Checks if the member exists in the specific group.
 
 ---
 
@@ -1079,7 +1154,7 @@ The Summary functionality is implemented through the `ExpenseCommand` class, whi
 3. **Export Functionality:**
 
    - Supports exporting summaries to text files via the `export/<type>` command
-   - Where `<type>` can be either `monthly` or `category wise`
+   - Where `<type>` can be either `monthly` or `category-wise`
    - Monthly summaries are exported to `monthly_summary.txt`
    - Category-wise summaries are exported to `category_summary.txt`
 
@@ -1146,11 +1221,11 @@ The Summary functionality is implemented through the `ExpenseCommand` class, whi
    - **Purpose:** Handles exporting summaries to text files
    - **Parameters:** `userInput` - The command string from the user
    - **Functionality:**
-     - Parses the input format (`export/<monthly | category wise>`)
+     - Parses the input format (`export/<monthly | category-wise>`)
      - Validates the export type parameter
      - Delegates to appropriate export method based on the specified type
      - Handles invalid formats and provides helpful error messages
-     - Supports "monthly" and "category wise" export types
+     - Supports "monthly" and "category-wise" export types
 
 6. **`exportMonthlySummary()`** and **`exportCategorySummary()`**
    - **Purpose:** Export specific summary types to text files
@@ -1268,13 +1343,18 @@ after the command duration has ended and upon exiting the program, handled by th
 
 ### 4.2 Expense CRUD Feature
 
-Below is the UML sequence diagram for the classes involved in the CRUD operations regarding user-created expenses. The main application class calls the constructor
-for the UI class, which calls its own method `processCommand()` that takes in the user input as a parameter and processes the addition, editing, deletion and saving of expenses depending on specific user inputs
-as shown in the diagram.
+Below is the UML sequence diagram for the split class. It requires external dependencies such as DataStorage, GRoupManager, OwesStorage, and FriendsCommands to seamlessly integrate the split function. A large part of the calls are to get data from the other classes. Another part is validating input and ensuring that the input is all valid and that the operation is not illegal. Afterwards, it calls the `executeSplit()` method to divide it, with the method prompting for more information regarding the type of split (manual assignment, via absolute values and percentages or via equal splitting). It has to get the data of groups and friends from other classes, and saves and loads using the OwesStorage class. The OwesStorage class implements tamper-checking to help ensure that the data has not been manipulated while being stored.
 
-![ExpenseCRUDFeatureSequenceDiagram.drawio.png](diagrams/ExpenseCRUDFeatureSequenceDiagram.drawio.png)
+![SplitClassSequenceDiagram.png](diagrams/SplitClassSequenceDiagram.png)
 
 ### 4.3 Split Expense Feature
+
+![ApplicationFlowChart.drawio.png](diagrams/ApplicationFlowChart.drawio.png)
+
+O\$P\$ is the main class of application which the user can interact with directly. The command input from the user is processed by the UI class which validates and parses the command.
+This class will check for any valid keywords in the input. Once the keywords are present, it will pass the input to its respective classes that the command is related to (see above diagram)
+to validate the format and details of the command. Upon successful validation and execution of the command, the new data is written to the .txt files within the program directory and saved
+after the command duration has ended and upon exiting the program, handled by the DataStorage class.
 
 ### 4.4 Change Currency Feature
 
