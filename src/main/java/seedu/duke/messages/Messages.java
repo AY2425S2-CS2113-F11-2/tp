@@ -3,6 +3,7 @@ package seedu.duke.messages;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JFrame;
 
 public class Messages {
@@ -114,9 +115,15 @@ public class Messages {
 
             add
               Description: Add a new expense
-              Usage: add/<title>/<date>/<amount>
+              Usage: add/<title>/<category>/<date>/<amount>
               Format:
                 - Title: Short name for the expense
+                - Category: Input one of the following:
+                            - Food
+                            - Travel
+                            - Entertainment
+                            - Shopping
+                            - Miscellaneous
                 - Date: In DD-MM-YYYY format
                 - Amount: The monetary value (must be a positive number)
               You will then be prompted to enter a description (optional)
@@ -147,37 +154,38 @@ public class Messages {
 
             edit
               Description: Edit an existing expense
-              Usage: edit/<expense number>/<new title>/<new date>/<new amount>
-              Note: Use 'x' to keep existing values for title, date, or amount
-              You will then be prompted to change the description (optional)
+              Usage: edit/<expense number>/<new title>/<new category>/<new date>/<new amount>
+              Note: Use 'x' to keep existing values for title, date, amount or category
 
             balance
-              Description: Show the balance overview (total expenses and amount owed)
+              Description: Show the balance overview (total unsettled expenses)
               Usage: balance
 
             create-group
               Description: Create a new group and add members to it
-              Usage: create-group/<group-name>
+              Usage: create-group
               You will be prompted to:
+                - Enter group name
                 - Enter members to add one by one
                 - Enter done to create and save the group
 
             view-group
               Description: View the members of a specific group
-              Usage: view-group/<group-name>
+              Usage: view-group
+              You will be prompted to enter:
+                - Enter group name
 
             add-member
               Description: Add a member to an existing group/ create a new group and add
-              Usage: add-member/<member name>/<group-name>
+              Usage: add-member /<member name> /<group-name>
                 -If the group exists, adds to group. Else prompts the user to create a new group first
 
             remove-group
-              Description: Remove a group
-              Usage: remove-group/<group-name>
-            
-            remove-member
               Description: Remove a member from a group
-              Usage: remove-group/<member-name>/<group-name>
+              Usage: remove-group
+              You will be prompted to enter:
+                - Enter name of member to remove
+                - Enter group to remove member from
 
             my-groups
               Description: View all groups and their members
@@ -185,11 +193,12 @@ public class Messages {
 
             split
               Description: Split an expense between the members of an existing group
-              Usage: split/<equal|assign>/<expense index>/<group name>
+              Usage: split/<equal | assign>/<expense index>/<group name>
+                -If assign, you will be prompted for 
 
             summary
               Description: View expense summaries in different formats
-              Usage: summary/[BY-MONTH|BY-CATEGORY]/[Y|N]
+              Usage: summary/<BY-MONTH|BY-CATEGORY>/<Y|N>
               Format:
                 - First parameter must be either BY-MONTH or BY-CATEGORY
                 - Second parameter must be Y or N for visualization
@@ -197,11 +206,8 @@ public class Messages {
 
             export
               Description: Export expense summaries to text files
-              Usage: export
-              You will be prompted to choose:
-                1. Monthly Summary: Exports to monthly_summary.txt
-                2. Category-wise Summary: Exports to category_summary.txt
-                3. Back to main menu
+              Usage: export/<monthly | category-wise>
+              
 
             change-currency
               Description: Change all your expenses to a different currency
@@ -222,7 +228,8 @@ public class Messages {
 
             find
               Description: Search for expenses by keyword
-              Usage: find/<keyword>
+              Usage: find
+              You will be prompted to enter a search keyword
 
             exit
               Description: Exit the program

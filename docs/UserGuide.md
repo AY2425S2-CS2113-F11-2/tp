@@ -40,27 +40,10 @@ Terminates the program and saves the user's data, such as their payee list, grou
 
 #### Add an expense: `add`
 
-- **Format:** `add/<title>/<date>/<amount>`
+- **Format:** `add/<title>/<category>/<date>/<amount>`
 
 Add an expense with a title, description, date, amount. You have to first enter
-the `add` keyword, followed by the `title`, `date` and `amount`, each separated by a `/`.
-
-After that, you will be prompted to optionally add a `description` of maximum 200 characters.
-Please ensure the description is accurate and simple, because the summary analytics by category uses description to classify expenses.
-Please ensure the description is not wordy and it is to the point, to ensure your expenses are accurately classified. 
-Please also ensure that the description does not contain conflicting categories. 
-
-- **Example Usage:**
-
-```
-Had lunch with friends
-```
-
-- **Example Usage:**
-
-```
-Went to the movies with friends
-```
+the `add` keyword, followed by the `title`,`category`, `date`, `amount`, each separated by a `/`.
 
 The `date` field has to follow the DD-MM-YYYY format. You can choose the date to be in the past (earliest 2000),
 present and future, as long as it is a legitimate date (e.g. NOT 99-99-9999).
@@ -68,39 +51,23 @@ present and future, as long as it is a legitimate date (e.g. NOT 99-99-9999).
 Once the expense has been added, it is unsettled. Typing `list-unsettled` will allow you to view
 your newly added expense, just like `list`.
 
+The `category` field has to be one of these categories (Food/Travel/Entertainment/Shopping/Miscellaneous).
+
 The `amount` can be entered as a whole number or floating-point number. The result will be rounded off to 2 decimal
 places. The `amount` is capped at 50,000SGD or its equivalent if your expenses are in another currency.
 
 - **Example Usage:**
 
 ```
-add/breakfast/23-08-2002/10.00
+add/Chicken Rice/Food/25-12-2025/100
 ```
-
-- **Output:**
-
-```
-Enter the description (press Enter to skip):
-```
-
-If you choose to add a description within 200 characters:
 
 ```
 Expense added successfully:
-Title: breakfast
-Description: McDonald's
-Date: 23-08-2002
-Amount: 10.00
-```
-
-If you skip the description part, the description field will be replaced with 'nil':
-
-```
-Expense added successfully:
-Title: breakfast
-Description: nil
-Date: 23-08-2002
-Amount: 10.00
+Title: chicken rice
+Category: Food
+Date: 25-12-2025
+Amount: 100.00
 ```
 
 The entry will automatically be tagged with a unique expense ID.
@@ -111,43 +78,45 @@ You are not allowed to add an expense containing a `title` of an expense that al
 
 #### Edit an expense: `edit`
 
-Edit an existing expense. Follows the same constraints and parameter-filling procedure as the `add` command.
+Edit an existing expense. Follows the same constraints and parameter-filling procedure as the `add` command. 'X' can be used to keep existing values.
 
-- **Format:** `edit/<expense ID>/<new title>/<new date>/<new amount>`
-
-If you do not wish to change the `title`, `date` or/and `amount`, type `X` (both lowercase and uppercase accepted)
-in the respective fields. Suppose you only want to change the `amount`:
+- **Format:** `edit/<expense ID>/<new title>/<new category>/<new date>/<new amount>`
 
 - **Example Usage:**
 
 ```
-edit/1/x/X/10
+edit/1/chicken rice/food/20-08-2004/20
 ```
 
 - **Output:**
-
-```
-Enter the description (press Enter to skip):
-```
-
-If you choose to change the description within 200 characters:
+  If you choose to change the amount:
 
 ```
 Expense edited successfully:
-Title: breakfast
-Description: Technoedge Canteen
-Date: 23-08-2002
-Amount: 10.00
+Title: chicken rice
+Category: Food
+Date: 20-08-2004
+Amount: 100.00
 ```
 
-If you choose to keep the current description:
+If you choose to change the category:
 
 ```
-Expense added successfully:
-Title: breakfast
-Description: McDonald's
-Date: 23-08-2002
-Amount: 10.00
+Expense edited successfully:
+Title: chicken rice
+Category: Micellaneous
+Date: 20-08-2004
+Amount: 20.00
+```
+
+If you choose to keep the current category:
+
+```
+Expense edited successfully:
+Title: chicken rice
+Category: Food
+Date: 20-08-2004
+Amount: 20.00
 ```
 
 ---
@@ -328,13 +297,13 @@ After exchange, the amount will be rounded off to 2dp.
 Shows total money the user needs to pay.
 
 - **Format and Usage:** `balance`
-- 
+-
 - **Output:**
   ```
   Balance Overview
   ----------------
   Total number of unsettled expenses: <total number of unsettled expenses user has>
-  Total amount owed: <total amount user owes>
+  Total unsettled amount: <total unsettled amount>
   ```
 
 ---
@@ -354,15 +323,35 @@ If you would like to include yourself in the group, please add your name as well
   Who would you like to add to the group? (Type 'done' to finish)
   Enter name: name1
   Enter name: name2
-  Enter name: done 
+  Enter name: done
   Group created successfully!
   ```
+
+#### View friends and expenses in a certain group: `view-member`
+
+View a specific group and see how much each member owes.
+
+- **Format:** `view-member/<group-name>/<member name>`
+- **Usage:** `view-member/testGroup/john`
+
+- **Output:**
+
+  ```
+  Transactions for member 'john' in group 'testGroup':
+  Transaction: Expense: expense1, Date: 10-10-2025, Group: testGroup, Member: john owes: 10.00
+  Transaction: Expense: expense2, Date: 10-10-2025, Group: testGroup, Member: john owes: 30.00
+  Transaction: Expense: expense3, Date: 10-10-2025, Group: testGroup, Member: john owes: 60.00
+  Total Amount: 100.00
+
+  ```
+
+---
 
 ---
 
 #### View friends and expenses in a certain group: `view-group`
 
-View a specific group and see how much each member owes.
+View a specific group and its constituent members.
 
 - **Format:** `view-group/<group-name>`
 - **Usage:** `view-group/test`
@@ -370,12 +359,15 @@ View a specific group and see how much each member owes.
 - **Output:**
 
   ```
-  Group: test
-  Members:
-  abc - Expense: $0.00
-  cde - Expense: $0.00
+  Group: testGroup
+  Members and Expenses:
+  john - Expense: $50.00
+  robert - Expense: $50.00
 
   ```
+  - **Notes:**
+
+- The expenses are summed from the member in that group. (If John exists in both testGroup and testGroup1, running `view-group/testGroup` will not sum the split expenses attributed to him from when the user split with `testGroup1`).
 
 ---
 
@@ -388,15 +380,18 @@ Adds a user to a group.
 
 - **Output:**
   If the group exists, then adds to the existing group.
+
   ```
   hij has been added to test
   ```
-  
+
   If the group does not exist, the user is prompted to create the group first.
+
   ```
   Group does not exist. Would you like to create this group first? (y/n): y
   Group test1 has been created and hij has been added.
   ```
+
 ---
 
 #### Remove Friend from a group: `remove-member`
@@ -412,6 +407,7 @@ Removes a member from a group
   Are you sure you want to remove hij from test1? (y/n): y
   hij has been removed from test1
   ```
+
 ---
 
 #### View all groups created by user: `my-groups`
@@ -439,6 +435,7 @@ Shows all the groups that the user has created.
   - mango
   - carrot
   ```
+
 ---
 
 #### Removes an existing group: `remove-group`
@@ -453,110 +450,109 @@ Removes an entire group.
   Are you sure you want to remove the group test1? (y/n): y
   Group test1 has been removed.
   ```
+
 ---
 
 ### Manage Payments:
 
-#### Select split method: `split`
+#### Split an expense among group members: `split`
 
-Splits an expense among members of a group either equally or manually (via absolute amounts or percentages).
+Splits a selected expense among members of a specific group, either **equally** or through **manual assignment**
+(using absolute amounts or percentages).
+
+- **Format:**
+`split/<equal | assign>/<expense index>/<group name>`
 
 - **Usage:**
+`split/equal/1/testGroup`
+
+- **Constraints:**
+
+- Expense index must be a **positive integer** (starting from 1).
+- The group must already exist and contain at least one member.
+- The same expense cannot be split more than once by the same group.
+- You can split either:
+  - Equally among all members, or
+  - Manually assign amounts using absolute values (`/a`) or percentages (`/p`).
+
+- **Examples:**
+
+- **Equal Split:**
 
   ```
-  split
-  [1] Split equally among all members of the selected group
-  [2] Manually assign amounts for each member in a group
-  [x]: Cancel
-  Enter option: 1
+  split/equal/1/friends
+  ```
 
-  Available expenses:
-  1. Lunch | Amount: 100.00
-  Enter expense number to split: 1
+  **Output:**
 
-  Enter group name for equal split: friends
+  ```
+  Selected expense amount: 100.00
   Splitting 100.00 equally among 2 members of group "friends":
-  - Alice owes: 50.00
-  - Bob owes: 50.00
-
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Alice owes: 50.00
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Bob owes: 50.00
   Updated list of transactions!
-  Here is the updated balance for group: friends
   ```
 
-- **Manual Split (absolute amounts):**
+- **Manual Split (Absolute Amounts):**
 
   ```
-  split
-  [1] Split equally among all members of the selected group
-  [2] Manually assign amounts for each member in a group
-  [x]: Cancel
-  Enter option: 2
+  split/assign/1/friends
+  ```
 
-  Available expenses:
-  1. Dinner | Amount: 100.00
-  Enter expense number to split: 1
+  **Prompted interaction:**
 
-  Enter group name for manual split: friends
+  ```
   Type '/a' for absolute amounts OR '/p' for percentages: /a
-
   Total expense amount to split: 100.00
   You can assign up to 100.00 in total.
   Enter amount for Alice: 30
   Remaining expense: 70.00
   Enter amount for Bob: 70
+  ```
 
+  **Output:**
+
+  ```
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Alice owes: 30.00
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Bob owes: 70.00
   Updated list of transactions!
   ```
 
-- **Manual Split (percentages):**
+- **Manual Split (Percentage-Based):**
 
   ```
-  split
-  [1] Split equally among all members of the selected group
-  [2] Manually assign amounts for each member in a group
-  [x]: Cancel
-  Enter option: 2
+  split/assign/1/friends
+  ```
 
-  Available expenses:
-  1. Brunch | Amount: 200.00
-  Enter expense number to split: 1
+  **Prompted interaction:**
 
-  Enter group name for manual split: friends
+  ```
   Type '/a' for absolute amounts OR '/p' for percentages: /p
-
-  Total expense is 200.00. You can assign up to 100% in total.
+  Total expense is 100.00. You can assign up to 100% in total.
   Enter percentage for Alice: 40
   Remaining percentage: 60.00%
   Enter percentage for Bob: 60
+  ```
 
-  - Alice owes: 80.00
-  - Bob owes: 120.00
+  **Output:**
 
+  ```
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Alice owes: 40.00
+  Transaction: Expense: Lunch, Date: 01-01-2025, Group: friends, Member: Bob owes: 60.00
   Updated list of transactions!
-  Here is the updated balance for group: friends
   ```
 
----
+- **Notes:**
 
-### Select split method: `split`
-
-Allows an expense to be split among a certain group, either equally or via manually specified amounts/percentages.
-
-- **Format:** `split`
-
-- **Example output:**
-  ```
-  [1] Split equally among all members of the selected group
-  [2] Manually input percentage and members involved in transaction
-  [x]: Cancel
-  ```
-- **Next steps:**
-  ```
-  Select Transaction to split
-  Select group to split transaction with
-  *If selected [2] before, choose whether to split via absolute amounts or via percentage
-  Will display the total amounts owed by each member
-  ```
+- Names are taken to be unique throughout the entire program. "John" in group1 is the same as "John" in group2. Splitting is within each group.
+- For the manual `assign` option, the absolute amount and percentage does not need to add up to 100% the full amount. While it cannot exceed the total value of the expense, the sum can be smaller than the full amount.
+- The split function does not take into account you as the user. Add yourself as a member to the group if you'd like to keep track of your split expenses in that particular group.
+- Each expense can only be split once per group.
+- Splitting an expense bakes in the value for that member, when the expense is edited/deleted, the amount owed for the members (when it was split) does not change.
+- Avoid using floating point numbers in the percentage ("/p" > "33.3") as it may be inprecise due to the way the number are stored.
+- Calling the split function does not mark or settle the expense. THe user has to manually trigger those events through the prescribed commands.
+- An expense can be split multiple times (by different groups).
+- All transaction details are stored per member and per group for tracking and retrieval.
 
 ---
 
@@ -566,7 +562,7 @@ Allows an expense to be split among a certain group, either equally or via manua
 
 Displays comprehensive analytics of your expenses through different visualization options. This command helps you track and analyze your spending patterns.
 
-- **Format:** `summary/[BY-MONTH|BY-CATEGORY]/[Y|N]`
+- **Format:** `summary/<BY-MONTH|BY-CATEGORY>/<Y|N>`
 
   - First parameter must be either `BY-MONTH` or `BY-CATEGORY`
   - Second parameter must be `Y` or `N` for visualization
@@ -576,16 +572,17 @@ Displays comprehensive analytics of your expenses through different visualizatio
 
   1. **Monthly Summary (`summary/BY-MONTH/N`)**
 
-     - Shows total expenses for each month
-     - Lists all expenses within each month
-     - Displays expense count per month
-     - No visualization available for monthly view
+  - Shows total expenses for each month
+  - Lists all expenses within each month
+  - Displays expense count per month
+  - No visualization available for monthly view
 
   2. **Category-wise Summary (`summary/BY-CATEGORY/Y` or `summary/BY-CATEGORY/N`)**
-     - Breaks down expenses into categories (Food, Travel, Entertainment, Shopping, Miscellaneous)
-     - Shows total amount and count for each category
-     - Optional pie chart visualization (Y/N)
-     - Displays percentage distribution across categories
+
+  - Breaks down expenses into categories (Food, Travel, Entertainment, Shopping, Miscellaneous)
+  - Shows total amount and count for each category
+  - Optional pie chart visualization (Y/N)
+  - Displays percentage distribution across categories
 
 - **Example Usage:**
 
@@ -606,8 +603,8 @@ Displays comprehensive analytics of your expenses through different visualizatio
 
   [Pie chart visualization will appear in a separate window]
   ```
-  ![image](https://github.com/user-attachments/assets/5eb6f031-9924-43d2-ab6b-3540e15fcefb)
 
+  ![image](https://github.com/user-attachments/assets/5eb6f031-9924-43d2-ab6b-3540e15fcefb)
 
 - **Notes about Pie Chart Visualization:**
   - Only available for category-wise summary
@@ -616,8 +613,68 @@ Displays comprehensive analytics of your expenses through different visualizatio
     - Very small expenses may not be clearly visible on the chart
     - Hover over segments to see exact values
     - Legend shows both amount and percentage for each category
+  - **IMPORTANT**: You must close the pie chart window before exiting the program. Due to a limitation in the visualization API, if you do not close the window, the program will not terminate properly.
   - Chart window will automatically close when program exits
   - Close the chart window to return to the application
+
+---
+
+### Export Summary Reports:
+
+#### Export expense summaries: `export`
+
+Exports your expense summaries to text files for record-keeping, sharing, or external analysis.
+
+- **Format:** `export/<monthly|category-wise>`
+
+  - Parameter must be either `monthly` or `category-wise`
+
+- **Features:**
+
+  1. **Monthly Summary Export (`export/monthly`)**
+
+     - Exports data to `monthly_summary.txt`
+     - Contains total expenses for each month
+     - Lists all expenses within each month with details
+     - Maintains the same format as the monthly summary display
+
+  2. **Category-wise Summary Export (`export/category-wise`)**
+     - Exports data to `category_summary.txt`
+     - Contains breakdown of expenses by category
+     - Shows total amount and count for each category
+     - Displays percentage distribution across categories
+
+- **Example Usage:**
+
+  ```
+  export/monthly
+  ```
+
+- **Output:**
+
+  ```
+  Monthly summary exported to monthly_summary.txt
+  ```
+
+- **Example File Content (monthly_summary.txt):**
+
+  ```
+  Monthly Expense Summary:
+  ----------------------
+  03-2025: $300.00 (1 expenses)
+    Expenses:
+    - March Expense (15-03-2025): $300.00
+
+  04-2025: $400.00 (1 expenses)
+    Expenses:
+    - April Expense (15-04-2025): $400.00
+  ```
+
+- **Notes:**
+  - Files are created in the same directory as the application
+  - Existing files with the same name will be overwritten
+  - The export uses the same formatting as the in-app summary display
+  - Text files can be opened with any text editor
 
 ---
 
@@ -747,7 +804,7 @@ Amount: 10.00
 Here's a quick reference for all available commands:
 
 | Command         | Format                                                  | Example Usage                 |
-| --------------- |---------------------------------------------------------|-------------------------------|
+| --------------- | ------------------------------------------------------- | ----------------------------- |
 | Help            | `help`                                                  | `help`                        |
 | Exit            | `exit`                                                  | `exit`                        |
 | Add Expense     | `add/<title>/<date>/<amount>`                           | `add/lunch/01-01-2024/15.50`  |
@@ -769,4 +826,5 @@ Here's a quick reference for all available commands:
 | Remove Group    | `remove-group/<group-name>`                             | `remove-group/test`           |
 | Split Expense   | `split`                                                 | `split` (then follow prompts) |
 | View Summary    | `summary/[BY-MONTH\|BY-CATEGORY]/[Y\|N]`                | `summary/BY-CATEGORY/Y`       |
+| Export Summary  | `export/<monthly\|category-wise>`                       | `export/monthly`              |
 | Sort List       | `sort-list/<option>`                                    | `sort-list/1`                 |

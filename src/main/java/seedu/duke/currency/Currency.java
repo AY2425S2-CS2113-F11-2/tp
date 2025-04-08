@@ -26,27 +26,42 @@ public class Currency {
      * @param scanner The scanner object for reading user input.
      * @param budgetManager The budget manager object to manage the expenses.
      */
-    public Currency(Scanner scanner, BudgetManager budgetManager){
+    public Currency(Scanner scanner, BudgetManager budgetManager) {
         initializeExchangeRates();
         this.scanner = scanner;
         this.budgetManager = budgetManager;
 
-        try{
-            File f = new File("./currentCurrency");
-            Scanner s = new Scanner(f);
-            String line;
-
-            if(s.hasNextLine()){
-                line = s.nextLine();
-                currentCurrency = line;
-            } else {
-                currentCurrency = Commands.DEFAULT_CURRENCY;
-            }
-        } catch (FileNotFoundException e){
-            File f = new File("./currentCurrency");
-            System.out.println("file not found...");
+        File file = new File("./currentCurrency");
+        if (!file.exists()) {
+            System.out.println("File not found...");
             System.out.println("A new file to load your current currency will be created for you!");
             currentCurrency = Commands.DEFAULT_CURRENCY;
+            return;
+        }
+
+        try (Scanner s = new Scanner(file)) {
+            if (!s.hasNextLine()) {
+                currentCurrency = Commands.DEFAULT_CURRENCY;
+                return;
+            }
+
+            String line = s.nextLine();
+            if (getExchangeRate(line) == null) {
+                currentCurrency = "SGD";
+                System.out.println("Currency file was tampered with. Currency reverted to SGD");
+
+                try {
+                    writeToFile("SGD");
+                } catch (IOException e) {
+                    System.out.println("Error recording the change of currency.");
+                }
+            } else {
+                currentCurrency = line;
+            }
+        } catch (FileNotFoundException e) {
+            // This shouldn't happen because we already checked file existence
+            currentCurrency = Commands.DEFAULT_CURRENCY;
+            System.out.println("Unexpected error: file was not found during reading.");
         }
     }
 
@@ -248,16 +263,16 @@ public class Currency {
      */
     public void changeCurrency(String command) {
         try {
-            String [] splitInput = command.split("/");
-            String method = splitInput[1];
-            String newCurrency = splitInput[2].toUpperCase();
+            String [] splitInput = command.trim().split("\\s*/\\s*");
+            String method = splitInput[1].trim();
+            String newCurrency = splitInput[2].toUpperCase().trim();
             int intMethod = Integer.parseInt(method);
 
             if(intMethod == 1 && splitInput.length != 4){
-                System.out.println("Please give input in correct format");
+                System.out.println("Invalid format. Usage: change-currency/1/<currency to change to>/<exchange rate>");
                 return;
             } else if(intMethod == 2 && splitInput.length != 3){
-                System.out.println("Please give input in correct format");
+                System.out.println("Invalid format. Usage: change-currency/2/<currency to change to>");
                 return;
             }
 
@@ -273,7 +288,8 @@ public class Currency {
         } catch (NumberFormatException e) {
             System.out.println("Please input a valid number");
         } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Please give input in correct format");
+            System.out.println("Invalid format. Usage: change-currency/1/<currency to change to>/<exchange rate>\nOR "
+                    + "change-currency/2/<currency to change to>");
         }
     }
 
