@@ -87,7 +87,7 @@ public class ExpenseStorage {
             if (expensesFileObj.exists()) {
                 boolean deleted = expensesFileObj.delete();
                 System.out.println("WARNING: if you have tampered with the expenses file: " + expensesFile
-                    + " it will be deleted, and a new one will be created following an add command.");
+                        + " it will be deleted, and a new one will be created following an add command.");
                 System.out.println();
                 /*
                 if (!deleted) {
